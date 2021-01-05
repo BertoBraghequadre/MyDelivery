@@ -20,7 +20,7 @@ origini presso i fornitori fino alla consegna dei prodotti finiti ai clienti e a
 Si suppone di avere diverse aziende di trasporto per consegnare la merce (corrieri). Ogni azienda ha a disposizione un numero di veicoli identificati da un
 codice, tipo veicolo e capienza container (numeri di colli che può contenere).
 Il collo è identificato da un codice, mittente, destinatario e peso. L’applicazione 
-deve gestire il carico di N colli nei container. Per il riempimento di utilizza un
+deve gestire il carico di N colli nei container. Per il riempimento si utilizza un
 algortimo approssimato (Next Fit) che risolve il problema del **Bin Packing** (vedi
 documento allegato).
 Il corriere, inoltre, aggiorna lo stato del collo ad ogni centro di smistamento, il
