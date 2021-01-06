@@ -3,9 +3,11 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
 
-<GridPane fx:controller="com.gaetanoippolito.controller.Controller"
-          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
+<GridPane fx:controller="com.gaetanoippolito.controller.LoginController"
+          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10"
+          fx:id="loginRoot">
 
     <fx:define>
         <ToggleGroup fx:id="toggleButton"/>
@@ -17,24 +19,47 @@
                   toggleGroup="$toggleButton"
                   fx:id="toggleAdmin"
                   onAction="#attivaBottoneLogin"/>
-    <!--
+
     <ToggleButton GridPane.rowIndex="1"
                   GridPane.columnIndex="0"
                   text="Magazziniere"
                   toggleGroup="$toggleButton"
                   fx:id="toggleMagazziniere"
                   onAction="#attivaBottoneLogin"/>
-    -->
+
+    <ToggleButton GridPane.rowIndex="2"
+                  GridPane.columnIndex="0"
+                  text="Corriere"
+                  toggleGroup="$toggleButton"
+                  fx:id="toggleCorriere"
+                  onAction="#attivaBottoneLogin"/>
+
+    <ToggleButton GridPane.rowIndex="3"
+                  GridPane.columnIndex="0"
+                  text="Cliente"
+                  toggleGroup="$toggleButton"
+                  fx:id="toggleCliente"
+                  onAction="#attivaBottoneLogin"/>
 
     <TextField GridPane.rowIndex="0"
                GridPane.columnIndex="1"
-               promptText="Username"/>
+               promptText="Username"
+               fx:id="usernameLoginField"/>
 
-    <TextField GridPane.rowIndex="1"
-               GridPane.columnIndex="1"
-               promptText="Password"/>
+    <PasswordField GridPane.rowIndex="1"
+                   GridPane.columnIndex="1"
+                   promptText="Password"
+                   fx:id="passwordLoginField"/>
 
-    <Button GridPane.rowIndex="2" GridPane.columnIndex="1" text="Log-in" disable="true" fx:id="loginButton"/>
-    <Button GridPane.rowIndex="3" GridPane.columnIndex="1" text="Registrati"/>
+    <Button GridPane.rowIndex="2"
+            GridPane.columnIndex="1"
+            text="Log-in" disable="true"
+            fx:id="loginButton"
+            onAction="#gestioneLogin"/>
 
+    <Button GridPane.rowIndex="3"
+            GridPane.columnIndex="1"
+            text="Registrati" disable="true"
+            fx:id="registerButton"
+            onAction="#gestisciRegistrazione"/>
 </GridPane>
