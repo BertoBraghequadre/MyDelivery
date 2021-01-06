@@ -8,7 +8,8 @@ package com.gaetanoippolito.model;
  */
 
 public class Admin extends Utente{
-    private MagazziniereBuilder magazziniereBuilder;
-
-    
+    // Costruttore
+    public Admin(String username, String password, String nome, String cognome, String email){
+        super(username, password, nome, cognome, email);
+    }
 }
