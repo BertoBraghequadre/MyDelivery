@@ -24,9 +24,6 @@ public abstract class Utente {
         this.email = email;
     }
 
-    // Per il Builder del magazziniere è stato creato questo costruttore vuoto
-    public Utente(){}
-
     // Setters e getters
     public String getUsername() {
         return this.username;

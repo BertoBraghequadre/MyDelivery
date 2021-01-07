@@ -27,12 +27,10 @@ public class LoginController {
     /**@see GridPane*/
     @FXML
     private GridPane loginRoot;
+
     /**@see ToggleButton*/
     @FXML
     private ToggleButton toggleAdmin;
-    /**@see ToggleButton*/
-    @FXML
-    private ToggleButton toggleMagazziniere;
     /**@see ToggleButton*/
     @FXML
     private ToggleButton toggleCorriere;
@@ -71,7 +69,7 @@ public class LoginController {
      */
     @FXML
     public void attivaBottoneLogin(){
-        if(toggleAdmin.isSelected() || toggleMagazziniere.isSelected() || toggleCorriere.isSelected()){
+        if(toggleAdmin.isSelected() || toggleCorriere.isSelected()){
             loginButton.setDisable(false);
             registerButton.setDisable(true);
         }
@@ -154,13 +152,8 @@ public class LoginController {
         try{
             // Creazione dei MenuItems per il Menu "show"
             MenuItem listaAzienda = new MenuItem("Lista Azienda");
-            MenuItem listaMagazzinieri = new MenuItem("Lista Magazzinieri");
             MenuItem listaVeicoli = new MenuItem("Lista Veicoli");
             MenuItem listaColliDaConsegnare = new MenuItem("Lista Colli Da Consegnare");
-
-            // Creazione dei MenuItems per il Menu "Magazziniere" che si trova all'interno del Menu "Edit"
-            MenuItem assumiMagazziniere = new MenuItem("Assumi Magazziniere");
-            MenuItem licenziaMagazziniere = new MenuItem("Licenzia Magazziniere");
 
             // Creazione dei MenuItems per il Menu "Azienda" che si trova all'interno del Menu "Edit"
             MenuItem aggiungiAzienda = new MenuItem("Aggiungi Azienda");
@@ -173,20 +166,17 @@ public class LoginController {
             Menu show = new Menu("Show");
 
             Menu edit = new Menu("Edit");
-            Menu magazziniere = new Menu("Magazziniere");
             Menu azienda = new Menu("Azienda");
 
             Menu logout = new Menu("Logout");
 
             // Associo i MenuItems ai Menu
-            // Show -> Lista Azienda, Lista Magazzinieri, Lista Veicoli, Lista Colli Da Consegnare
-            show.getItems().addAll(listaAzienda, listaMagazzinieri, listaVeicoli, listaColliDaConsegnare);
-            // Magazziniere -> Assumi Magazziniere, Licenzia Magazziniere
-            magazziniere.getItems().addAll(assumiMagazziniere, licenziaMagazziniere);
+            // Show -> Lista Azienda, Lista Veicoli, Lista Colli Da Consegnare
+            show.getItems().addAll(listaAzienda, listaVeicoli, listaColliDaConsegnare);
             // Azienda -> Aggiungi Azienda, Rimuovi Azienda
             azienda.getItems().addAll(aggiungiAzienda, rimuoviAzienda);
-            // Edit -> Magazziniere, Azienda
-            edit.getItems().addAll(magazziniere, azienda);
+            // Edit -> Azienda
+            edit.getItems().addAll(azienda);
             // Logout -> Exit..
             logout.getItems().add(exit);
 

@@ -23,19 +23,12 @@
 
     <ToggleButton GridPane.rowIndex="1"
                   GridPane.columnIndex="0"
-                  text="Magazziniere"
-                  toggleGroup="$toggleButton"
-                  fx:id="toggleMagazziniere"
-                  onAction="#attivaBottoneLogin"/>
-
-    <ToggleButton GridPane.rowIndex="2"
-                  GridPane.columnIndex="0"
                   text="Corriere"
                   toggleGroup="$toggleButton"
                   fx:id="toggleCorriere"
                   onAction="#attivaBottoneLogin"/>
 
-    <ToggleButton GridPane.rowIndex="3"
+    <ToggleButton GridPane.rowIndex="2"
                   GridPane.columnIndex="0"
                   text="Cliente"
                   toggleGroup="$toggleButton"
