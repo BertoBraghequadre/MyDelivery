@@ -16,9 +16,10 @@ public class MyDeliveryData {
     // Eager Initialization
     private static final MyDeliveryData instance = new MyDeliveryData();
     private static final String filenameAdmin = "listaAdmin.txt";
+    /**@see Admin*/
     private Admin admin;
 
-    // Costruttore
+    // Costruttore vuoto
     private MyDeliveryData(){}
 
     // Getter e setter
@@ -29,6 +30,10 @@ public class MyDeliveryData {
         return instance;
     }
 
+    /**
+     * Questo metodo setta l'admin
+     * @see Admin
+     */
     public void setAdmin(Admin admin){
         this.admin = admin;
     }
@@ -51,7 +56,7 @@ public class MyDeliveryData {
 
     /**
      * Questo metodo lo si utilizza per caricare tutti i file txt dove sono contenuti i dati degli Admin
-     * */
+     */
     public void loadAdmins() throws IOException {
         Path path = Paths.get(filenameAdmin);
         String input;

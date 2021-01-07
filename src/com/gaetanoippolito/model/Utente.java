@@ -24,6 +24,9 @@ public abstract class Utente {
         this.email = email;
     }
 
+    // Per il Builder del magazziniere è stato creato questo costruttore vuoto
+    public Utente(){}
+
     // Setters e getters
     public String getUsername() {
         return this.username;
@@ -76,5 +79,14 @@ public abstract class Utente {
     @Override
     public int hashCode() {
         return Objects.hash(username, password);
+    }
+
+    @Override
+    public String toString(){
+        return String.format("Username: %s\n" +
+                             "Password: %s\n" +
+                             "Nome: %s\n" +
+                             "Cognome: %s\n" +
+                             "Email: %s", this.username, this.password, this.nome, this.cognome, this.email);
     }
 }

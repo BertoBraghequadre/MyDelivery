@@ -7,7 +7,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -16,37 +15,52 @@ import java.io.IOException;
 import java.util.Optional;
 
 /**
- * Questa
+ * Questo Controller gestisce il login da parte dell'utente selezionando le apposite view, se le codizioni sono state
+ * accettate, e cambia gli stati delle classi del model
  */
 
 public class LoginController {
+    // Attributi
     private final String rootAdminStageFile = "src/com/gaetanoippolito/view/fxml/adminStage.fxml";
 
+    // Variabili di istanza che rappresentano il layout del Login
+    /**@see GridPane*/
     @FXML
     private GridPane loginRoot;
-
+    /**@see ToggleButton*/
     @FXML
     private ToggleButton toggleAdmin;
+    /**@see ToggleButton*/
     @FXML
     private ToggleButton toggleMagazziniere;
+    /**@see ToggleButton*/
     @FXML
     private ToggleButton toggleCorriere;
+    /**@see ToggleButton*/
     @FXML
     private ToggleButton toggleCliente;
 
+    /**@see Button*/
     @FXML
     private Button loginButton;
+    /**@see Button*/
     @FXML
     private Button registerButton;
 
+    /**@see TextField*/
     @FXML
     private TextField usernameLoginField;
+    /**@see PasswordField*/
     @FXML
     private PasswordField passwordLoginField;
 
+    /**@see Label*/
     @FXML
     private Label loginErrorLabel;
 
+    /**
+     * Metodo overridato che viene triggerato nel momento in cui viene inizializzata la view
+     */
     @FXML
     public void initialize(){
 
@@ -77,14 +91,17 @@ public class LoginController {
     @FXML
     public void gestioneLogin(){
         if(toggleAdmin.isSelected()){
+            // Salvo il valore in input digitato dall'utente nei vari TextField
             String username = this.usernameLoginField.getText().trim();
             String password = this.passwordLoginField.getText().trim();
 
+            /**@see MyDeliveryData*/
             boolean isAdmin = MyDeliveryData.getInstance().verificaLoginAdmin(username, password);
 
             if(isAdmin){
                 this.loginErrorLabel.setVisible(false);
 
+                // Questo è il metodo che ci permette di cambiare Stage
                 vaiAdInterfacciaAdmin();
             }
             else{
@@ -137,17 +154,17 @@ public class LoginController {
         try{
             // Creazione dei MenuItems per il Menu "show"
             MenuItem listaAzienda = new MenuItem("Lista Azienda");
-            MenuItem listaMagazzinieri = new MenuItem("listaMagazzinieri");
-            MenuItem listaVeicoli = new MenuItem("listaVeicoli");
-            MenuItem listaColliDaConsegnare = new MenuItem("listaColliDaConsegnare");
+            MenuItem listaMagazzinieri = new MenuItem("Lista Magazzinieri");
+            MenuItem listaVeicoli = new MenuItem("Lista Veicoli");
+            MenuItem listaColliDaConsegnare = new MenuItem("Lista Colli Da Consegnare");
 
             // Creazione dei MenuItems per il Menu "Magazziniere" che si trova all'interno del Menu "Edit"
-            MenuItem assumiMagazziniere = new MenuItem("assumiMagazziniere");
-            MenuItem licenziaMagazziniere = new MenuItem("licenziaMagazziniere");
+            MenuItem assumiMagazziniere = new MenuItem("Assumi Magazziniere");
+            MenuItem licenziaMagazziniere = new MenuItem("Licenzia Magazziniere");
 
             // Creazione dei MenuItems per il Menu "Azienda" che si trova all'interno del Menu "Edit"
-            MenuItem aggiungiAzienda = new MenuItem("aggiungiAzienda");
-            MenuItem rimuoviAzienda = new MenuItem("rimuoviAzienda");
+            MenuItem aggiungiAzienda = new MenuItem("Aggiungi Azienda");
+            MenuItem rimuoviAzienda = new MenuItem("Rimuovi Azienda");
 
             // Creazione del MenuItem per il Menu "Exit"
             MenuItem exit = new MenuItem("Exit..");
@@ -161,18 +178,27 @@ public class LoginController {
 
             Menu logout = new Menu("Logout");
 
+            // Associo i MenuItems ai Menu
+            // Show -> Lista Azienda, Lista Magazzinieri, Lista Veicoli, Lista Colli Da Consegnare
             show.getItems().addAll(listaAzienda, listaMagazzinieri, listaVeicoli, listaColliDaConsegnare);
+            // Magazziniere -> Assumi Magazziniere, Licenzia Magazziniere
             magazziniere.getItems().addAll(assumiMagazziniere, licenziaMagazziniere);
+            // Azienda -> Aggiungi Azienda, Rimuovi Azienda
             azienda.getItems().addAll(aggiungiAzienda, rimuoviAzienda);
+            // Edit -> Magazziniere, Azienda
             edit.getItems().addAll(magazziniere, azienda);
+            // Logout -> Exit..
             logout.getItems().add(exit);
 
+            // Aggiungo al MenuBar tutti i Menu con i MenuItems associati
             MenuBar menuBarAdmin = new MenuBar();
             menuBarAdmin.getMenus().addAll(show, edit, logout);
 
+            // Chiude la finestra del Login
             Stage stage = (Stage)loginButton.getScene().getWindow();
             stage.close();
 
+            // Creazione di una nuova finestra
             Stage adminStage = new Stage();
 
             VBox adminVBox = new VBox();

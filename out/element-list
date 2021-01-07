@@ -1,0 +1,6 @@
+module:MyDelivery
+com.gaetanoippolito.controller
+com.gaetanoippolito.model
+com.gaetanoippolito.model.database
+com.gaetanoippolito.model.magazziniereBuilder
+com.gaetanoippolito.view
