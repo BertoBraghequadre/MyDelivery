@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Optional;
@@ -140,7 +139,6 @@ public class LoginController {
             Stage adminStage = new Stage();
             FXMLLoader loader = new FXMLLoader();
             Parent root = loader.load(new FileInputStream(rootAdminStageFile));
-            System.out.println("caccapupi");
 
             adminStage.setTitle(Admin.getInstance().getNome() + " " + Admin.getInstance().getCognome());
             adminStage.setScene(new Scene(root, 800, 600));
