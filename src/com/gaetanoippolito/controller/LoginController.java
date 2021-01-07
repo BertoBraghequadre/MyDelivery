@@ -73,12 +73,10 @@ public class LoginController {
             String username = this.usernameLoginField.getText().trim();
             String password = this.passwordLoginField.getText().trim();
 
-            ObservableList<Admin> admin = MyDeliveryData.getInstance().getListaAdmin();
+            boolean admin = MyDeliveryData.getInstance().verificaLoginAdmin(username, password);
 
-            for (Admin admins : admin) {
-                if(username.equals(admins.getUsername()) && password.equals(admins.getPassword())){
-                    System.out.println("CIAOOOO");
-                }
+            if(admin){
+                System.out.println("ciao");
             }
         }
     }

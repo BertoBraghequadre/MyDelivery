@@ -1,10 +1,9 @@
 package com.gaetanoippolito.model.database;
 
 import com.gaetanoippolito.model.Admin;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,24 +17,49 @@ public class MyDeliveryData {
     // Attributi
     // Eager Initialization
     private static final MyDeliveryData instance = new MyDeliveryData();
-    private static String filenameAdmin = "com.gaetanoippolito.listaAdmin.txt";
+    private static final String filenameAdmin = "listaAdmin.txt";
     private ObservableList<Admin> listaAdmin;
 
     // Costruttore
-    private MyDeliveryData(){};
+    private MyDeliveryData(){
+        listaAdmin = FXCollections.observableArrayList();
+    };
 
     // Getter
     public ObservableList<Admin> getListaAdmin() {
         return this.listaAdmin;
     }
 
+    /**
+     * Ritorna l'unica istanza della classe (siccome è stato utilizzato un Singleton)
+     */
     public static MyDeliveryData getInstance(){
         return instance;
     }
 
     // Metodi
+    /**
+     * Questo metodo aggiunge Admin alla ObservableList di Admin
+     */
     public void aggiungiAdmin(Admin admin){
         this.listaAdmin.add(admin);
+    }
+
+    /**
+     * Questo metodo verifica il successo o il fallimento del login di un Admin
+     * @param username rappresenta l'username digitato dall'admin per accedere nell'applicazione
+     * @param password rappresenta la password digitata dall'admin per accedere nell'applicazione
+     * @return Il metodo ritorna un boolean che sta a rappresentare il successo o il fallimento del login
+     */
+    public boolean verificaLoginAdmin(String username, String password){
+        Admin admin = this.listaAdmin.get(0);
+
+        if(admin.getUsername().equals(username) && admin.getPassword().equals(password)){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     /**
@@ -48,7 +72,7 @@ public class MyDeliveryData {
         // Questo fa tutto il lavoro del "buffer", in cui si bufferizza il file dato un path
         try(BufferedReader br = Files.newBufferedReader(path)){
             while((input = br.readLine()) != null){
-                String[] itemPieces = input.split("\t");
+                String[] itemPieces = input.split("   -   ");
 
                 String username = itemPieces[0];
                 String password = itemPieces[1];
@@ -57,7 +81,7 @@ public class MyDeliveryData {
                 String email = itemPieces[4];
 
                 Admin admin = new Admin(username, password, nome, cognome, email);
-                this.listaAdmin.add(admin);
+                aggiungiAdmin(admin);
             }
         }
     }
@@ -65,7 +89,8 @@ public class MyDeliveryData {
     /**
      *
      */
-    public void storeAdmins() throws IOException{
+    /*
+    public void storeClienti() throws IOException{
         Path path = Paths.get(filenameAdmin);
 
         try(BufferedWriter bw = Files.newBufferedWriter(path)){
@@ -81,4 +106,5 @@ public class MyDeliveryData {
             }
         }
     }
+    */
 }
