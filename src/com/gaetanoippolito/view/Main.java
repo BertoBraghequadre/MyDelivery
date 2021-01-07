@@ -8,6 +8,13 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
 
+/**
+ * Questa classe rappresenta l'Entry point dell'applicazione. Quì vengono gestite le scene e gli stage della finistra
+ * dell'applicazione.
+ * @author Gaetano Ippolito (0124001867)
+ * @version 0.5.1
+ * */
+
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -18,6 +25,7 @@ public class Main extends Application {
         primaryStage.setTitle("My Delivery");
         primaryStage.setScene(new Scene(root, 300, 275));
         primaryStage.show();
+
     }
 
     @Override

@@ -1,8 +1,6 @@
 package com.gaetanoippolito.controller;
 
-import com.gaetanoippolito.model.Admin;
 import com.gaetanoippolito.model.database.MyDeliveryData;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,7 +8,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Optional;
 
 /**
@@ -39,6 +36,9 @@ public class LoginController {
     private TextField usernameLoginField;
     @FXML
     private PasswordField passwordLoginField;
+
+    @FXML
+    private Label loginErrorLabel;
 
     @FXML
     public void initialize(){
@@ -77,6 +77,11 @@ public class LoginController {
 
             if(admin){
                 System.out.println("ciao");
+                this.loginErrorLabel.setVisible(false);
+            }
+            else{
+                this.loginErrorLabel.setVisible(true);
+                this.loginErrorLabel.setText("Username o Password Errati");
             }
         }
     }
