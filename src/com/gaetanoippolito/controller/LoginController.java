@@ -7,7 +7,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -133,18 +135,58 @@ public class LoginController {
      */
     private void vaiAdInterfacciaAdmin(){
         try{
+            // Creazione dei MenuItems per il Menu "show"
+            MenuItem listaAzienda = new MenuItem("Lista Azienda");
+            MenuItem listaMagazzinieri = new MenuItem("listaMagazzinieri");
+            MenuItem listaVeicoli = new MenuItem("listaVeicoli");
+            MenuItem listaColliDaConsegnare = new MenuItem("listaColliDaConsegnare");
+
+            // Creazione dei MenuItems per il Menu "Magazziniere" che si trova all'interno del Menu "Edit"
+            MenuItem assumiMagazziniere = new MenuItem("assumiMagazziniere");
+            MenuItem licenziaMagazziniere = new MenuItem("licenziaMagazziniere");
+
+            // Creazione dei MenuItems per il Menu "Azienda" che si trova all'interno del Menu "Edit"
+            MenuItem aggiungiAzienda = new MenuItem("aggiungiAzienda");
+            MenuItem rimuoviAzienda = new MenuItem("rimuoviAzienda");
+
+            // Creazione del MenuItem per il Menu "Exit"
+            MenuItem exit = new MenuItem("Exit..");
+
+            // Dichiaro i Menu
+            Menu show = new Menu("Show");
+
+            Menu edit = new Menu("Edit");
+            Menu magazziniere = new Menu("Magazziniere");
+            Menu azienda = new Menu("Azienda");
+
+            Menu logout = new Menu("Logout");
+
+            show.getItems().addAll(listaAzienda, listaMagazzinieri, listaVeicoli, listaColliDaConsegnare);
+            magazziniere.getItems().addAll(assumiMagazziniere, licenziaMagazziniere);
+            azienda.getItems().addAll(aggiungiAzienda, rimuoviAzienda);
+            edit.getItems().addAll(magazziniere, azienda);
+            logout.getItems().add(exit);
+
+            MenuBar menuBarAdmin = new MenuBar();
+            menuBarAdmin.getMenus().addAll(show, edit, logout);
+
             Stage stage = (Stage)loginButton.getScene().getWindow();
             stage.close();
 
             Stage adminStage = new Stage();
+
+            VBox adminVBox = new VBox();
+            adminVBox.getChildren().add(menuBarAdmin);
+
             FXMLLoader loader = new FXMLLoader();
             Parent root = loader.load(new FileInputStream(rootAdminStageFile));
+            adminVBox.getChildren().add(root);
 
             adminStage.setTitle(Admin.getInstance().getNome() + " " + Admin.getInstance().getCognome());
-            adminStage.setScene(new Scene(root, 800, 600));
+            adminStage.setScene(new Scene(adminVBox, 800, 600));
             adminStage.show();
         } catch (IOException e){
-            System.out.println("Errore nel caricamento della pagina");
+            System.out.println("Errore nel caricamento del File fxml");
         }
     }
 }
