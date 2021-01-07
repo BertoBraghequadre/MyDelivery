@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"m":"MyDelivery","l":"com.gaetanoippolito.controller"},{"m":"MyDelivery","l":"com.gaetanoippolito.model"},{"m":"MyDelivery","l":"com.gaetanoippolito.model.database"},{"m":"MyDelivery","l":"com.gaetanoippolito.view"}];updateSearchResults();
