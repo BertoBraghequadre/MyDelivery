@@ -1,6 +1,8 @@
 package com.gaetanoippolito.model.database;
 
 import com.gaetanoippolito.model.Admin;
+import com.gaetanoippolito.model.Magazzino;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,8 +18,11 @@ public class MyDeliveryData {
     // Eager Initialization
     private static final MyDeliveryData instance = new MyDeliveryData();
     private static final String filenameAdmin = "listaAdmin.txt";
+    private static final String filenameMagazzino = "listaMagazzino.txt";
     /**@see Admin*/
     private Admin admin;
+    /**@see Magazzino*/
+    private Magazzino magazzino;
 
     // Costruttore vuoto
     private MyDeliveryData(){}
@@ -36,6 +41,14 @@ public class MyDeliveryData {
      */
     public void setAdmin(Admin admin){
         this.admin = admin;
+    }
+
+    /**
+     * Questo metodo setta il Magazzino
+     * @see Magazzino
+     */
+    public void setMagazzino(Magazzino magazzino){
+        this.magazzino = magazzino;
     }
 
     // Metodi
@@ -74,6 +87,27 @@ public class MyDeliveryData {
 
                 Admin admin = Admin.getInstance(username, password, nome, cognome, email);
                 this.setAdmin(admin);
+            }
+        }
+    }
+
+    /**
+     * Questo metodo lo si utilizza per caricare tutti i file txt dove sono contenuti i dati degli Admin
+     */
+    public void loadMagazzino() throws IOException {
+        Path path = Paths.get(filenameMagazzino);
+        String input;
+
+        // Questo fa tutto il lavoro del "buffer", in cui si bufferizza il file dato un path
+        try(BufferedReader br = Files.newBufferedReader(path)){
+            while((input = br.readLine()) != null){
+                String[] itemPieces = input.split("   -   ");
+
+                String indirizzo = itemPieces[0];
+                String numeroCivico = itemPieces[1];
+                String cap = itemPieces[2];
+
+
             }
         }
     }
