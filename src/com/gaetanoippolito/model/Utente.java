@@ -1,5 +1,7 @@
 package com.gaetanoippolito.model;
 
+import java.util.Objects;
+
 /**
  * La classe "Utente" rappresenta l'astrazione di ogni singola persona che ha la possibilità di loggare
  * all'interno dell'applicazione.
@@ -61,5 +63,18 @@ public abstract class Utente {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Utente)) return false;
+        Utente utente = (Utente) o;
+        return Objects.equals(username, utente.username) && Objects.equals(password, utente.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, password);
     }
 }

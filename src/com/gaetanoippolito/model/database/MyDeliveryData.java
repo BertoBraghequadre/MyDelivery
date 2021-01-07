@@ -1,8 +1,6 @@
 package com.gaetanoippolito.model.database;
 
 import com.gaetanoippolito.model.Admin;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,18 +16,12 @@ public class MyDeliveryData {
     // Eager Initialization
     private static final MyDeliveryData instance = new MyDeliveryData();
     private static final String filenameAdmin = "listaAdmin.txt";
-    private ObservableList<Admin> listaAdmin;
+    private Admin admin;
 
     // Costruttore
-    private MyDeliveryData(){
-        listaAdmin = FXCollections.observableArrayList();
-    };
+    private MyDeliveryData(){}
 
-    // Getter
-    public ObservableList<Admin> getListaAdmin() {
-        return this.listaAdmin;
-    }
-
+    // Getter e setter
     /**
      * Ritorna l'unica istanza della classe (siccome è stato utilizzato un Singleton)
      */
@@ -37,14 +29,11 @@ public class MyDeliveryData {
         return instance;
     }
 
-    // Metodi
-    /**
-     * Questo metodo aggiunge Admin alla ObservableList di Admin
-     */
-    public void aggiungiAdmin(Admin admin){
-        this.listaAdmin.add(admin);
+    public void setAdmin(Admin admin){
+        this.admin = admin;
     }
 
+    // Metodi
     /**
      * Questo metodo verifica il successo o il fallimento del login di un Admin
      * @param username rappresenta l'username digitato dall'admin per accedere nell'applicazione
@@ -52,8 +41,6 @@ public class MyDeliveryData {
      * @return Il metodo ritorna un boolean che sta a rappresentare il successo o il fallimento del login
      */
     public boolean verificaLoginAdmin(String username, String password){
-        Admin admin = this.listaAdmin.get(0);
-
         if(admin.getUsername().equals(username) && admin.getPassword().equals(password)){
             return true;
         }
@@ -80,8 +67,8 @@ public class MyDeliveryData {
                 String cognome = itemPieces[3];
                 String email = itemPieces[4];
 
-                Admin admin = new Admin(username, password, nome, cognome, email);
-                aggiungiAdmin(admin);
+                Admin admin = Admin.getInstance(username, password, nome, cognome, email);
+                this.setAdmin(admin);
             }
         }
     }

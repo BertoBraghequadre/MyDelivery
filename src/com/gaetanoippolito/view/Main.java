@@ -18,14 +18,13 @@ import java.io.IOException;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("fxml/login.fxml"));
 
         setUserAgentStylesheet(STYLESHEET_CASPIAN);
 
         primaryStage.setTitle("My Delivery");
         primaryStage.setScene(new Scene(root, 300, 275));
         primaryStage.show();
-
     }
 
     @Override
