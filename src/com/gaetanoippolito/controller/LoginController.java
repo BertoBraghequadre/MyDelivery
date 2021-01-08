@@ -157,7 +157,7 @@ public class LoginController {
             Parent root = loader.load(new FileInputStream(rootAdminStageFile));
 
             adminStage.setTitle(Admin.getInstance().getNome() + " " + Admin.getInstance().getCognome());
-            adminStage.setScene(new Scene(root, 800, 600));
+            adminStage.setScene(new Scene(root, 800, 400));
             adminStage.show();
         } catch (IOException e){
             System.out.println("Errore nel caricamento del file");

@@ -13,7 +13,7 @@ public class AggiungiAziendaController {
 
     }
 
-    public void gestioneAggiuntaAzienda(){
+    public void processaAggiuntaAzienda(){
         System.out.println("CIAO");
     }
 }
