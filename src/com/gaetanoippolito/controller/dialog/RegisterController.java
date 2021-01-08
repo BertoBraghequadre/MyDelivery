@@ -1,4 +1,4 @@
-package com.gaetanoippolito.controller;
+package com.gaetanoippolito.controller.dialog;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanExpression;

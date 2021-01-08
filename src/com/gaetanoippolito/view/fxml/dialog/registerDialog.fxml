@@ -4,7 +4,7 @@
 
 <DialogPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.gaetanoippolito.controller.RegisterController"
+            fx:controller="com.gaetanoippolito.controller.dialog.RegisterController"
             headerText="Registra un account"
             fx:id="">
 

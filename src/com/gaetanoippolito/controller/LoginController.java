@@ -8,7 +8,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,6 +21,7 @@ import java.util.Optional;
 public class LoginController {
     // Attributi
     private final String rootAdminStageFile = "src/com/gaetanoippolito/view/fxml/adminStage.fxml";
+    private final String rootRegisterDialogFile = "src/com/gaetanoippolito/view/fxml/dialog/registerDialog.fxml";
 
     // Variabili di istanza che rappresentano il layout del Login
     /**@see GridPane*/
@@ -114,7 +114,6 @@ public class LoginController {
      */
     @FXML
     public void gestisciRegistrazione(){
-        RegisterController registerController;
         Dialog<ButtonType> registerDialog = new Dialog<>();
         FXMLLoader loader = new FXMLLoader();
 
@@ -122,7 +121,7 @@ public class LoginController {
         registerDialog.setTitle("Registra un Account");
 
         try{
-            Parent root = loader.load(new FileInputStream("src/com/gaetanoippolito/view/registerDialog.fxml"));
+            Parent root = loader.load(new FileInputStream(rootRegisterDialogFile));
             registerDialog.getDialogPane().setContent(root);
         } catch (IOException e){
             System.out.println("File not found");
@@ -132,9 +131,6 @@ public class LoginController {
         // Aggiungiamo i Bottoni nel dialog
         registerDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
         registerDialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
-
-        // Carichiamo il controller del registerDialog
-        registerController = loader.getController();
 
         /*
         // Settiamo il bottone a "non cliccabile" in base al ritorno dinamico del testo dei vari TextField
@@ -149,60 +145,22 @@ public class LoginController {
      * Questo metodo viene utilizzato per aprire una nuova Finestra in cui vi è l'interfaccia grafica per l'Admin
      */
     private void vaiAdInterfacciaAdmin(){
+        // Chiude la finestra del Login
+        Stage stage = (Stage)loginButton.getScene().getWindow();
+        stage.close();
+
+        // Creazione di una nuova finestra
+        Stage adminStage = new Stage();
+
         try{
-            // Creazione dei MenuItems per il Menu "show"
-            MenuItem listaAzienda = new MenuItem("Lista Azienda");
-            MenuItem listaVeicoli = new MenuItem("Lista Veicoli");
-            MenuItem listaColliDaConsegnare = new MenuItem("Lista Colli Da Consegnare");
-
-            // Creazione dei MenuItems per il Menu "Azienda" che si trova all'interno del Menu "Edit"
-            MenuItem aggiungiAzienda = new MenuItem("Aggiungi Azienda");
-            MenuItem rimuoviAzienda = new MenuItem("Rimuovi Azienda");
-
-            // Creazione del MenuItem per il Menu "Exit"
-            MenuItem exit = new MenuItem("Exit..");
-
-            // Dichiaro i Menu
-            Menu show = new Menu("Show");
-
-            Menu edit = new Menu("Edit");
-            Menu azienda = new Menu("Azienda");
-
-            Menu logout = new Menu("Logout");
-
-            // Associo i MenuItems ai Menu
-            // Show -> Lista Azienda, Lista Veicoli, Lista Colli Da Consegnare
-            show.getItems().addAll(listaAzienda, listaVeicoli, listaColliDaConsegnare);
-            // Azienda -> Aggiungi Azienda, Rimuovi Azienda
-            azienda.getItems().addAll(aggiungiAzienda, rimuoviAzienda);
-            // Edit -> Azienda
-            edit.getItems().addAll(azienda);
-            // Logout -> Exit..
-            logout.getItems().add(exit);
-
-            // Aggiungo al MenuBar tutti i Menu con i MenuItems associati
-            MenuBar menuBarAdmin = new MenuBar();
-            menuBarAdmin.getMenus().addAll(show, edit, logout);
-
-            // Chiude la finestra del Login
-            Stage stage = (Stage)loginButton.getScene().getWindow();
-            stage.close();
-
-            // Creazione di una nuova finestra
-            Stage adminStage = new Stage();
-
-            VBox adminVBox = new VBox();
-            adminVBox.getChildren().add(menuBarAdmin);
-
             FXMLLoader loader = new FXMLLoader();
             Parent root = loader.load(new FileInputStream(rootAdminStageFile));
-            adminVBox.getChildren().add(root);
 
             adminStage.setTitle(Admin.getInstance().getNome() + " " + Admin.getInstance().getCognome());
-            adminStage.setScene(new Scene(adminVBox, 800, 600));
+            adminStage.setScene(new Scene(root, 800, 600));
             adminStage.show();
         } catch (IOException e){
-            System.out.println("Errore nel caricamento del File fxml");
+            System.out.println("Errore nel caricamento del file");
         }
     }
 }

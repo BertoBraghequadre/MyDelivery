@@ -8,5 +8,8 @@ module MyDelivery {
     opens com.gaetanoippolito.model;
     opens com.gaetanoippolito.model.database;
     opens com.gaetanoippolito.view;
+    opens com.gaetanoippolito.view.fxml;
+    opens com.gaetanoippolito.view.fxml.dialog;
     opens com.gaetanoippolito.controller;
+    opens com.gaetanoippolito.controller.dialog;
 }
