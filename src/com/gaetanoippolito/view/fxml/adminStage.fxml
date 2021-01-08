@@ -5,6 +5,4 @@
 
 <VBox fx:controller="com.gaetanoippolito.controller.AdminStageController"
       xmlns:fx="http://javafx.com/fxml" fx:id="vboxAdminStage">
-
-    <TableView  />
 </VBox>

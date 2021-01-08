@@ -3,6 +3,10 @@ package com.gaetanoippolito.controller;
 import com.gaetanoippolito.controller.dialog.AggiungiAziendaController;
 import com.gaetanoippolito.controller.dialog.RimuoviAziendaController;
 import com.gaetanoippolito.model.Azienda;
+import com.gaetanoippolito.model.Veicolo;
+import com.gaetanoippolito.model.database.MyDeliveryData;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,19 +30,7 @@ public class AdminStageController {
     @FXML
     private VBox vboxAdminStage;
 
-    private Menu show;
-    private Menu edit;
-    private Menu azienda;
-    private Menu logout;
-
-    private MenuItem listaAzienda;
-    private MenuItem listaVeicoli;
-    private MenuItem listaColliDaConsegnare;
-    private MenuItem aggiungiAzienda;
-    private MenuItem rimuoviAzienda;
-    private MenuItem exit;
-
-    private MenuBar menuBarAdmin;
+    private ObservableList<Azienda> aziende = MyDeliveryData.getInstance().getAziende();
 
     /**
      * Metodo overridato che viene triggerato nel momento in cui viene inizializzata la view. Quì dentro si setta una
@@ -47,49 +39,56 @@ public class AdminStageController {
     @FXML
     public void initialize(){
         // Creazione dei MenuItems per il Menu "show"
-        this.listaAzienda = new MenuItem("Lista Azienda");
-        this.listaVeicoli = new MenuItem("Lista Veicoli");
-        this.listaColliDaConsegnare = new MenuItem("Lista Colli Da Consegnare");
+        MenuItem listaAziendaItem = new MenuItem("Lista Azienda");
+        MenuItem listaVeicoliItem = new MenuItem("Lista Veicoli");
+        MenuItem listaColliDaConsegnareItem = new MenuItem("Lista Colli Da Consegnare");
 
         // Creazione dei MenuItems per il Menu "Azienda" che si trova all'interno del Menu "Edit"
-        this.aggiungiAzienda = new MenuItem("Aggiungi Azienda");
-        this.rimuoviAzienda = new MenuItem("Rimuovi Azienda");
+        MenuItem aggiungiAziendaItem = new MenuItem("Aggiungi Azienda");
+        MenuItem rimuoviAziendaItem = new MenuItem("Rimuovi Azienda");
 
         // Creazione del MenuItem per il Menu "Exit"
-        this.exit = new MenuItem("Exit..");
+        MenuItem exitItem = new MenuItem("Exit..");
 
         // Dichiaro i Menu
-        this.show = new Menu("Show");
+        Menu show = new Menu("Show");
 
-        this.edit = new Menu("Edit");
-        this.azienda = new Menu("Azienda");
+        Menu edit = new Menu("Edit");
+        Menu azienda = new Menu("Azienda");
 
-        this.logout = new Menu("Logout");
+        Menu logout = new Menu("Logout");
 
         // Associo i MenuItems ai Menu
         // Show -> Lista Azienda, Lista Veicoli, Lista Colli Da Consegnare
-        this.show.getItems().addAll(this.listaAzienda, this.listaVeicoli, this.listaColliDaConsegnare);
+        show.getItems().addAll(listaAziendaItem, listaVeicoliItem, listaColliDaConsegnareItem);
         // Azienda -> Aggiungi Azienda, Rimuovi Azienda
-        this.azienda.getItems().addAll(this.aggiungiAzienda, this.rimuoviAzienda);
+        azienda.getItems().addAll(aggiungiAziendaItem, rimuoviAziendaItem);
         // Edit -> Azienda
-        this.edit.getItems().addAll(this.azienda);
+        edit.getItems().addAll(azienda);
         // Logout -> Exit..
-        this.logout.getItems().add(this.exit);
+        logout.getItems().add(exitItem);
 
         // Aggiungo al MenuBar tutti i Menu con i MenuItems associati
-        this.menuBarAdmin = new MenuBar();
-        this.menuBarAdmin.getMenus().addAll(this.show, this.edit, this.logout);
+        MenuBar menuBarAdmin = new MenuBar();
+        menuBarAdmin.getMenus().addAll(show, edit, logout);
 
         // Imposto il MenuBar in cima alla finestra
-        this.vboxAdminStage.getChildren().add(0, this.menuBarAdmin);
+        this.vboxAdminStage.getChildren().add(0, menuBarAdmin);
+
+        // Visualizziamo la tabella
+        TableView tableView = visualizzaAziende();
+        tableView.setItems(this.aziende);
+        this.vboxAdminStage.getChildren().add(1, tableView);
+
+        // TODO: // Visualizzare i Veicoli, finire di commentare
 
         // Azione che si triggera se il bottone "AggiungiAzienda" viene cliccato
-        this.aggiungiAzienda.setOnAction(event -> {
+        aggiungiAziendaItem.setOnAction(event -> {
             gestisciAggiuntaAzienda();
         });
 
         // Azione che si triggera se il bottone "RimuoviAzienda" viene cliccato
-        this.rimuoviAzienda.setOnAction(event -> {
+        rimuoviAziendaItem.setOnAction(event -> {
             gestisciRimuoviAzienda();
         });
     }
@@ -139,6 +138,10 @@ public class AdminStageController {
         }
     }
 
+    /**
+     * Quando viene cliccato sul bottone "rimuoviAzienda" questo metodo viene richiamato. Il suo scopo è quello
+     * di rimuovere un'azienda
+     */
     public void gestisciRimuoviAzienda(){
         RimuoviAziendaController rimuoviAziendaController;
         Dialog<ButtonType> rimuoviAziendaDialog = new Dialog<>();
@@ -175,5 +178,50 @@ public class AdminStageController {
         else{
             System.out.println("Operazione Annullata");
         }
+    }
+
+    /**
+     * Questo metodo crea una tableView con le Colonne e celle settate in base ai valori della lista degli admin
+     * @return ritorna una TableView costruita
+     * @see TableView
+     * @see TableColumn
+     * */
+    public TableView<Azienda> visualizzaAziende(){
+        TableView<Azienda> aziendeView = new TableView<>();
+
+        TableColumn<Azienda, String> colonnaNomeAzienda = new TableColumn<>("Nome Azienda");
+        TableColumn<Azienda, String> colonnaPartitaIVA = new TableColumn<>("Partita IVA");
+
+        colonnaNomeAzienda.setCellValueFactory(nome -> new SimpleStringProperty(nome.getValue().getNome()));
+        aziendeView.getColumns().add(popolaCelle(colonnaNomeAzienda));
+
+        colonnaPartitaIVA.setCellValueFactory(partitaIVA -> new SimpleStringProperty(partitaIVA.getValue().getPartitaIVA()));
+        aziendeView.getColumns().add(popolaCelle(colonnaPartitaIVA));
+
+        // Impostiamo la grandezza massima della TableView per ogni colonna
+        aziendeView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        colonnaNomeAzienda.setMaxWidth(Integer.MAX_VALUE * 50D);    // 25%
+        colonnaPartitaIVA.setMaxWidth(Integer.MAX_VALUE * 50D);     // 25%
+
+        return aziendeView;
+    }
+
+    /**
+     *
+     */
+    private TableColumn<Azienda, String> popolaCelle(TableColumn<Azienda, String> tableColumn){
+        tableColumn.setCellFactory(column -> new TableCell<>(){
+            @Override
+            protected void updateItem(String string, boolean empty){
+                super.updateItem(string, empty);
+                if(empty || string == null){
+                    setText(null);
+                } else {
+                    setText(string);
+                }
+            }
+        });
+
+        return tableColumn;
     }
 }
