@@ -1,5 +1,6 @@
 package com.gaetanoippolito.controller.dialog;
 
+import com.gaetanoippolito.model.database.MyDeliveryData;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
@@ -11,6 +12,8 @@ public class RimuoviAziendaController {
     public void initialize(){}
 
     public void processaRimozioneAzienda(){
-        System.out.println("ciao");
+        String partitaIVA = this.partitaIVADialog.getText().trim();
+
+        MyDeliveryData.getInstance().cercaAzienda(partitaIVA);
     }
 }

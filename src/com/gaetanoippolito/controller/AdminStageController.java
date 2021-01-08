@@ -2,6 +2,7 @@ package com.gaetanoippolito.controller;
 
 import com.gaetanoippolito.controller.dialog.AggiungiAziendaController;
 import com.gaetanoippolito.controller.dialog.RimuoviAziendaController;
+import com.gaetanoippolito.model.Azienda;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -122,12 +123,16 @@ public class AdminStageController {
         // inizializziamo  il controller
         aggiungiAziendaController = loader.getController();
 
+        // Settiamo il bottone a "non cliccabile" in base al ritorno dinamico del testo dei vari TextField
+        aggiungiAziendaDialog.getDialogPane().lookupButton(ButtonType.OK).disableProperty().bind(aggiungiAziendaController.disabilitaOkButton());
+
         // Aspettiamo l'input dell'utente
         Optional<ButtonType> result = aggiungiAziendaDialog.showAndWait();
 
         // Se il tasto "OK" è stato cliccato aggiungi l'azienda, altrimenti annulla l'operazione
         if(result.isPresent() && result.get() == ButtonType.OK){
-            aggiungiAziendaController.processaAggiuntaAzienda();
+            Azienda nuovaAzienda = aggiungiAziendaController.processaAggiuntaAzienda();
+            System.out.println(nuovaAzienda);
         }
         else{
             System.out.println("Operazione Annullata");
@@ -165,6 +170,7 @@ public class AdminStageController {
         // Se il tasto "OK" è stato cliccato rimuovi l'azienda, altrimenti annulla l'operazione
         if(result.isPresent() && result.get() == ButtonType.OK){
             rimuoviAziendaController.processaRimozioneAzienda();
+            System.out.println("Rimozione avvenuta con successo!");
         }
         else{
             System.out.println("Operazione Annullata");

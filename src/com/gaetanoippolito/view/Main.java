@@ -32,12 +32,16 @@ public class Main extends Application {
         try{
             MyDeliveryData.getInstance().loadAdmins();
         } catch (IOException e) {
-            System.out.println("Caricamento file fallito");
+            System.out.println("Caricamento file \"listaAdmin.txt\" fallito");
         }
+
+        MyDeliveryData.getInstance().loadAziende();
     }
 
     @Override
-    public void stop() throws Exception{}
+    public void stop() throws Exception{
+        MyDeliveryData.getInstance().storeAziende();
+    }
 
     public static void main(String[] args) {
         launch(args);
