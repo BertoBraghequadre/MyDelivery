@@ -17,14 +17,14 @@ public class AggiungiAziendaController {
 
     }
 
-    public Azienda processaAggiuntaAzienda(){
+    public void processaAggiuntaAzienda(){
         String nomeAzienda = this.nomeAziendaDialog.getText().trim();
         String partitaIva = this.partitaIVADialog.getText().trim();
 
-        Azienda nuovaAzienda = new Azienda(nomeAzienda, partitaIva);
-        MyDeliveryData.getInstance().aggiungiAzienda(nuovaAzienda);
-
-        return nuovaAzienda;
+        if(controllaEsistenzaAzienda(partitaIva)){
+            Azienda nuovaAzienda = new Azienda(nomeAzienda, partitaIva);
+            MyDeliveryData.getInstance().aggiungiAzienda(nuovaAzienda);
+        }
     }
 
     /**
@@ -41,5 +41,15 @@ public class AggiungiAziendaController {
                                                    this.partitaIVADialog.getText().trim().isEmpty(),
                                                    this.nomeAziendaDialog.textProperty(),
                                                    this.partitaIVADialog.textProperty());
+    }
+
+    public boolean controllaEsistenzaAzienda(String nuovaPartitaIva){
+        for(Azienda azienda : MyDeliveryData.getInstance().getAziende()){
+            if(nuovaPartitaIva.equals(azienda.getPartitaIVA())){
+                return false;
+            }
+        }
+
+        return true;
     }
 }

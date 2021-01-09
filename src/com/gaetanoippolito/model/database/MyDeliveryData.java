@@ -5,6 +5,7 @@ import com.gaetanoippolito.model.Azienda;
 import com.gaetanoippolito.model.Veicolo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -22,6 +23,7 @@ public class MyDeliveryData {
     private static final MyDeliveryData instance = new MyDeliveryData();
     private static final String filenameAdmin = "listaAdmin.txt";
     private static final String filenameAzienda = "listaAziende.txt";
+    private static final String filenameVeicoli = "listaVeicoli.txt";
     /**@see Admin*/
     private Admin admin;
     /**@see Azienda*/
@@ -32,6 +34,7 @@ public class MyDeliveryData {
     // Costruttore
     private MyDeliveryData(){
         this.aziende = FXCollections.observableArrayList();
+        this.veicoli = FXCollections.observableArrayList();
     }
 
     // Getter e setter
@@ -132,19 +135,41 @@ public class MyDeliveryData {
     }
 
     /**
-     * Questo metodo serve ad aggiungere delle Aziende all'interno di MyDeliveryData
-     * @param azienda rappresenta l'azienda selezionata dall'utente da aggiungere
+     * Questo metodo serve ad aggiungere delle Aziende all'interno di MyDeliveryData e controlla se l'azienda che viene
+     * aggiunta non è già presente.
+     * @param aziendaNuova rappresenta l'azienda selezionata dall'utente da aggiungere
+     * @see Azienda
      */
-    public void aggiungiAzienda(Azienda azienda){
-        this.aziende.add(azienda);
+    public void aggiungiAzienda(Azienda aziendaNuova){
+        String aziendaNuovaPartitaIVA = aziendaNuova.getPartitaIVA();
+        for(Azienda azienda : this.aziende){
+            if(aziendaNuovaPartitaIVA.equals(aziendaNuova.getPartitaIVA())){
+                System.out.println("Azienda già esistente");
+            }
+            else{
+                this.aziende.add(aziendaNuova);
+            }
+        }
+
+        try{
+            storeAziende();
+        } catch (IOException e){
+            System.out.println("Salvataggio fallito");
+        }
     }
 
     /**
-     * Questo metodo serve a rimuovere un'azienda all'interno di MyDeliveryData
+     * Questo metodo serve a rimuovere un'azienda all'interno di MyDeliveryData e salvare
      * @param azienda rappresenta l'azienda da rimuovere
      */
     private void rimuoviAzienda(Azienda azienda){
         this.aziende.remove(azienda);
+        rimuoviVeicoli(azienda);
+        try{
+            storeAziende();
+        } catch (IOException e){
+            System.out.println("Rimozione fallita");
+        }
     }
 
     /**
@@ -153,12 +178,12 @@ public class MyDeliveryData {
      * @return Questo metodo ritorna "true" se l'azienda è stata trovata, altrimenti ritorna false
      */
     public boolean cercaAzienda(String partitaIVA){
-        Azienda aziendaTrovata = null;
+        Azienda aziendaTrovata;
 
         for(Azienda azienda : this.aziende){
             if(azienda.getPartitaIVA().equals(partitaIVA)){
                 aziendaTrovata = azienda;
-                rimuoviAzienda((aziendaTrovata));
+                rimuoviAzienda(aziendaTrovata);
                 return true;
             }
         }
@@ -184,9 +209,66 @@ public class MyDeliveryData {
         }
     }
 
+    ///////////////////////////// ZONA VEICOLI /////////////////////////////////
+    /**
+     * Questo metodo lo si utilizza per caricare i dati di Azienda
+     */
+    public void loadVeicoli(){
+        try(ObjectInputStream objectIn = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filenameVeicoli))))
+        {
+            try{
+                this.veicoli.setAll((ArrayList<Veicolo>)objectIn.readObject());
+            } catch (ClassNotFoundException e){
+                e.printStackTrace();
+            }
+
+            System.out.println("File \"listaVeicoli.txt\" caricato con successo");
+
+        } catch (Exception e) {
+            System.out.println("Errore nel caricamento del File \"listaVeicoli\"");
+            e.printStackTrace();
+        }
+    }
+
     /**
      *
      */
+    public void aggiungiVeicoli(Veicolo veicolo){
+        this.veicoli.add(veicolo);
+    }
+
+    private void rimuoviVeicoli(Azienda azienda){
+        for(Veicolo veicolo : azienda.getVeicoli()){
+            this.veicoli.remove(veicolo);
+        }
+        try{
+            storeVeicoli();
+        }catch (IOException e){
+            System.out.println("Errore nella cancellazione dei veicoli");
+        }
+    }
+
+    /**
+     * Questo metodo lo si utilizza per salvare i dati di Azienda all'interno di un file txt
+     * chiamato "listaAziende.txt"
+     */
+    public void storeVeicoli() throws IOException{
+        try (ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filenameVeicoli)))){
+
+            ArrayList<Veicolo> veicoli = new ArrayList<>(this.veicoli);
+
+            objectOut.writeObject(veicoli);
+            System.out.println(veicoli);
+            System.out.println("Il file \"listaVeicoli.txt\" è stato salvato con successo");
+
+        } catch (IOException e) {
+            System.out.println("Errore nel salvataggio del File \"listaVeicoli.txt\"");
+            e.printStackTrace();
+        }
+    }
+
+    ///////////////////////////// ZONA CLIENTI /////////////////////////////////
+
     /*
     public void storeClienti() throws IOException{
         Path path = Paths.get(filenameAdmin);

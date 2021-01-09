@@ -36,11 +36,13 @@ public class Main extends Application {
         }
 
         MyDeliveryData.getInstance().loadAziende();
+        MyDeliveryData.getInstance().loadVeicoli();
     }
 
     @Override
     public void stop() throws Exception{
         MyDeliveryData.getInstance().storeAziende();
+        MyDeliveryData.getInstance().storeVeicoli();
     }
 
     public static void main(String[] args) {

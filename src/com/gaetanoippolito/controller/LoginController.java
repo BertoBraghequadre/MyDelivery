@@ -160,6 +160,7 @@ public class LoginController {
             adminStage.setScene(new Scene(root, 800, 400));
             adminStage.show();
         } catch (IOException e){
+            e.printStackTrace();
             System.out.println("Errore nel caricamento del file");
         }
     }

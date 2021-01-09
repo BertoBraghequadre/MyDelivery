@@ -11,9 +11,9 @@ public class RimuoviAziendaController {
     @FXML
     public void initialize(){}
 
-    public void processaRimozioneAzienda(){
+    public boolean processaRimozioneAzienda(){
         String partitaIVA = this.partitaIVADialog.getText().trim();
 
-        MyDeliveryData.getInstance().cercaAzienda(partitaIVA);
+        return MyDeliveryData.getInstance().cercaAzienda(partitaIVA);
     }
 }

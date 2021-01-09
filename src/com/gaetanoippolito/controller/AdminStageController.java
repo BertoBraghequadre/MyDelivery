@@ -30,7 +30,13 @@ public class AdminStageController {
     @FXML
     private VBox vboxAdminStage;
 
+    TableView<Azienda> aziendaTableView = new TableView<>();
+    // Questa TableView viene assegnata la prima volta dal metodo "visualizzaVeicoli()"
+    TableView<Veicolo> veicoloTableView;
+    // TableView<Ordine> ordineTableView = new TableView<>();
+
     private ObservableList<Azienda> aziende = MyDeliveryData.getInstance().getAziende();
+    private ObservableList<Veicolo> veicoli = MyDeliveryData.getInstance().getVeicoli();
 
     /**
      * Metodo overridato che viene triggerato nel momento in cui viene inizializzata la view. Quì dentro si setta una
@@ -75,12 +81,10 @@ public class AdminStageController {
         // Imposto il MenuBar in cima alla finestra
         this.vboxAdminStage.getChildren().add(0, menuBarAdmin);
 
-        // Visualizziamo la tabella
-        TableView tableView = visualizzaAziende();
-        tableView.setItems(this.aziende);
-        this.vboxAdminStage.getChildren().add(1, tableView);
+        // Visualizziamo la tabella con le informazioni delle aziende associate di Default
+        visualizzaAziende();
 
-        // TODO: // Visualizzare i Veicoli, finire di commentare
+        // TODO: // finire di commentare
 
         // Azione che si triggera se il bottone "AggiungiAzienda" viene cliccato
         aggiungiAziendaItem.setOnAction(event -> {
@@ -90,6 +94,14 @@ public class AdminStageController {
         // Azione che si triggera se il bottone "RimuoviAzienda" viene cliccato
         rimuoviAziendaItem.setOnAction(event -> {
             gestisciRimuoviAzienda();
+        });
+
+        listaAziendaItem.setOnAction(event -> {
+            visualizzaAziende();
+        });
+
+        listaVeicoliItem.setOnAction(event -> {
+            visualizzaVeicoli();
         });
     }
 
@@ -130,8 +142,7 @@ public class AdminStageController {
 
         // Se il tasto "OK" è stato cliccato aggiungi l'azienda, altrimenti annulla l'operazione
         if(result.isPresent() && result.get() == ButtonType.OK){
-            Azienda nuovaAzienda = aggiungiAziendaController.processaAggiuntaAzienda();
-            System.out.println(nuovaAzienda);
+            aggiungiAziendaController.processaAggiuntaAzienda();
         }
         else{
             System.out.println("Operazione Annullata");
@@ -172,8 +183,12 @@ public class AdminStageController {
 
         // Se il tasto "OK" è stato cliccato rimuovi l'azienda, altrimenti annulla l'operazione
         if(result.isPresent() && result.get() == ButtonType.OK){
-            rimuoviAziendaController.processaRimozioneAzienda();
-            System.out.println("Rimozione avvenuta con successo!");
+            if(rimuoviAziendaController.processaRimozioneAzienda()){
+                System.out.println("Rimozione avvenuta con successo!");
+            }
+            else{
+                System.out.println("Azienda non trovata");
+            }
         }
         else{
             System.out.println("Operazione Annullata");
@@ -182,34 +197,101 @@ public class AdminStageController {
 
     /**
      * Questo metodo crea una tableView con le Colonne e celle settate in base ai valori della lista degli admin
-     * @return ritorna una TableView costruita
      * @see TableView
      * @see TableColumn
      * */
-    public TableView<Azienda> visualizzaAziende(){
-        TableView<Azienda> aziendeView = new TableView<>();
+    public void visualizzaAziende(){
+        int i = this.vboxAdminStage.getChildren().size();
+        if(i == 2){
+            this.vboxAdminStage.getChildren().remove(i - 1);
+            this.vboxAdminStage.getChildren().add(i - 1, this.aziendaTableView);
+        }
+        else{
+            TableColumn<Azienda, String> colonnaNomeAzienda = new TableColumn<>("Nome Azienda");
+            TableColumn<Azienda, String> colonnaPartitaIVA = new TableColumn<>("Partita IVA");
 
-        TableColumn<Azienda, String> colonnaNomeAzienda = new TableColumn<>("Nome Azienda");
-        TableColumn<Azienda, String> colonnaPartitaIVA = new TableColumn<>("Partita IVA");
+            colonnaNomeAzienda.setCellValueFactory(nomeAzienda -> new SimpleStringProperty(nomeAzienda.getValue().getNome()));
+            this.aziendaTableView.getColumns().add(popolaCelleAzienda(colonnaNomeAzienda));
 
-        colonnaNomeAzienda.setCellValueFactory(nome -> new SimpleStringProperty(nome.getValue().getNome()));
-        aziendeView.getColumns().add(popolaCelle(colonnaNomeAzienda));
+            colonnaPartitaIVA.setCellValueFactory(partitaIVA -> new SimpleStringProperty(partitaIVA.getValue().getPartitaIVA()));
+            this.aziendaTableView.getColumns().add(popolaCelleAzienda(colonnaPartitaIVA));
 
-        colonnaPartitaIVA.setCellValueFactory(partitaIVA -> new SimpleStringProperty(partitaIVA.getValue().getPartitaIVA()));
-        aziendeView.getColumns().add(popolaCelle(colonnaPartitaIVA));
+            // Impostiamo la grandezza massima della TableView per ogni colonna
+            this.aziendaTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+            colonnaNomeAzienda.setMaxWidth(Integer.MAX_VALUE * 50D);    // 50%
+            colonnaPartitaIVA.setMaxWidth(Integer.MAX_VALUE * 50D);     // 50%
 
-        // Impostiamo la grandezza massima della TableView per ogni colonna
-        aziendeView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        colonnaNomeAzienda.setMaxWidth(Integer.MAX_VALUE * 50D);    // 25%
-        colonnaPartitaIVA.setMaxWidth(Integer.MAX_VALUE * 50D);     // 25%
-
-        return aziendeView;
+            this.aziendaTableView.setItems(this.aziende);
+            this.vboxAdminStage.getChildren().add(i, this.aziendaTableView);
+        }
     }
 
     /**
      *
      */
-    private TableColumn<Azienda, String> popolaCelle(TableColumn<Azienda, String> tableColumn){
+    public void visualizzaVeicoli(){
+        int i = this.vboxAdminStage.getChildren().size();
+        this.vboxAdminStage.getChildren().remove(i - 1);
+
+        if(i == 2 && this.veicoloTableView == null){
+            this.veicoloTableView = new TableView<>();
+
+            TableColumn<Veicolo, String> colonnaTipoVeicolo = new TableColumn<>("Tipo Veicolo");
+            TableColumn<Veicolo, String> colonnaCapienzaVeicolo = new TableColumn<>("Capienza Veicolo");
+            TableColumn<Veicolo, String> colonnaCodiceVeicolo = new TableColumn<>("Codice");
+            TableColumn<Veicolo, String> colonnaAziendaAssociata = new TableColumn<>("Azienda Associata");
+
+            colonnaTipoVeicolo.setCellValueFactory(tipoVeicolo -> new SimpleStringProperty(tipoVeicolo.getValue().getTipoVeicolo().toString()));
+            this.veicoloTableView.getColumns().add(popolaCelleVeicolo(colonnaTipoVeicolo));
+
+            colonnaCapienzaVeicolo.setCellValueFactory(capienzaVeicolo -> new SimpleStringProperty(String.valueOf(capienzaVeicolo.getValue().getCapienzaContainer())));
+            this.veicoloTableView.getColumns().add(popolaCelleVeicolo(colonnaCapienzaVeicolo));
+
+            colonnaCodiceVeicolo.setCellValueFactory(codiceVeicolo -> new SimpleStringProperty(String.valueOf(codiceVeicolo.getValue().getCodice())));
+            this.veicoloTableView.getColumns().add(popolaCelleVeicolo(colonnaCodiceVeicolo));
+
+            colonnaAziendaAssociata.setCellValueFactory(nomeAzienda -> new SimpleStringProperty(nomeAzienda.getValue().getAziendaAssociata()));
+            this.veicoloTableView.getColumns().add(popolaCelleVeicolo(colonnaAziendaAssociata));
+
+            // Impostiamo la grandezza massima della TableView per ogni colonna
+            this.veicoloTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+            colonnaTipoVeicolo.setMaxWidth(Integer.MAX_VALUE * 25D);       // 25%
+            colonnaCapienzaVeicolo.setMaxWidth(Integer.MAX_VALUE * 25D);   // 25%
+            colonnaCodiceVeicolo.setMaxWidth(Integer.MAX_VALUE * 25D);     // 25%
+            colonnaAziendaAssociata.setMaxWidth(Integer.MAX_VALUE * 25D);  // 25%
+
+            this.veicoloTableView.setItems(this.veicoli);
+
+            this.vboxAdminStage.getChildren().add(i - 1, this.veicoloTableView);
+        }
+        else{
+            this.vboxAdminStage.getChildren().add(i - 1, this.veicoloTableView);
+        }
+    }
+
+    /**
+     *
+     */
+    public TableColumn<Veicolo, String> popolaCelleVeicolo(TableColumn<Veicolo, String> tableColumn){
+        tableColumn.setCellFactory(column -> new TableCell<>(){
+            @Override
+            protected void updateItem(String string, boolean empty){
+                super.updateItem(string, empty);
+                if(empty || string == null){
+                    setText(null);
+                } else {
+                    setText(string);
+                }
+            }
+        });
+
+        return tableColumn;
+    }
+
+    /**
+     *
+     */
+    private TableColumn<Azienda, String> popolaCelleAzienda(TableColumn<Azienda, String> tableColumn){
         tableColumn.setCellFactory(column -> new TableCell<>(){
             @Override
             protected void updateItem(String string, boolean empty){
