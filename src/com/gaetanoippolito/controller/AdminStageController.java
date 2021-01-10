@@ -20,24 +20,28 @@ import java.util.Optional;
  * Questa classe rappresenta il Controller della finestra con cui l'Admin interagisce e monitora le azienda con cui
  * collabora, i veicoli delle aziende e gli ordini effettuati dal cliente.
  */
-
 public class AdminStageController {
-    // Attributi
+    ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
     private final String rootAdminStageFile = "src/com/gaetanoippolito/view/fxml/adminStage.fxml";
     private final String rootAggiungiAziendaDialog = "src/com/gaetanoippolito/view/fxml/dialog/aggiungiAziendaDialog.fxml";
     private final String rootRimuoviAziendaDialog = "src/com/gaetanoippolito/view/fxml/dialog/rimuoviAziendaDialog.fxml";
 
     @FXML
+    /**@see VBox*/
     private VBox vboxAdminStage;
 
+    /**@see Azienda*/
     TableView<Azienda> aziendaTableView = new TableView<>();
+
     // Questa TableView viene assegnata la prima volta dal metodo "visualizzaVeicoli()"
+    /**@see Veicolo*/
     TableView<Veicolo> veicoloTableView;
     // TableView<Ordine> ordineTableView = new TableView<>();
 
     private ObservableList<Azienda> aziende = MyDeliveryData.getInstance().getAziende();
     private ObservableList<Veicolo> veicoli = MyDeliveryData.getInstance().getVeicoli();
 
+    ////////////////////////////////////// METODI //////////////////////////////////////
     /**
      * Metodo overridato che viene triggerato nel momento in cui viene inizializzata la view. Quì dentro si setta una
      * MenuBar e tutti i vari Item e Menu che sono al suo interno.
@@ -84,8 +88,6 @@ public class AdminStageController {
         // Visualizziamo la tabella con le informazioni delle aziende associate di Default
         visualizzaAziende();
 
-        // TODO: // finire di commentare
-
         // Azione che si triggera se il bottone "AggiungiAzienda" viene cliccato
         aggiungiAziendaItem.setOnAction(event -> {
             gestisciAggiuntaAzienda();
@@ -96,18 +98,22 @@ public class AdminStageController {
             gestisciRimuoviAzienda();
         });
 
+        // Azione che si triggera se il bottone "Lista Azienda" viene cliccato
         listaAziendaItem.setOnAction(event -> {
             visualizzaAziende();
         });
 
+        // Azione che si triggera se il bottone "Lista Veicoli" viene cliccato
         listaVeicoliItem.setOnAction(event -> {
             visualizzaVeicoli();
         });
     }
 
     /**
-     * Quando viene cliccato sul bottone "AggiungiAzienda" questo metodo viene richiamato. Il suo scopo è quello
-     * di aggiungere una nuova azienda alla lista di aziende presenti.
+     * Quando viene cliccato sul bottone "Aggiungi Azienda" questo metodo viene richiamato. Il suo scopo è quello di
+     * mostrare la finestra dialog "aggiungiAziendaDialog.fxml" e di controllare se l'utente ha premuto sul tasto "OK"
+     * o sul tasto "CANCEL". Il metodo aspetta che i bottoni vengano premuti e in base a ciò che è stato premuto svolge
+     * un'operazione.
      */
     public void gestisciAggiuntaAzienda(){
         AggiungiAziendaController aggiungiAziendaController;
@@ -150,8 +156,10 @@ public class AdminStageController {
     }
 
     /**
-     * Quando viene cliccato sul bottone "rimuoviAzienda" questo metodo viene richiamato. Il suo scopo è quello
-     * di rimuovere un'azienda
+     * Quando viene cliccato sul bottone "Rimuovi Azienda" questo metodo viene richiamato. Il suo scopo è quello di
+     * mostrare la finestra dialog "rimuoviAziendaDialog.fxml" e di controllare se l'utente ha premuto sul tasto "OK"
+     * o sul tasto "CANCEL". Il metodo aspetta che i bottoni vengano premuti e in base a ciò che è stato premuto svolge
+     * un'operazione.
      */
     public void gestisciRimuoviAzienda(){
         RimuoviAziendaController rimuoviAziendaController;
@@ -199,17 +207,28 @@ public class AdminStageController {
      * Questo metodo crea una tableView con le Colonne e celle settate in base ai valori della lista degli admin
      * @see TableView
      * @see TableColumn
-     * */
+     */
     public void visualizzaAziende(){
+        // Salviamo la grandezza della Vbox in a quanti nodi sono presenti al suo interno. Serve per controllare se
+        // una tabella è già presente all'interno della VBox.
         int i = this.vboxAdminStage.getChildren().size();
+
+        // Se "i" è uguale a 2 vuol dire che una tabella è già presente. Questa verrà rimossa e aggiunta la tabella
+        // che vogliamo mostrare, ovvero la tabella che mostra la lista degli admin.
         if(i == 2){
             this.vboxAdminStage.getChildren().remove(i - 1);
             this.vboxAdminStage.getChildren().add(i - 1, this.aziendaTableView);
         }
+        // Questo else viene richiamato se "i" è minore di 2, siccome questo indica che non ci sono tabelle all'interno
+        // della VBox. Quindi la tabella verrà creata per la prima volta da questo blocco e salvata all'interno di
+        // "aziendaTableView"
         else{
+            // Creazione delle colonne e del nome dell'intestazione
             TableColumn<Azienda, String> colonnaNomeAzienda = new TableColumn<>("Nome Azienda");
             TableColumn<Azienda, String> colonnaPartitaIVA = new TableColumn<>("Partita IVA");
 
+            // Si setta il valore delle celle in base al ritorno della funzione lamba
+            // "SimpleStringProperty" rende una stringa osservabile data una stringa
             colonnaNomeAzienda.setCellValueFactory(nomeAzienda -> new SimpleStringProperty(nomeAzienda.getValue().getNome()));
             this.aziendaTableView.getColumns().add(popolaCelleAzienda(colonnaNomeAzienda));
 
@@ -222,25 +241,37 @@ public class AdminStageController {
             colonnaPartitaIVA.setMaxWidth(Integer.MAX_VALUE * 50D);     // 50%
 
             this.aziendaTableView.setItems(this.aziende);
+            // Aggiungiamo alla VBox la tabella dopo il MenuBar creato durante l'initialize
             this.vboxAdminStage.getChildren().add(i, this.aziendaTableView);
         }
     }
 
     /**
-     *
+     * Questo metodo crea una tableView con le Colonne e celle settate in base ai valori della lista dei veicoli
+     * @see TableView
+     * @see TableColumn
      */
     public void visualizzaVeicoli(){
+        // Salviamo la grandezza della Vbox in a quanti nodi sono presenti al suo interno. Serve per controllare se
+        // una tabella è già presente all'interno della VBox.
         int i = this.vboxAdminStage.getChildren().size();
+
+        // Visto che la lista delle aziende viene visualizzata di default, quando viene richiamato questo metodo
+        // rimuoviamo la lista delle aziende
         this.vboxAdminStage.getChildren().remove(i - 1);
 
+        // Durante questo if statement viene creato per la prima volta la tabella e inizializzata.
         if(i == 2 && this.veicoloTableView == null){
             this.veicoloTableView = new TableView<>();
 
+            // Creazione delle colonne e del nome dell'intestazione
             TableColumn<Veicolo, String> colonnaTipoVeicolo = new TableColumn<>("Tipo Veicolo");
             TableColumn<Veicolo, String> colonnaCapienzaVeicolo = new TableColumn<>("Capienza Veicolo");
             TableColumn<Veicolo, String> colonnaCodiceVeicolo = new TableColumn<>("Codice");
             TableColumn<Veicolo, String> colonnaAziendaAssociata = new TableColumn<>("Azienda Associata");
 
+            // Si setta il valore delle celle in base al ritorno della funzione lamba
+            // "SimpleStringProperty" rende una stringa osservabile data una stringa
             colonnaTipoVeicolo.setCellValueFactory(tipoVeicolo -> new SimpleStringProperty(tipoVeicolo.getValue().getTipoVeicolo().toString()));
             this.veicoloTableView.getColumns().add(popolaCelleVeicolo(colonnaTipoVeicolo));
 
@@ -262,17 +293,22 @@ public class AdminStageController {
 
             this.veicoloTableView.setItems(this.veicoli);
 
+            // Aggiungiamo alla VBox la tabella dopo il MenuBar creato durante l'initialize
             this.vboxAdminStage.getChildren().add(i - 1, this.veicoloTableView);
         }
+        // Questo else viene chiamato se e solo se la tabella dei veicoli è stata già creata (ciò che avviene nel blocco
+        // if). In questo blocco viene aggiunta la tabella nella VBox.
         else{
             this.vboxAdminStage.getChildren().add(i - 1, this.veicoloTableView);
         }
     }
 
     /**
-     *
+     * Questo metodo viene chiamato quando bisogna aggiungere elementi alla lista dei veicoli.
+     * @param tableColumn rappresenta la colonna che deve essere popolata
+     * @return Ritorna la tabella popolata
      */
-    public TableColumn<Veicolo, String> popolaCelleVeicolo(TableColumn<Veicolo, String> tableColumn){
+    private TableColumn<Veicolo, String> popolaCelleVeicolo(TableColumn<Veicolo, String> tableColumn){
         tableColumn.setCellFactory(column -> new TableCell<>(){
             @Override
             protected void updateItem(String string, boolean empty){
@@ -289,9 +325,12 @@ public class AdminStageController {
     }
 
     /**
-     *
+     * Questo metodo viene chiamato quando bisogna aggiungere elementi alla lista delle aziende.
+     * @param tableColumn rappresenta la colonna che deve essere popolata
+     * @return Ritorna la tabella popolata
      */
     private TableColumn<Azienda, String> popolaCelleAzienda(TableColumn<Azienda, String> tableColumn){
+        // Personalizziamo la cella e quello che vogliamo vedere
         tableColumn.setCellFactory(column -> new TableCell<>(){
             @Override
             protected void updateItem(String string, boolean empty){

@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
  * metodi que gestiscono l'aggiunta al database di un'azienda ed eventuali controlli su ciò che viene aggiunto.
  */
 public class AggiungiAziendaController {
+    ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
     @FXML
     /**@see TextField*/
     private TextField nomeAziendaDialog;
@@ -19,6 +20,7 @@ public class AggiungiAziendaController {
     /**@see TextField*/
     private TextField partitaIVADialog;
 
+    ////////////////////////////////////// METODI //////////////////////////////////////
     /**
      * Metodo overridato che viene triggerato nel momento in cui viene inizializzata la view
      */

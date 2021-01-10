@@ -9,10 +9,12 @@ import javafx.scene.control.TextField;
  * metodi que gestiscono la rimozione di un'azienda ed eventuali controlli su ciò che viene rimosso.
  */
 public class RimuoviAziendaController {
+    ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
     @FXML
     /**@see TextField*/
     private TextField partitaIVADialog;
 
+    ////////////////////////////////////// METODI //////////////////////////////////////
     @FXML
     /**
      * Metodo overridato che viene triggerato nel momento in cui viene inizializzata la view
