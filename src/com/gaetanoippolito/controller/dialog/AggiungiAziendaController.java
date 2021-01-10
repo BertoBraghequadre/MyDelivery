@@ -38,6 +38,7 @@ public class AggiungiAziendaController {
         if(controllaEsistenzaAzienda(partitaIva)){
             Azienda nuovaAzienda = new Azienda(nomeAzienda, partitaIva);
             // Salvo nel database la nuova azienda
+            /**@see MyDeliveryData*/
             MyDeliveryData.getInstance().aggiungiAzienda(nuovaAzienda);
         }
     }
@@ -64,6 +65,7 @@ public class AggiungiAziendaController {
      * @param nuovaPartitaIva rappresenta la partita IVA digitata dall'utente all'interno del TextField del dialog
      * @return ritorna vero se non ha trovato partite IVA uguali, altrimenti, se ne trova una uguale, ritorna falso.
      * @see Azienda
+     * @see MyDeliveryData
      */
     private boolean controllaEsistenzaAzienda(String nuovaPartitaIva){
         for(Azienda azienda : MyDeliveryData.getInstance().getAziende()){
