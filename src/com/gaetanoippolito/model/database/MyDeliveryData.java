@@ -5,8 +5,6 @@ import com.gaetanoippolito.model.Azienda;
 import com.gaetanoippolito.model.Veicolo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,9 +16,10 @@ import java.util.ArrayList;
  */
 
 public class MyDeliveryData {
-    // Attributi
+    ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
     // Eager Initialization
     private static final MyDeliveryData instance = new MyDeliveryData();
+
     private static final String filenameAdmin = "listaAdmin.txt";
     private static final String filenameAzienda = "listaAziende.txt";
     private static final String filenameVeicoli = "listaVeicoli.txt";
@@ -31,45 +30,73 @@ public class MyDeliveryData {
     /**@see Veicolo*/
     private ObservableList<Veicolo> veicoli;
 
-    // Costruttore
+    //////////////////////////////////// COSTRUTTORE ////////////////////////////////////
+    /**
+     * Questo rappresenta il costruttore della classe "MyDeliveryData". Esso è privato siccome è stato applicato un
+     * Singleton, infatti viene richiamato un'unica volta al momento dell'inizializzazione all'interno della classe
+     * stessa. Ciò che fa al momento della creazione è quello di inizializzare le ObservableList.
+     */
     private MyDeliveryData(){
         this.aziende = FXCollections.observableArrayList();
         this.veicoli = FXCollections.observableArrayList();
     }
 
-    // Getter e setter
+    ///////////////////////////////////// GETTER /////////////////////////////////////
     /**
-     * Ritorna l'unica istanza della classe (siccome è stato utilizzato un Singleton)
+     * Metodo che ritorna l'unica istanza della classe (siccome è stato applicato un Singleton)
+     * @return Ritorna l'istanza di MyDelivery
      */
     public static MyDeliveryData getInstance(){
         return instance;
     }
 
     /**
-     * Questo metodo setta l'admin
+     * Metodo che ritorna l'ObserableList in cui sono contenute le aziende
+     * @return Ritorna una ObservableList di Aziende
+     * @see Azienda
+     */
+    public ObservableList<Azienda> getAziende() {
+        return this.aziende;
+    }
+
+    /**
+     * Metodo che ritorna l'ObserableList in cui sono contenuti i veicoli
+     * @return Ritorna una ObservableList di Veicolo
+     * @see Veicolo
+     */
+    public ObservableList<Veicolo> getVeicoli() {
+        return this.veicoli;
+    }
+
+    ///////////////////////////////////// SETTER /////////////////////////////////////
+    /**
+     * Questo metodo setta l'Admin
+     * @param admin Rappresenta l'admin da settare all'interno della classe
      * @see Admin
      */
     public void setAdmin(Admin admin){
         this.admin = admin;
     }
 
-    public ObservableList<Azienda> getAziende() {
-        return this.aziende;
-    }
-
+    /**
+     * Questo metodo setta l'ObservableList di Azienda
+     * @param aziende Rappresenta l'ObservableList di Azienda da settare all'interno della classe
+     * @see Azienda
+     */
     public void setAziende(ObservableList<Azienda> aziende) {
         this.aziende = aziende;
     }
 
-    public ObservableList<Veicolo> getVeicoli() {
-        return this.veicoli;
-    }
-
+    /**
+     * Questo metodo setta l'ObservableList di Veicolo
+     * @param veicoli Rappresenta l'ObservableList di Veicolo da settare all'interno della classe
+     * @see Veicolo
+     */
     public void setVeicoli(ObservableList<Veicolo> veicoli) {
         this.veicoli = veicoli;
     }
 
-    // Metodi
+    ////////////////////////////////////// METODI //////////////////////////////////////
     /**
      * Questo metodo verifica il successo o il fallimento del login di un Admin
      * @param username rappresenta l'username digitato dall'admin per accedere nell'applicazione
@@ -85,12 +112,14 @@ public class MyDeliveryData {
         }
     }
 
-    ///////////////////////////// ZONA ADMIN /////////////////////////////////
+    ///////////////////////////////// METODI: ZONA ADMIN /////////////////////////////////
 
     /**
-     * Questo metodo lo si utilizza per caricare il file txt dove sono contenuti i dati degli Admin
+     * Questo metodo lo si utilizza per caricare i dati del file "listaAdmin.txt" dove sono contenuti i
+     * dati degli Admin.
      */
-    public void loadAdmins() throws IOException {
+    public void loadAdmins() {
+        /**@see Path*/
         Path path = Paths.get(filenameAdmin);
         String input;
 
@@ -105,16 +134,20 @@ public class MyDeliveryData {
                 String cognome = itemPieces[3];
                 String email = itemPieces[4];
 
+                /**@see Admin*/
                 Admin admin = Admin.getInstance(username, password, nome, cognome, email);
                 this.setAdmin(admin);
             }
+        } catch (IOException e){
+            System.out.println("Caricamento file \"listaAdmin.txt\" fallito");
         }
     }
 
-    ///////////////////////////// ZONA AZIENDA /////////////////////////////////
+    //////////////////////////////// METODI: ZONA AZIENDA ////////////////////////////////
 
     /**
-     * Questo metodo lo si utilizza per caricare i dati di Azienda
+     * Questo metodo lo si utilizza per caricare i dati del file "listaAziende.txt" dove sono contenuti i
+     * dati degli Admin.
      */
     public void loadAziende(){
         try(ObjectInputStream objectIn = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filenameAzienda))))
@@ -136,14 +169,17 @@ public class MyDeliveryData {
 
     /**
      * Questo metodo serve ad aggiungere delle Aziende all'interno di MyDeliveryData e controlla se l'azienda che viene
-     * aggiunta non è già presente.
-     * @param aziendaNuova rappresenta l'azienda selezionata dall'utente da aggiungere
+     * aggiunta non è già presente. Dopo aver finito il controllo e l'aggiunta, salva il contenuto nel file
+     * "listaAziende.txt"
+     * @param aziendaNuova rappresenta l'azienda selezionata dall'utente da aggiungere all'interno di MyDeliveryData
      * @see Azienda
      */
     public void aggiungiAzienda(Azienda aziendaNuova){
+        // Salvo la partita IVA dell'azienda aggiunta dall'utente
         String aziendaNuovaPartitaIVA = aziendaNuova.getPartitaIVA();
+
         for(Azienda azienda : this.aziende){
-            if(aziendaNuovaPartitaIVA.equals(aziendaNuova.getPartitaIVA())){
+            if(aziendaNuovaPartitaIVA.equals(azienda.getPartitaIVA())){
                 System.out.println("Azienda già esistente");
             }
             else{
@@ -159,8 +195,9 @@ public class MyDeliveryData {
     }
 
     /**
-     * Questo metodo serve a rimuovere un'azienda all'interno di MyDeliveryData e salvare
-     * @param azienda rappresenta l'azienda da rimuovere
+     * Questo metodo serve a rimuovere un'azienda all'interno di MyDeliveryData e salvare il contenuto all'interno di
+     * "listaAziende.txt"
+     * @param azienda rappresenta l'azienda che l'utente vuole rimuovere
      */
     private void rimuoviAzienda(Azienda azienda){
         this.aziende.remove(azienda);
@@ -191,8 +228,8 @@ public class MyDeliveryData {
     }
 
     /**
-     * Questo metodo lo si utilizza per salvare i dati di Azienda all'interno di un file txt
-     * chiamato "listaAziende.txt"
+     * Questo metodo lo si utilizza per salvare i dati di Azienda all'interno del file "listaAziende.txt"
+     * @throws IOException
      */
     public void storeAziende() throws IOException{
         try (ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filenameAzienda)))){
@@ -209,9 +246,11 @@ public class MyDeliveryData {
         }
     }
 
-    ///////////////////////////// ZONA VEICOLI /////////////////////////////////
+    //////////////////////////////// METODI: ZONA VEICOLI ////////////////////////////////
+
     /**
-     * Questo metodo lo si utilizza per caricare i dati di Azienda
+     * Questo metodo lo si utilizza per caricare i dati del file "listaVeicoli.txt" dove sono contenuti i
+     * dati dei Veicoli.
      */
     public void loadVeicoli(){
         try(ObjectInputStream objectIn = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filenameVeicoli))))
@@ -231,12 +270,18 @@ public class MyDeliveryData {
     }
 
     /**
-     *
+     * Questo metodo aggiunge un Veicolo all'interno della ObservableList di MyDeliveryData
+     * @param veicolo Rappresenta il veicolo che bisogna aggiungere
      */
     public void aggiungiVeicoli(Veicolo veicolo){
         this.veicoli.add(veicolo);
     }
 
+    /**
+     * Questo metodo rimuove un Veicolo all'interno della ObservableList di MyDeliveryData una volta che è
+     * stata rimossa l'azienda a cui il Veicolo è associata.
+     * @param azienda Rappresenta l'azienda a cui il Veicolo è associato
+     */
     private void rimuoviVeicoli(Azienda azienda){
         for(Veicolo veicolo : azienda.getVeicoli()){
             this.veicoli.remove(veicolo);
@@ -249,8 +294,8 @@ public class MyDeliveryData {
     }
 
     /**
-     * Questo metodo lo si utilizza per salvare i dati di Azienda all'interno di un file txt
-     * chiamato "listaAziende.txt"
+     * Questo metodo lo si utilizza per salvare i dati di Azienda all'interno del file "listaVeicoli.txt"
+     * @throws IOException
      */
     public void storeVeicoli() throws IOException{
         try (ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filenameVeicoli)))){
@@ -267,7 +312,7 @@ public class MyDeliveryData {
         }
     }
 
-    ///////////////////////////// ZONA CLIENTI /////////////////////////////////
+    ///////////////////////////// METODI: ZONA CLIENTI /////////////////////////////////
 
     /*
     public void storeClienti() throws IOException{

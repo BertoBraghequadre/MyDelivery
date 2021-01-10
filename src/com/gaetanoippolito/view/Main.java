@@ -29,12 +29,7 @@ public class Main extends Application {
 
     @Override
     public void init() throws Exception{
-        try{
-            MyDeliveryData.getInstance().loadAdmins();
-        } catch (IOException e) {
-            System.out.println("Caricamento file \"listaAdmin.txt\" fallito");
-        }
-
+        MyDeliveryData.getInstance().loadAdmins();
         MyDeliveryData.getInstance().loadAziende();
         MyDeliveryData.getInstance().loadVeicoli();
     }
