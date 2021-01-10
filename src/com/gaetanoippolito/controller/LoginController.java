@@ -17,9 +17,8 @@ import java.util.Optional;
  * Questo Controller gestisce il login da parte dell'utente selezionando le apposite view, se le codizioni sono state
  * accettate, e cambia gli stati delle classi del model
  */
-
 public class LoginController {
-    // Attributi
+    ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
     private final String rootAdminStageFile = "src/com/gaetanoippolito/view/fxml/adminStage.fxml";
     private final String rootRegisterDialogFile = "src/com/gaetanoippolito/view/fxml/dialog/registerDialog.fxml";
 
@@ -56,27 +55,32 @@ public class LoginController {
     @FXML
     private Label loginErrorLabel;
 
+
+    ////////////////////////////////////// METODI //////////////////////////////////////
     /**
      * Metodo overridato che viene triggerato nel momento in cui viene inizializzata la view
      */
     @FXML
-    public void initialize(){
-
-    }
+    public void initialize(){}
 
     /**
-     * Questo metodo serve ad abilitare il bottone "login" quando i vari ToggleButton sono selezionati.
+     * Questo metodo serve ad abilitare il bottone "login" e il bottone "registra" quando i vari ToggleButton sono
+     * selezionati.
      */
     @FXML
     public void attivaBottoneLogin(){
+        // Se il toggleAdmin o il toggleCorriere sono selezionati, abilitiamo il tasto login, ma disabilitiamo
+        // il tasto per la registrazione
         if(toggleAdmin.isSelected() || toggleCorriere.isSelected()){
             loginButton.setDisable(false);
             registerButton.setDisable(true);
         }
+        // Se il toggleCliente è selezionato, abilitiamo entrambi i bottoni
         else if(toggleCliente.isSelected()){
             loginButton.setDisable(false);
             registerButton.setDisable(false);
         }
+        // Se tutti i toggleButton sono deselezionati allora disabilitiamo i tasti
         else{
             loginButton.setDisable(true);
             registerButton.setDisable(true);
@@ -110,16 +114,18 @@ public class LoginController {
     }
 
     /**
-     * Questo metodo apre una nuova finestra per permettere all'utente di registrarsi all'applicazione.
+     * Questo metodo apre una nuova finestra che permette all'utente di registrarsi sulla piattaforma.
      */
     @FXML
     public void gestisciRegistrazione(){
         Dialog<ButtonType> registerDialog = new Dialog<>();
         FXMLLoader loader = new FXMLLoader();
 
+        // Impostiamo il proprietario del Dialog che si deve aprire e il titolo del Dialog
         registerDialog.initOwner(this.loginRoot.getScene().getWindow());
         registerDialog.setTitle("Registra un Account");
 
+        // Carichiamo il file fxml che rappresenterà la finestra con cui registrarsi
         try{
             Parent root = loader.load(new FileInputStream(rootRegisterDialogFile));
             registerDialog.getDialogPane().setContent(root);
