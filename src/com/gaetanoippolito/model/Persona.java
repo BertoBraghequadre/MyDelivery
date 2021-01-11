@@ -1,6 +1,7 @@
 package com.gaetanoippolito.model;
 
 public class Persona {
+    // TODO: Commentare la classe Persona
     private String nome;
     private String cognome;
     private String indirizzo;

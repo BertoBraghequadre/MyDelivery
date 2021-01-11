@@ -41,7 +41,7 @@ public abstract class Utente extends Persona{
      * @param email Rappresenta l'email dell'utente
      */
     public Utente(String username, String password, String nome, String cognome, String email) {
-        this(username, password, nome, cognome, email, null, null, null);
+        this(username, password, nome, cognome, email, "", "", "");
     }
 
     ///////////////////////////////////// GETTER /////////////////////////////////////
