@@ -1,6 +1,8 @@
 package com.gaetanoippolito.model;
 
 import com.gaetanoippolito.model.database.MyDeliveryData;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -13,6 +15,7 @@ import java.util.Random;
 public class Azienda implements Serializable {
     ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
     // id del "serialVersionUID" di default
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private String nomeAzienda;

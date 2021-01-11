@@ -1,5 +1,6 @@
 package com.gaetanoippolito.model;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -12,6 +13,7 @@ public class Veicolo implements Serializable {
     ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
 
     // id del "serialVersionUID"
+    @Serial
     private static final long serialVersionUID = 2L;
 
     /**@see TipoVeicolo*/

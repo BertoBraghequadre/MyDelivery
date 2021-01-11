@@ -168,24 +168,13 @@ public class MyDeliveryData {
     }
 
     /**
-     * Questo metodo serve ad aggiungere delle Aziende all'interno di MyDeliveryData e controlla se l'azienda che viene
-     * aggiunta non è già presente. Dopo aver finito il controllo e l'aggiunta, salva il contenuto nel file
-     * "listaAziende.txt"
+     * Questo metodo serve ad aggiungere delle Aziende all'interno di MyDeliveryData. Dopo aver finito l'aggiunta,
+     * salva il contenuto nel file "listaAziende.txt".
      * @param aziendaNuova rappresenta l'azienda selezionata dall'utente da aggiungere all'interno di MyDeliveryData
      * @see Azienda
      */
     public void aggiungiAzienda(Azienda aziendaNuova){
-        // Salvo la partita IVA dell'azienda aggiunta dall'utente
-        String aziendaNuovaPartitaIVA = aziendaNuova.getPartitaIVA();
-
-        for(Azienda azienda : this.aziende){
-            if(aziendaNuovaPartitaIVA.equals(azienda.getPartitaIVA())){
-                System.out.println("Azienda già esistente");
-            }
-            else{
-                this.aziende.add(aziendaNuova);
-            }
-        }
+        this.aziende.add(aziendaNuova);
 
         try{
             storeAziende();
@@ -218,7 +207,7 @@ public class MyDeliveryData {
         Azienda aziendaTrovata;
 
         for(Azienda azienda : this.aziende){
-            if(azienda.getPartitaIVA().equals(partitaIVA)){
+            if(controllaPartitaIVA(azienda, partitaIVA)){
                 aziendaTrovata = azienda;
                 rimuoviAzienda(aziendaTrovata);
                 return true;
@@ -228,10 +217,20 @@ public class MyDeliveryData {
     }
 
     /**
+     * Metodo che controlla se esiste un'azienda con una specifica partita IVA
+     * @param azienda Rappresenta l'azienda da confrontare con la partita IVA data dall'utente
+     * @param partitaIVA Rappresenta la partita IVA data dall'utente
+     * @return Ritorna true se esiste un'azienda con la partita IVA data in input, altrimenti ritorna false
+     */
+    private boolean controllaPartitaIVA(Azienda azienda, String partitaIVA){
+        return azienda.getPartitaIVA().equals(partitaIVA);
+    }
+
+    /**
      * Questo metodo lo si utilizza per salvare i dati di Azienda all'interno del file "listaAziende.txt"
      * @throws IOException
      */
-    public void storeAziende() throws IOException{
+    private void storeAziende() throws IOException{
         try (ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filenameAzienda)))){
 
             ArrayList<Azienda> aziende = new ArrayList<>(this.aziende);
@@ -275,6 +274,11 @@ public class MyDeliveryData {
      */
     public void aggiungiVeicoli(Veicolo veicolo){
         this.veicoli.add(veicolo);
+        try{
+            storeVeicoli();
+        }catch (IOException e){
+            System.out.println("Errore nell'aggiunta del veicolo");
+        }
     }
 
     /**
@@ -297,7 +301,7 @@ public class MyDeliveryData {
      * Questo metodo lo si utilizza per salvare i dati di Azienda all'interno del file "listaVeicoli.txt"
      * @throws IOException
      */
-    public void storeVeicoli() throws IOException{
+    private void storeVeicoli() throws IOException{
         try (ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filenameVeicoli)))){
 
             ArrayList<Veicolo> veicoli = new ArrayList<>(this.veicoli);
