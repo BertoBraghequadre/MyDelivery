@@ -5,6 +5,7 @@ import com.gaetanoippolito.model.observerPattern.Destinatario;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Random;
 
 public class Cliente extends Utente implements Serializable {
@@ -18,6 +19,10 @@ public class Cliente extends Utente implements Serializable {
                    String cf, String numeroDiTelefono){
 
         super(username, password, nome, cognome, email, indirizzo, cf, numeroDiTelefono);
+    }
+
+    public Cliente(String username, String password){
+        this(username, password, "", "", "", "", "", "");
     }
 
     public BuilderOrdine getBuilderOrdine(){
@@ -66,5 +71,19 @@ public class Cliente extends Utente implements Serializable {
                         "Email: %s\n" +
                         "ID: %s",
                 super.getUsername(), super.getPassword(), super.getNome(), super.getCognome(), super.getEmail(), this.idCliente);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Cliente)) return false;
+        if (!super.equals(o)) return false;
+        Cliente cliente = (Cliente) o;
+        return Objects.equals(idCliente, cliente.idCliente);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), idCliente);
     }
 }

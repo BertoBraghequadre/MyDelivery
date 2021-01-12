@@ -340,15 +340,55 @@ public class MyDeliveryData {
     }
 
 
-    public void aggiungiCliente(Cliente clienteNuovo){
+    public boolean aggiungiCliente(Cliente clienteNuovo){
         clienteNuovo.setIdCliente(String.valueOf(this.clienti.size() + 1));
-        this.clienti.add(clienteNuovo);
 
-        try{
-            storeClienti();
-        } catch (IOException e){
-            System.out.println("Errore nel salvataggio del File \"listaClienti\"");
+        if(this.clienti.size() == 0){
+            this.clienti.add(clienteNuovo);
+            return true;
         }
+        else{
+            if(cercaEsistenzaCliente(clienteNuovo.getUsername())){
+                System.out.println("Account già esistente");
+                return false;
+            }
+            else{
+                this.clienti.add(clienteNuovo);
+
+                try{
+                    storeClienti();
+                } catch (IOException e){
+                    System.out.println("Errore nel salvataggio del File \"listaClienti\"");
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private boolean cercaEsistenzaCliente(String username){
+        for(Cliente cliente : this.clienti){
+            if(cliente.getUsername().equals(username)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public Cliente loginCliente(Cliente loginCliente) throws Exception{
+        System.out.println("ciao");
+        if(cercaEsistenzaCliente(loginCliente.getUsername())){
+            System.out.println("ciao");
+            for(Cliente cliente : this.clienti){
+                if(loginCliente.getUsername().equals(cliente.getUsername())
+                        && loginCliente.getPassword().equals(cliente.getPassword())){
+                    return loginCliente;
+                }
+            }
+        }
+
+        throw new Exception();
     }
 
     public void storeClienti() throws IOException{

@@ -2,6 +2,7 @@ package com.gaetanoippolito.controller;
 
 import com.gaetanoippolito.controller.dialog.RegisterController;
 import com.gaetanoippolito.model.Admin;
+import com.gaetanoippolito.model.Cliente;
 import com.gaetanoippolito.model.database.MyDeliveryData;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +23,7 @@ public class LoginController {
     ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
     private final String rootAdminStageFile = "src/com/gaetanoippolito/view/fxml/adminStage.fxml";
     private final String rootRegisterDialogFile = "src/com/gaetanoippolito/view/fxml/dialog/registerDialog.fxml";
+    private final String rootClienteStageFile = "src/com/gaetanoippolito/view/fxml/clienteStage.fxml";
 
     // Variabili di istanza che rappresentano il layout del Login
     /**@see GridPane*/
@@ -93,21 +95,34 @@ public class LoginController {
      */
     @FXML
     public void gestioneLogin(){
-        if(toggleAdmin.isSelected()){
+        if(this.toggleAdmin.isSelected()){
             // Salvo il valore in input digitato dall'utente nei vari TextField
             String username = this.usernameLoginField.getText().trim();
             String password = this.passwordLoginField.getText().trim();
 
             /**@see MyDeliveryData*/
-            boolean isAdmin = MyDeliveryData.getInstance().verificaLoginAdmin(username, password);
-
-            if(isAdmin){
+            if(MyDeliveryData.getInstance().verificaLoginAdmin(username, password)){
                 this.loginErrorLabel.setVisible(false);
 
                 // Questo è il metodo che ci permette di cambiare Stage
                 vaiAdInterfacciaAdmin();
             }
             else{
+                this.loginErrorLabel.setVisible(true);
+                this.loginErrorLabel.setText("Username o Password Errati");
+            }
+        }
+
+        if(this.toggleCliente.isSelected()){
+            // Salvo il valore in input digitato dall'utente nei vari TextField
+            String username = this.usernameLoginField.getText().trim();
+            String password = this.passwordLoginField.getText().trim();
+
+            try{
+                Cliente cliente = MyDeliveryData.getInstance().loginCliente(new Cliente(username, password));
+
+                vaiAdInterfacciaCliente(cliente);
+            } catch (Exception e){
                 this.loginErrorLabel.setVisible(true);
                 this.loginErrorLabel.setText("Username o Password Errati");
             }
@@ -148,7 +163,12 @@ public class LoginController {
         Optional<ButtonType> result = registerDialog.showAndWait();
 
         if(result.isPresent() && result.get() == ButtonType.OK){
-            registerController.aggiungiNuovoAccount();
+            this.loginErrorLabel.setVisible(true);
+            this.loginErrorLabel.setText(registerController.aggiungiNuovoAccount());
+        }
+        else{
+            this.loginErrorLabel.setVisible(true);
+            this.loginErrorLabel.setText("Account inserito già presente");
         }
     }
 
@@ -170,6 +190,32 @@ public class LoginController {
             adminStage.setTitle(Admin.getInstance().getNome() + " " + Admin.getInstance().getCognome());
             adminStage.setScene(new Scene(root, 800, 400));
             adminStage.show();
+
+
+        } catch (IOException e){
+            e.printStackTrace();
+            System.out.println("Errore nel caricamento del file");
+        }
+    }
+
+    private void vaiAdInterfacciaCliente(Cliente cliente){
+        // Chiude la finestra del Login
+        Stage stage = (Stage)loginButton.getScene().getWindow();
+        stage.close();
+
+        // Creazione di una nuova finestra
+        Stage adminStage = new Stage();
+
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            Parent root = loader.load(new FileInputStream(rootClienteStageFile));
+
+            adminStage.setTitle(Admin.getInstance().getNome() + " " + Admin.getInstance().getCognome());
+            adminStage.setScene(new Scene(root, 800, 400));
+            adminStage.show();
+
+            ClienteStageController clienteStageController = loader.getController();
+            clienteStageController.clienteStage(cliente);
         } catch (IOException e){
             e.printStackTrace();
             System.out.println("Errore nel caricamento del file");

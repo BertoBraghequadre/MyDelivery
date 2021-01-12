@@ -26,7 +26,7 @@ public class RegisterController {
     private TextField numeroDiTelefonoTextField;
 
 
-    public void aggiungiNuovoAccount(){
+    public String aggiungiNuovoAccount(){
         String nome = this.nomeTextField.getText().trim();
         String cognome = this.cognomeTextField.getText().trim();
         String username = this.usernameTextField.getText().trim();
@@ -36,8 +36,13 @@ public class RegisterController {
         String cf = this.cfTextField.getText().trim();
         String numeroDiTelefono = this.numeroDiTelefonoTextField.getText().trim();
 
-        Cliente cliente = new Cliente(nome, cognome, username, password, email, indirizzo, cf, numeroDiTelefono);
-        MyDeliveryData.getInstance().aggiungiCliente(cliente);
+        Cliente cliente = new Cliente(username, password, nome, cognome, email, indirizzo, cf, numeroDiTelefono);
+        if(MyDeliveryData.getInstance().aggiungiCliente(cliente)){
+            return "Account aggiunto!";
+        }
+        else{
+            return "Account già esistente";
+        }
     }
 
     // Una BooleanExpression ritorna una espressione booleana osservabile
