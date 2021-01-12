@@ -4267,7 +4267,7 @@
 											"top": 793,
 											"width": 342.86865234375,
 											"height": 13,
-											"text": "-builderPacco: BuilderPacco",
+											"text": "-builderPacco",
 											"horizontalAlignment": 0
 										}
 									],
@@ -4590,7 +4590,7 @@
 											"top": 1071,
 											"width": 342.86865234375,
 											"height": 13,
-											"text": "+setBuilder(builderPacco: BuilderPacco): void",
+											"text": "+setBuilder(builderPacco): void",
 											"horizontalAlignment": 0
 										},
 										{
@@ -4942,64 +4942,6 @@
 							"enumerationLiteralCompartment": {
 								"$ref": "AAAAAAF20xOIm8BbY9Q="
 							}
-						},
-						{
-							"_type": "UMLNoteView",
-							"_id": "AAAAAAF20xZVcc5naqk=",
-							"_parent": {
-								"$ref": "AAAAAAF20nnPMFP+oQI="
-							},
-							"font": "Arial;13;0",
-							"left": 3064,
-							"top": 528,
-							"width": 83.58447265625,
-							"height": 90,
-							"text": "Controllare il Model Explorer per eventuali attributi"
-						},
-						{
-							"_type": "UMLNoteLinkView",
-							"_id": "AAAAAAF20xat+c9c1lU=",
-							"_parent": {
-								"$ref": "AAAAAAF20nnPMFP+oQI="
-							},
-							"font": "Arial;13;0",
-							"head": {
-								"$ref": "AAAAAAF20xOImcBRj8w="
-							},
-							"tail": {
-								"$ref": "AAAAAAF20xZVcc5naqk="
-							},
-							"lineStyle": 1,
-							"points": "3063:582;3019:592"
-						},
-						{
-							"_type": "UMLNoteView",
-							"_id": "AAAAAAF20xa1ec+b3nM=",
-							"_parent": {
-								"$ref": "AAAAAAF20nnPMFP+oQI="
-							},
-							"font": "Arial;13;0",
-							"left": 2744,
-							"top": 504,
-							"width": 105,
-							"height": 116,
-							"text": "Aggiungere ai costruttori degli enumeration literal l'attributo \"comune: String\""
-						},
-						{
-							"_type": "UMLNoteLinkView",
-							"_id": "AAAAAAF20xdtBNBy5yk=",
-							"_parent": {
-								"$ref": "AAAAAAF20nnPMFP+oQI="
-							},
-							"font": "Arial;13;0",
-							"head": {
-								"$ref": "AAAAAAF20xOImcBRj8w="
-							},
-							"tail": {
-								"$ref": "AAAAAAF20xa1ec+b3nM="
-							},
-							"lineStyle": 1,
-							"points": "2849:577;2887:588"
 						},
 						{
 							"_type": "UMLAssociationView",
@@ -11442,10 +11384,7 @@
 								"$ref": "AAAAAAF20w0CUrZtcss="
 							},
 							"name": "builderPacco",
-							"visibility": "private",
-							"type": {
-								"$ref": "AAAAAAF20rRu442OkuM="
-							}
+							"visibility": "private"
 						}
 					],
 					"operations": [
@@ -11868,10 +11807,7 @@
 									"_parent": {
 										"$ref": "AAAAAAF20yogyES/GMI="
 									},
-									"name": "builderPacco",
-									"type": {
-										"$ref": "AAAAAAF20rRu442OkuM="
-									}
+									"name": "builderPacco"
 								},
 								{
 									"_type": "UMLParameter",

@@ -1,7 +1,6 @@
 package com.gaetanoippolito.model;
 
 import com.gaetanoippolito.model.builderOrdine.BuilderOrdine;
-
 import java.time.LocalDate;
 import java.util.Random;
 
