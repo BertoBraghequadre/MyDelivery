@@ -2,8 +2,51 @@
 
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.gaetanoippolito.controller.ClienteStageController">
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToolBar?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.gaetanoippolito.controller.ClienteStageController">
 
-</VBox>
+    <top>
+        <ToolBar>
+            <HBox>
+                <Button text="Crea Nuovo Ordine">
+                    <tooltip>
+                        <Tooltip text="Crea un nuovo Ordine da spedire"/>
+                    </tooltip>
+                </Button>
+            </HBox>
+        </ToolBar>
+    </top>
+
+    <center>
+        <TableView fx:id="ordineView">
+            <columns>
+                <TableColumn text="Mittente"
+                             fx:id="mittenteColonna"
+                             editable="false"/>
+
+                <TableColumn text="Destinatario"
+                             fx:id="destinatarioColonna"
+                             editable="false"/>
+
+                <TableColumn text="Stato Ordine"
+                             fx:id="statoOrdine"
+                             editable="false"/>
+
+                <TableColumn text="Corriere"
+                             fx:id="corriereColonna"
+                             editable="false"/>
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>

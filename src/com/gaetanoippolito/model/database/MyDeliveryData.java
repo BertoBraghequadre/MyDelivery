@@ -377,13 +377,11 @@ public class MyDeliveryData {
     }
 
     public Cliente loginCliente(Cliente loginCliente) throws Exception{
-        System.out.println("ciao");
         if(cercaEsistenzaCliente(loginCliente.getUsername())){
-            System.out.println("ciao");
             for(Cliente cliente : this.clienti){
                 if(loginCliente.getUsername().equals(cliente.getUsername())
                         && loginCliente.getPassword().equals(cliente.getPassword())){
-                    return loginCliente;
+                    return cliente;
                 }
             }
         }

@@ -210,7 +210,7 @@ public class LoginController {
             FXMLLoader loader = new FXMLLoader();
             Parent root = loader.load(new FileInputStream(rootClienteStageFile));
 
-            adminStage.setTitle(Admin.getInstance().getNome() + " " + Admin.getInstance().getCognome());
+            adminStage.setTitle(cliente.getNome() + " " + cliente.getCognome());
             adminStage.setScene(new Scene(root, 800, 400));
             adminStage.show();
 
