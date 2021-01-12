@@ -1,12 +1,13 @@
 package com.gaetanoippolito.model;
 
-import com.gaetanoippolito.model.builderOrdine.BuilderOrdine;
-import com.gaetanoippolito.model.observer.Destinatario;
+import com.gaetanoippolito.model.builderPattern.BuilderOrdine;
+import com.gaetanoippolito.model.observerPattern.Destinatario;
 
 import java.time.LocalDate;
 import java.util.Random;
 
 public class Cliente extends Utente{
+    private String idCliente;
     private BuilderOrdine builderOrdine;
 
     public Cliente(String username, String password, String nome, String cognome, String email, String indirizzo,
@@ -17,6 +18,14 @@ public class Cliente extends Utente{
 
     public BuilderOrdine getBuilderOrdine(){
         return this.builderOrdine;
+    }
+
+    public String getIdCliente(){
+        return this.idCliente;
+    }
+
+    public void setIdCliente(String idCliente){
+        this.idCliente = idCliente;
     }
 
     public void setBuilderOrdine(BuilderOrdine builderOrdine){

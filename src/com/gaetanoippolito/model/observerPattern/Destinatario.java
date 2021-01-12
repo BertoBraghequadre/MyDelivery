@@ -1,4 +1,4 @@
-package com.gaetanoippolito.model.observer;
+package com.gaetanoippolito.model.observerPattern;
 
 import com.gaetanoippolito.model.Persona;
 import com.gaetanoippolito.model.StatoOrdine;

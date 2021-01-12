@@ -1,5 +1,6 @@
 package com.gaetanoippolito.controller;
 
+import com.gaetanoippolito.controller.dialog.RegisterController;
 import com.gaetanoippolito.model.Admin;
 import com.gaetanoippolito.model.database.MyDeliveryData;
 import javafx.fxml.FXML;
@@ -118,6 +119,7 @@ public class LoginController {
      */
     @FXML
     public void gestisciRegistrazione(){
+        RegisterController registerController;
         Dialog<ButtonType> registerDialog = new Dialog<>();
         FXMLLoader loader = new FXMLLoader();
 
@@ -133,18 +135,21 @@ public class LoginController {
             System.out.println("File not found");
             e.printStackTrace();
         }
+        registerController = loader.getController();
 
         // Aggiungiamo i Bottoni nel dialog
         registerDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
         registerDialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
 
-        /*
         // Settiamo il bottone a "non cliccabile" in base al ritorno dinamico del testo dei vari TextField
-        registerDialog.getDialogPane().lookupButton(ButtonType.OK).disableProperty().bind(registerController.invalidInputProperty());
-         */
+        registerDialog.getDialogPane().lookupButton(ButtonType.OK).disableProperty().bind(registerController.disabilitaTastoOK());
 
         // Aspettiamo l'input dell'utente
         Optional<ButtonType> result = registerDialog.showAndWait();
+
+        if(result.isPresent() && result.get() == ButtonType.OK){
+            registerController.aggiungiNuovoAccount();
+        }
     }
 
     /**

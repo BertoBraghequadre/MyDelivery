@@ -2,6 +2,7 @@ package com.gaetanoippolito.model.database;
 
 import com.gaetanoippolito.model.Admin;
 import com.gaetanoippolito.model.Azienda;
+import com.gaetanoippolito.model.Cliente;
 import com.gaetanoippolito.model.Veicolo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,6 +10,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -20,15 +22,18 @@ public class MyDeliveryData {
     // Eager Initialization
     private static final MyDeliveryData instance = new MyDeliveryData();
 
-    private static final String filenameAdmin = "listaAdmin.txt";
+    private static final String filenameAdmin = "listaClienti.txt";
     private static final String filenameAzienda = "listaAziende.txt";
     private static final String filenameVeicoli = "listaVeicoli.txt";
+    private static final String filenameClienti = "listaClienti.txt";
     /**@see Admin*/
     private Admin admin;
     /**@see Azienda*/
     private ObservableList<Azienda> aziende;
     /**@see Veicolo*/
     private ObservableList<Veicolo> veicoli;
+    /**@see Cliente*/
+    private ObservableList<Cliente> clienti;
 
     //////////////////////////////////// COSTRUTTORE ////////////////////////////////////
     /**
@@ -39,6 +44,7 @@ public class MyDeliveryData {
     private MyDeliveryData(){
         this.aziende = FXCollections.observableArrayList();
         this.veicoli = FXCollections.observableArrayList();
+        this.clienti = FXCollections.observableArrayList();
     }
 
     ///////////////////////////////////// GETTER /////////////////////////////////////
@@ -115,7 +121,7 @@ public class MyDeliveryData {
     ///////////////////////////////// METODI: ZONA ADMIN /////////////////////////////////
 
     /**
-     * Questo metodo lo si utilizza per caricare i dati del file "listaAdmin.txt" dove sono contenuti i
+     * Questo metodo lo si utilizza per caricare i dati del file "listaClienti.txt" dove sono contenuti i
      * dati degli Admin.
      */
     public void loadAdmins() {
@@ -127,6 +133,7 @@ public class MyDeliveryData {
         try(BufferedReader br = Files.newBufferedReader(path)){
             while((input = br.readLine()) != null){
                 String[] itemPieces = input.split("   -   ");
+                System.out.println(itemPieces);
 
                 String username = itemPieces[0];
                 String password = itemPieces[1];
@@ -139,7 +146,7 @@ public class MyDeliveryData {
                 this.setAdmin(admin);
             }
         } catch (IOException e){
-            System.out.println("Caricamento file \"listaAdmin.txt\" fallito");
+            System.out.println("Caricamento file \"listaClienti.txt\" fallito");
         }
     }
 
@@ -317,23 +324,60 @@ public class MyDeliveryData {
     }
 
     ///////////////////////////// METODI: ZONA CLIENTI /////////////////////////////////
+    public void loadClienti() throws IOException{
+        Path path = Paths.get(filenameClienti);
+        String input;
 
-    /*
+        // Questo fa tutto il lavoro del "buffer", in cui si bufferizza il file dato un path
+        try(BufferedReader br = Files.newBufferedReader(path)){
+            while((input = br.readLine()) != null){
+                String[] itemPieces = input.split("\t");
+
+                String usernameCliente = itemPieces[0];
+                String passwordCliente = itemPieces[1];
+                String nomeCliente = itemPieces[2];
+                String cognomeCliente = itemPieces[3];
+                String emailCliente = itemPieces[4];
+                String indirizzoCliente = itemPieces[5];
+                String cfCliente = itemPieces[6];
+                String numeroDiTelefonoCliente = itemPieces[7];
+
+                Cliente cliente = new Cliente(usernameCliente, passwordCliente, nomeCliente, cognomeCliente,
+                                              emailCliente, indirizzoCliente, cfCliente, numeroDiTelefonoCliente);
+                this.clienti.add(cliente);
+            }
+        }
+    }
+
+
+    public void aggiungiCliente(Cliente clienteNuovo){
+        clienteNuovo.setIdCliente(String.valueOf(this.clienti.size()));
+        this.clienti.add(clienteNuovo);
+
+        try{
+            storeClienti();
+        } catch (IOException e){
+            System.out.println("Errore nel salvataggio del File \"listaClienti\"");
+        }
+    }
+
     public void storeClienti() throws IOException{
-        Path path = Paths.get(filenameAdmin);
+        Path path = Paths.get(filenameClienti);
 
         try(BufferedWriter bw = Files.newBufferedWriter(path)){
-            for(Admin admin : this.listaAdmin){
-                bw.write(String.format("%s\t%s\t%s\t%s\t%s",
-                        admin.getUsername(),
-                        admin.getPassword(),
-                        admin.getNome(),
-                        admin.getCognome(),
-                        admin.getEmail()));
+            for(Cliente cliente : this.clienti){
+                bw.write(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s",
+                        cliente.getUsername(),
+                        cliente.getPassword(),
+                        cliente.getNome(),
+                        cliente.getCognome(),
+                        cliente.getEmail(),
+                        cliente.getIndirizzo(),
+                        cliente.getCf(),
+                        cliente.getNumeroDiTelefono()));
 
                 bw.newLine();
             }
         }
     }
-    */
 }

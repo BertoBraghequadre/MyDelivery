@@ -7,13 +7,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.util.Random;
-
 /**
  * Questa classe rappresenta l'Entry point dell'applicazione. Quì vengono gestite le scene e gli stage della finistra
  * dell'applicazione.
  * @author Gaetano Ippolito (0124001867)
- * @version 0.5.1
+ * @version 0.19.6
  * */
 
 public class Main extends Application {
@@ -33,6 +31,7 @@ public class Main extends Application {
         MyDeliveryData.getInstance().loadAdmins();
         MyDeliveryData.getInstance().loadAziende();
         MyDeliveryData.getInstance().loadVeicoli();
+        MyDeliveryData.getInstance().loadClienti();
     }
 
     public static void main(String[] args) {

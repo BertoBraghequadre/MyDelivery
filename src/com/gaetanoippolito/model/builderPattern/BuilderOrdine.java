@@ -1,7 +1,7 @@
-package com.gaetanoippolito.model.builderOrdine;
+package com.gaetanoippolito.model.builderPattern;
 
 import com.gaetanoippolito.model.*;
-import com.gaetanoippolito.model.observer.Destinatario;
+import com.gaetanoippolito.model.observerPattern.Destinatario;
 
 import java.time.LocalDate;
 

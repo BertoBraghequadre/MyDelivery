@@ -1,8 +1,6 @@
 package com.gaetanoippolito.model;
 
-import com.gaetanoippolito.model.observer.Destinatario;
-
-import java.time.LocalDate;
+import com.gaetanoippolito.model.observerPattern.Destinatario;
 
 public class Pacco {
     private String codice;

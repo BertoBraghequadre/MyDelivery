@@ -1,6 +1,6 @@
 package com.gaetanoippolito.model;
 
-import com.gaetanoippolito.model.observer.Destinatario;
+import com.gaetanoippolito.model.observerPattern.Destinatario;
 
 import java.time.LocalDate;
 import java.util.Random;
