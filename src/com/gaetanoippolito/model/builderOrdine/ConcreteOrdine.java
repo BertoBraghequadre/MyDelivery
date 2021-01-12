@@ -1,6 +1,8 @@
 package com.gaetanoippolito.model.builderOrdine;
 
 import com.gaetanoippolito.model.*;
+import com.gaetanoippolito.model.observer.Destinatario;
+
 import java.time.LocalDate;
 
 
@@ -11,7 +13,7 @@ public class ConcreteOrdine extends BuilderOrdine {
     }
 
     @Override
-    public void buildDestinatario(Persona persona){
+    public void buildDestinatario(Destinatario persona){
         ordine.setDestinatario(persona);
     }
 

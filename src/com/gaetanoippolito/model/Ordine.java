@@ -1,12 +1,14 @@
 package com.gaetanoippolito.model;
 
+import com.gaetanoippolito.model.observer.Destinatario;
+
 import java.time.LocalDate;
 import java.util.Random;
 
 public class Ordine {
     private Pacco pacco;
     private Cliente mittente;
-    private Persona destinatario;
+    private Destinatario destinatario;
     private StatoOrdine statoOrdine;
     private LocalDate dataDiConsegna;
     private Azienda ordineDaAzienda;
@@ -15,7 +17,7 @@ public class Ordine {
     private Veicolo ordineDelVeicolo;
 
     public Ordine(){
-        pacco = new Pacco(getMittente(), getDestinatario(), generaPeso(), generaFragile());
+        this.pacco = new Pacco(getMittente(), getDestinatario(), generaPeso(), generaFragile());
     }
 
     public Pacco getPacco() {
@@ -34,7 +36,7 @@ public class Ordine {
         return this.mittente;
     }
 
-    public Persona getDestinatario(){
+    public Destinatario getDestinatario(){
         return this.destinatario;
     }
 
@@ -47,7 +49,6 @@ public class Ordine {
     }
 
     public void setPacco(Pacco pacco) {
-        // TODO: Permettere la creazione dei pacchi tramite il builder
         this.pacco = pacco;
     }
 
@@ -63,7 +64,7 @@ public class Ordine {
         this.mittente = mittente;
     }
 
-    public void setDestinatario(Persona destinatario){
+    public void setDestinatario(Destinatario destinatario){
         this.destinatario = destinatario;
     }
 

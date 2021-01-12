@@ -1,6 +1,8 @@
 package com.gaetanoippolito.model;
 
 import com.gaetanoippolito.model.builderOrdine.BuilderOrdine;
+import com.gaetanoippolito.model.observer.Destinatario;
+
 import java.time.LocalDate;
 import java.util.Random;
 
@@ -21,12 +23,12 @@ public class Cliente extends Utente{
         this.builderOrdine = builderOrdine;
     }
 
-    public void creaOrdine(Persona destinatario, Azienda ordineDiAzienda, Veicolo veicoloDiOrdine){
+    public void creaOrdine(Destinatario destinatario, Azienda ordineDiAzienda, Veicolo veicoloDiOrdine){
         Random random = new Random();
         int maxDays = 25;
         long randomDays = random.nextInt(maxDays);
 
-        builderOrdine.creaOrdine();
+        this.builderOrdine.creaOrdine();
         this.builderOrdine.buildMittente(this);
         this.builderOrdine.buildDestinatario(destinatario);
         this.builderOrdine.buildStatoOrdine(StatoOrdine.IN_PREPARAZIONE);

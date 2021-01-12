@@ -1,6 +1,7 @@
 package com.gaetanoippolito.model.builderOrdine;
 
 import com.gaetanoippolito.model.*;
+import com.gaetanoippolito.model.observer.Destinatario;
 
 import java.time.LocalDate;
 
@@ -8,7 +9,7 @@ public abstract class BuilderOrdine {
     Ordine ordine;
 
     public abstract void buildMittente(Cliente mittente);
-    public abstract void buildDestinatario(Persona destinatario);
+    public abstract void buildDestinatario(Destinatario destinatario);
     public abstract void buildStatoOrdine(StatoOrdine stato);
     public abstract void buildDataDiConsegna(LocalDate dataDiConsegna);
     public abstract void buildAzienda(Azienda azienda);

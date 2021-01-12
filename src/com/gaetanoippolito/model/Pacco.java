@@ -1,15 +1,17 @@
 package com.gaetanoippolito.model;
 
+import com.gaetanoippolito.model.observer.Destinatario;
+
 import java.time.LocalDate;
 
 public class Pacco {
     private String codice;
     private Cliente mittente;
-    private Persona destinatario;
+    private Destinatario destinatario;
     private double pesoPacco;
     private boolean isFragile;
 
-    public Pacco(Cliente mittente, Persona destinatario, double pesoPacco, boolean isFragile){
+    public Pacco(Cliente mittente, Destinatario destinatario, double pesoPacco, boolean isFragile){
         this.mittente = mittente;
         this.destinatario = destinatario;
         this.pesoPacco = pesoPacco;
@@ -25,12 +27,12 @@ public class Pacco {
         return this.mittente;
     }
 
-    public Persona getDestinatario() {
-        return destinatario;
+    public Destinatario getDestinatario() {
+        return this.destinatario;
     }
 
     public double getPesoPacco() {
-        return pesoPacco;
+        return this.pesoPacco;
     }
 
     public boolean isFragile() {
@@ -41,7 +43,7 @@ public class Pacco {
         this.mittente = mittente;
     }
 
-    public void setDestinatario(Persona destinatario) {
+    public void setDestinatario(Destinatario destinatario) {
         this.destinatario = destinatario;
     }
 
