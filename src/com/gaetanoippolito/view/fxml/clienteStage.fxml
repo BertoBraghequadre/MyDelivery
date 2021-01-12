@@ -1,25 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.*?>
-
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToolBar?>
+
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.gaetanoippolito.controller.ClienteStageController">
+            fx:controller="com.gaetanoippolito.controller.ClienteStageController" fx:id="stageClienteBorderPane">
 
     <top>
         <ToolBar>
             <HBox>
-                <Button text="Crea Nuovo Ordine">
+                <Button text="Crea Nuovo Ordine" onAction="#gestioneOrdineDialog">
                     <tooltip>
                         <Tooltip text="Crea un nuovo Ordine da spedire"/>
                     </tooltip>
@@ -40,7 +35,7 @@
                              editable="false"/>
 
                 <TableColumn text="Stato Ordine"
-                             fx:id="statoOrdine"
+                             fx:id="statoOrdineColonna"
                              editable="false"/>
 
                 <TableColumn text="Corriere"
