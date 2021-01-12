@@ -10,7 +10,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -22,7 +21,7 @@ public class MyDeliveryData {
     // Eager Initialization
     private static final MyDeliveryData instance = new MyDeliveryData();
 
-    private static final String filenameAdmin = "listaClienti.txt";
+    private static final String filenameAdmin = "listaAdmin.txt";
     private static final String filenameAzienda = "listaAziende.txt";
     private static final String filenameVeicoli = "listaVeicoli.txt";
     private static final String filenameClienti = "listaClienti.txt";
@@ -133,7 +132,6 @@ public class MyDeliveryData {
         try(BufferedReader br = Files.newBufferedReader(path)){
             while((input = br.readLine()) != null){
                 String[] itemPieces = input.split("   -   ");
-                System.out.println(itemPieces);
 
                 String username = itemPieces[0];
                 String password = itemPieces[1];
@@ -325,33 +323,25 @@ public class MyDeliveryData {
 
     ///////////////////////////// METODI: ZONA CLIENTI /////////////////////////////////
     public void loadClienti() throws IOException{
-        Path path = Paths.get(filenameClienti);
-        String input;
-
-        // Questo fa tutto il lavoro del "buffer", in cui si bufferizza il file dato un path
-        try(BufferedReader br = Files.newBufferedReader(path)){
-            while((input = br.readLine()) != null){
-                String[] itemPieces = input.split("\t");
-
-                String usernameCliente = itemPieces[0];
-                String passwordCliente = itemPieces[1];
-                String nomeCliente = itemPieces[2];
-                String cognomeCliente = itemPieces[3];
-                String emailCliente = itemPieces[4];
-                String indirizzoCliente = itemPieces[5];
-                String cfCliente = itemPieces[6];
-                String numeroDiTelefonoCliente = itemPieces[7];
-
-                Cliente cliente = new Cliente(usernameCliente, passwordCliente, nomeCliente, cognomeCliente,
-                                              emailCliente, indirizzoCliente, cfCliente, numeroDiTelefonoCliente);
-                this.clienti.add(cliente);
+        try(ObjectInputStream objectIn = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filenameClienti)))) {
+            try{
+                this.clienti.setAll((ArrayList<Cliente>)objectIn.readObject());
+            } catch (ClassNotFoundException e){
+                e.printStackTrace();
             }
+
+            System.out.println(this.clienti);
+            System.out.println("File \"listaClienti.txt\" caricato con successo");
+
+        } catch (Exception e) {
+            System.out.println("Errore nel caricamento del File \"listaClienti\"");
+            e.printStackTrace();
         }
     }
 
 
     public void aggiungiCliente(Cliente clienteNuovo){
-        clienteNuovo.setIdCliente(String.valueOf(this.clienti.size()));
+        clienteNuovo.setIdCliente(String.valueOf(this.clienti.size() + 1));
         this.clienti.add(clienteNuovo);
 
         try{
@@ -362,22 +352,17 @@ public class MyDeliveryData {
     }
 
     public void storeClienti() throws IOException{
-        Path path = Paths.get(filenameClienti);
+        try (ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filenameClienti)))){
 
-        try(BufferedWriter bw = Files.newBufferedWriter(path)){
-            for(Cliente cliente : this.clienti){
-                bw.write(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s",
-                        cliente.getUsername(),
-                        cliente.getPassword(),
-                        cliente.getNome(),
-                        cliente.getCognome(),
-                        cliente.getEmail(),
-                        cliente.getIndirizzo(),
-                        cliente.getCf(),
-                        cliente.getNumeroDiTelefono()));
+            ArrayList<Cliente> cliente = new ArrayList<>(this.clienti);
 
-                bw.newLine();
-            }
+            objectOut.writeObject(cliente);
+            System.out.println(cliente);
+            System.out.println("Il file \"listaClienti.txt\" è stato salvato con successo");
+
+        } catch (IOException e) {
+            System.out.println("Errore nel salvataggio del File \"listaClienti.txt\"");
+            e.printStackTrace();
         }
     }
 }

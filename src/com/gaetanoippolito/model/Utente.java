@@ -1,13 +1,18 @@
 package com.gaetanoippolito.model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * La classe "Utente" rappresenta l'astrazione di ogni singola persona che ha la possibilità di loggare e registrarsi
  * all'interno dell'applicazione.
  */
-public abstract class Utente extends Persona{
+public abstract class Utente extends Persona implements Serializable {
     ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
+    @Serial
+    private static final long serialVersionUID = 4L;
+
     private String username;
     private String password;
     private String email;

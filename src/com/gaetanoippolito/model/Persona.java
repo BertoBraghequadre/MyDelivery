@@ -1,6 +1,11 @@
 package com.gaetanoippolito.model;
 
-public class Persona {
+import java.io.Serial;
+import java.io.Serializable;
+
+public class Persona implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 5L;
     // TODO: Commentare la classe Persona
     private String nome;
     private String cognome;

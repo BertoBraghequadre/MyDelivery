@@ -2,11 +2,15 @@ package com.gaetanoippolito.model;
 
 import com.gaetanoippolito.model.builderPattern.BuilderOrdine;
 import com.gaetanoippolito.model.observerPattern.Destinatario;
-
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Random;
 
-public class Cliente extends Utente{
+public class Cliente extends Utente implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 3L;
+
     private String idCliente;
     private BuilderOrdine builderOrdine;
 
@@ -52,4 +56,15 @@ public class Cliente extends Utente{
         // setterà lo stato di un ordine già creato
     }
     */
+
+    @Override
+    public String toString(){
+        return String.format("Username: %s\n" +
+                        "Password: %s\n" +
+                        "Nome: %s\n" +
+                        "Cognome: %s\n" +
+                        "Email: %s\n" +
+                        "ID: %s",
+                super.getUsername(), super.getPassword(), super.getNome(), super.getCognome(), super.getEmail(), this.idCliente);
+    }
 }
