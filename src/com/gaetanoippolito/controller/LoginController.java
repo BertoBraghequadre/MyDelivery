@@ -166,9 +166,13 @@ public class LoginController {
             this.loginErrorLabel.setVisible(true);
             this.loginErrorLabel.setText(registerController.aggiungiNuovoAccount());
         }
+        else if(result.isPresent() && result.get() == ButtonType.CANCEL){
+            this.loginErrorLabel.setVisible(true);
+            this.loginErrorLabel.setText("Operazione annullata");
+        }
         else{
             this.loginErrorLabel.setVisible(true);
-            this.loginErrorLabel.setText("Account inserito già presente");
+            this.loginErrorLabel.setText("Account esistente");
         }
     }
 

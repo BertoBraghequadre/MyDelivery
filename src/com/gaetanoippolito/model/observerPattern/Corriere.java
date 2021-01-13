@@ -3,14 +3,22 @@ package com.gaetanoippolito.model.observerPattern;
 import com.gaetanoippolito.model.Ordine;
 import com.gaetanoippolito.model.StatoOrdine;
 import com.gaetanoippolito.model.Utente;
+
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Corriere extends Utente implements ObservableCorriere{
-    private String idCorriere;
+public class Corriere extends Utente implements ObservableCorriere, Serializable {
+    ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
+    // id del "serialVersionUID"
+    @Serial
+    private static final long serialVersionUID = 7L;
+
+    private int idCorriere;
     private Ordine ordineAssociato;
     private ArrayList<ObserverDestinatario> listaDestinatari;
 
-    public Corriere(String username, String password, String nome, String cognome, String email, String idCorriere,
+    public Corriere(String username, String password, String nome, String cognome, String email, int idCorriere,
                     Ordine ordineAssociato, Destinatario destinatario){
         super(username, password, nome, cognome, email);
         this.idCorriere = idCorriere;
@@ -20,7 +28,11 @@ public class Corriere extends Utente implements ObservableCorriere{
         this.listaDestinatari.add(destinatario);
     }
 
-    public String getIdCorriere() {
+    public Corriere(String nome, String cognome, int idCorriere){
+        this("", "", nome, cognome, "", idCorriere, null, null);
+    }
+
+    public int getIdCorriere() {
         return idCorriere;
     }
 
@@ -32,7 +44,7 @@ public class Corriere extends Utente implements ObservableCorriere{
         return listaDestinatari;
     }
 
-    public void setIdCorriere(String idCorriere) {
+    public void setIdCorriere(int idCorriere) {
         this.idCorriere = idCorriere;
     }
 
@@ -61,5 +73,13 @@ public class Corriere extends Utente implements ObservableCorriere{
         for(ObserverDestinatario destinatario : this.listaDestinatari){
             destinatario.updateStatoOrdine(this.ordineAssociato.getStatoOrdine());
         }
+    }
+
+    @Override
+    public String toString(){
+        return String.format("Nome: %s\n" +
+                             "Cognome: %s\n" +
+                             "IdCorriere: %s",
+                             super.getNome(), super.getCognome(), this.idCorriere);
     }
 }

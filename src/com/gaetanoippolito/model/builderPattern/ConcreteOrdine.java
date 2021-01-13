@@ -1,8 +1,8 @@
 package com.gaetanoippolito.model.builderPattern;
 
 import com.gaetanoippolito.model.*;
+import com.gaetanoippolito.model.observerPattern.Corriere;
 import com.gaetanoippolito.model.observerPattern.Destinatario;
-
 import java.time.LocalDate;
 
 
@@ -37,10 +37,8 @@ public class ConcreteOrdine extends BuilderOrdine {
         ordine.setOrdineDelVeicolo(veicolo);
     }
 
-    /*
     @Override
     public void buildCorriere(Corriere corriere){
-
+        ordine.setOrdineDelCorriere(corriere);
     }
-    */
 }

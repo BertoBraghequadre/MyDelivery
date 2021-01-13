@@ -1,6 +1,7 @@
 package com.gaetanoippolito.controller;
 
 import com.gaetanoippolito.controller.dialog.CreaOrdineController;
+import com.gaetanoippolito.model.Azienda;
 import com.gaetanoippolito.model.Cliente;
 import com.gaetanoippolito.model.Ordine;
 import com.gaetanoippolito.model.StatoOrdine;
@@ -35,15 +36,18 @@ public class ClienteStageController {
     private TableColumn<Ordine, StatoOrdine> statoOrdineColonna;
     @FXML
     private TableColumn<Corriere, String> corriereColonna;
+    @FXML
+    private TableColumn<Azienda, String> nomeAziendaColonna;
 
     @FXML
     public void initialize(){
         // Impostiamo la grandezza massima della TableView per ogni colonna
         this.ordineView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        this.mittenteColonna.setMaxWidth(Integer.MAX_VALUE * 25D);      //25%
-        this.destinatarioColonna.setMaxWidth(Integer.MAX_VALUE * 25D);  //25%
-        this.statoOrdineColonna.setMaxWidth(Integer.MAX_VALUE * 25D);   //25%
-        this.corriereColonna.setMaxWidth(Integer.MAX_VALUE * 25D);      //25%
+        this.mittenteColonna.setMaxWidth(Integer.MAX_VALUE * 20D);      //20%
+        this.destinatarioColonna.setMaxWidth(Integer.MAX_VALUE * 20D);  //20%
+        this.statoOrdineColonna.setMaxWidth(Integer.MAX_VALUE * 20D);   //20%
+        this.corriereColonna.setMaxWidth(Integer.MAX_VALUE * 20D);      //20%
+        this.nomeAziendaColonna.setMaxWidth(Integer.MAX_VALUE * 20D);   //20%
     }
 
     public void clienteStage(Cliente cliente){

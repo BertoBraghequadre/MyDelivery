@@ -41,6 +41,10 @@
                 <TableColumn text="Corriere"
                              fx:id="corriereColonna"
                              editable="false"/>
+
+                <TableColumn text="Azienda"
+                             fx:id="nomeAziendaColonna"
+                             editable="false"/>
             </columns>
         </TableView>
     </center>

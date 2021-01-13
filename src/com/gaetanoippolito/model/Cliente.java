@@ -1,6 +1,7 @@
 package com.gaetanoippolito.model;
 
 import com.gaetanoippolito.model.builderPattern.BuilderOrdine;
+import com.gaetanoippolito.model.observerPattern.Corriere;
 import com.gaetanoippolito.model.observerPattern.Destinatario;
 import java.io.Serial;
 import java.io.Serializable;
@@ -41,7 +42,7 @@ public class Cliente extends Utente implements Serializable {
         this.builderOrdine = builderOrdine;
     }
 
-    public void creaOrdine(Destinatario destinatario, Azienda ordineDiAzienda, Veicolo veicoloDiOrdine){
+    public void creaOrdine(Destinatario destinatario, Azienda ordineDiAzienda, Veicolo veicoloDiOrdine, Corriere corriere){
         Random random = new Random();
         int maxDays = 25;
         long randomDays = random.nextInt(maxDays);
@@ -53,7 +54,7 @@ public class Cliente extends Utente implements Serializable {
         this.builderOrdine.buildDataDiConsegna(LocalDate.now().plusDays(randomDays));
         this.builderOrdine.buildAzienda(ordineDiAzienda);
         this.builderOrdine.buildVeicolo(veicoloDiOrdine);
-        //this.builderOrdine.buildCorriere(Corriere corriere);
+        this.builderOrdine.buildCorriere(corriere);
     }
 
     /*

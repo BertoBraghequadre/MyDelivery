@@ -38,7 +38,7 @@ public class RegisterController {
 
         Cliente cliente = new Cliente(username, password, nome, cognome, email, indirizzo, cf, numeroDiTelefono);
         if(MyDeliveryData.getInstance().aggiungiCliente(cliente)){
-            return "Account aggiunto!";
+            return "Account Registrato!";
         }
         else{
             return "Account già esistente";

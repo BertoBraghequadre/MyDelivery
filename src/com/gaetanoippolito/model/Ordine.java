@@ -1,5 +1,6 @@
 package com.gaetanoippolito.model;
 
+import com.gaetanoippolito.model.observerPattern.Corriere;
 import com.gaetanoippolito.model.observerPattern.Destinatario;
 
 import java.time.LocalDate;
@@ -12,8 +13,7 @@ public class Ordine {
     private StatoOrdine statoOrdine;
     private LocalDate dataDiConsegna;
     private Azienda ordineDaAzienda;
-    // TODO: Aggiungere i corrieri
-    // private Corriere ordineDelCorriere;
+    private Corriere ordineDelCorriere;
     private Veicolo ordineDelVeicolo;
 
     public Ordine(){
@@ -48,6 +48,10 @@ public class Ordine {
         return this.ordineDelVeicolo;
     }
 
+    public Corriere getOrdineDelCorriere(){
+        return this.ordineDelCorriere;
+    }
+
     public void setPacco(Pacco pacco) {
         this.pacco = pacco;
     }
@@ -74,6 +78,10 @@ public class Ordine {
 
     public void setOrdineDelVeicolo(Veicolo ordineDelVeicolo) {
         this.ordineDelVeicolo = ordineDelVeicolo;
+    }
+
+    public void setOrdineDelCorriere(Corriere corriere){
+        this.ordineDelCorriere = corriere;
     }
 
     private double generaPeso(){

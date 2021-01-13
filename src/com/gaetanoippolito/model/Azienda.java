@@ -1,6 +1,7 @@
 package com.gaetanoippolito.model;
 
 import com.gaetanoippolito.model.database.MyDeliveryData;
+import com.gaetanoippolito.model.observerPattern.Corriere;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -23,6 +24,7 @@ public class Azienda implements Serializable {
     /**@see Veicolo*/
     private ArrayList<Veicolo> veicoli;
     // TODO: Aggiungere i Corrieri
+    private ArrayList<Corriere> corrieri;
 
     //////////////////////////////////// COSTRUTTORE ////////////////////////////////////
     /**
@@ -41,6 +43,8 @@ public class Azienda implements Serializable {
         else{
             this.veicoli = veicoli;
         }
+
+        this.corrieri = (ArrayList<Corriere>) MyDeliveryData.getInstance().getCorrieri();
     }
 
     /**
@@ -151,7 +155,7 @@ public class Azienda implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("Nome azienda: %s - Partita IVA: %s - Veicoli: %s",
-                              this.nomeAzienda, this.partitaIVA, this.veicoli);
+        return String.format("Nome azienda: %s - Partita IVA: %s",
+                              this.nomeAzienda, this.partitaIVA);
     }
 }

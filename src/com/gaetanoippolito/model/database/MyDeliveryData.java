@@ -4,6 +4,7 @@ import com.gaetanoippolito.model.Admin;
 import com.gaetanoippolito.model.Azienda;
 import com.gaetanoippolito.model.Cliente;
 import com.gaetanoippolito.model.Veicolo;
+import com.gaetanoippolito.model.observerPattern.Corriere;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.io.*;
@@ -25,6 +26,7 @@ public class MyDeliveryData {
     private static final String filenameAzienda = "listaAziende.txt";
     private static final String filenameVeicoli = "listaVeicoli.txt";
     private static final String filenameClienti = "listaClienti.txt";
+    private static final String filenameCorrieri = "listaCorrieri.txt";
     /**@see Admin*/
     private Admin admin;
     /**@see Azienda*/
@@ -33,6 +35,8 @@ public class MyDeliveryData {
     private ObservableList<Veicolo> veicoli;
     /**@see Cliente*/
     private ObservableList<Cliente> clienti;
+    /**@see Corriere*/
+    private ObservableList<Corriere> corrieri;
 
     //////////////////////////////////// COSTRUTTORE ////////////////////////////////////
     /**
@@ -44,6 +48,7 @@ public class MyDeliveryData {
         this.aziende = FXCollections.observableArrayList();
         this.veicoli = FXCollections.observableArrayList();
         this.clienti = FXCollections.observableArrayList();
+        this.corrieri = FXCollections.observableArrayList();
     }
 
     ///////////////////////////////////// GETTER /////////////////////////////////////
@@ -71,6 +76,15 @@ public class MyDeliveryData {
      */
     public ObservableList<Veicolo> getVeicoli() {
         return this.veicoli;
+    }
+
+    /**
+     * Metodo che ritorna l'ObserableList in cui sono contenuti i corrieri
+     * @return Ritorna una ObservableList di Corriere
+     * @see Veicolo
+     */
+    public ObservableList<Corriere> getCorrieri() {
+        return this.corrieri;
     }
 
     ///////////////////////////////////// SETTER /////////////////////////////////////
@@ -317,6 +331,49 @@ public class MyDeliveryData {
 
         } catch (IOException e) {
             System.out.println("Errore nel salvataggio del File \"listaVeicoli.txt\"");
+            e.printStackTrace();
+        }
+    }
+
+    ///////////////////////////// METODI: ZONA CORRIERI ////////////////////////////////
+    public void loadCorrieri() throws IOException{
+        try(ObjectInputStream objectIn = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filenameCorrieri)))) {
+            try{
+                this.corrieri.setAll((ArrayList<Corriere>)objectIn.readObject());
+            } catch (ClassNotFoundException e){
+                e.printStackTrace();
+            }
+
+            System.out.println(this.corrieri);
+            System.out.println("File \"listaCorriere.txt\" caricato con successo");
+
+        } catch (Exception e) {
+            System.out.println("Errore nel caricamento del File \"listaCorriere\"");
+            e.printStackTrace();
+        }
+    }
+
+    public void aggiungiCorrieri(Corriere corriere){
+        this.corrieri.add(corriere);
+
+        try{
+            storeCorrieri();
+        } catch(IOException e){
+            System.out.println("Errore nel salvataggio dei corrieri");
+        }
+    }
+
+    public void storeCorrieri() throws IOException{
+        try (ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filenameCorrieri)))){
+
+            ArrayList<Corriere> corrieri = new ArrayList<>(this.corrieri);
+
+            objectOut.writeObject(corrieri);
+            System.out.println(corrieri);
+            System.out.println("Il file \"listaCorrieri.txt\" è stato salvato con successo");
+
+        } catch (IOException e) {
+            System.out.println("Errore nel salvataggio del File \"listaCorrieri.txt\"");
             e.printStackTrace();
         }
     }

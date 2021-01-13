@@ -2,9 +2,16 @@ package com.gaetanoippolito.model.observerPattern;
 
 import com.gaetanoippolito.model.Persona;
 import com.gaetanoippolito.model.StatoOrdine;
+
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Destinatario extends Persona implements ObserverDestinatario{
+public class Destinatario extends Persona implements ObserverDestinatario, Serializable {
+    ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
+    // id del "serialVersionUID"
+    @Serial
+    private static final long serialVersionUID = 9L;
     private StatoOrdine statoOrdine;
     private ArrayList<ObservableCorriere> listaCorrieriDiOrdine;
 

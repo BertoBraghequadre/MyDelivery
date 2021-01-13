@@ -32,6 +32,7 @@ public class Main extends Application {
         MyDeliveryData.getInstance().loadAziende();
         MyDeliveryData.getInstance().loadVeicoli();
         MyDeliveryData.getInstance().loadClienti();
+        MyDeliveryData.getInstance().loadCorrieri();
     }
 
     public static void main(String[] args) {
