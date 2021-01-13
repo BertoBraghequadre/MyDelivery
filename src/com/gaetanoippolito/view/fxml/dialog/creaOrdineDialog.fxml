@@ -8,16 +8,56 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import java.lang.String?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <DialogPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.gaetanoippolito.controller.dialog.CreaOrdineController">
 
     <content>
        <GridPane>
+           <Label text="Ordine presso azienda..."
+                  GridPane.columnIndex="0"
+                  GridPane.rowIndex="0"/>
           <ChoiceBox GridPane.columnIndex="0"
-                    GridPane.rowIndex="0"
-                    GridPane.columnSpan="2" fx:id="aziendeChoiceBox">
+                    GridPane.rowIndex="1"
+                    fx:id="aziendeChoiceBox">
           </ChoiceBox>
+
+           <Label text="Nome"
+                  GridPane.columnIndex="0"
+                  GridPane.rowIndex="2"/>
+           <TextField GridPane.columnIndex="0"
+                      GridPane.rowIndex="3"
+                      fx:id="nomeTextField"/>
+
+           <Label text="Cognome"
+                  GridPane.columnIndex="1"
+                  GridPane.rowIndex="2"/>
+           <TextField GridPane.columnIndex="1"
+                      GridPane.rowIndex="3"
+                      fx:id="cognomeTextField"/>
+
+           <Label text="Indirizzo"
+                  GridPane.columnIndex="0"
+                  GridPane.rowIndex="4"/>
+           <TextField GridPane.columnIndex="0"
+                      GridPane.rowIndex="5"
+                      fx:id="indirizzoTextField"/>
+
+           <Label text="Codice fiscale"
+                  GridPane.columnIndex="1"
+                  GridPane.rowIndex="4"/>
+           <TextField GridPane.columnIndex="1"
+                      GridPane.rowIndex="5"
+                      fx:id="cfTextField"/>
+
+           <Label text="Numero di Telefono"
+                  GridPane.columnIndex="0"
+                  GridPane.rowIndex="6"/>
+           <TextField GridPane.columnIndex="0"
+                      GridPane.rowIndex="7"
+                      fx:id="numeroDiTelefonoTextField"/>
        </GridPane>
     </content>
 </DialogPane>

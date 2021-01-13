@@ -1,12 +1,20 @@
 package com.gaetanoippolito.model;
 
+import com.gaetanoippolito.model.database.MyDeliveryData;
 import com.gaetanoippolito.model.observerPattern.Corriere;
 import com.gaetanoippolito.model.observerPattern.Destinatario;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Random;
 
-public class Ordine {
+public class Ordine implements Serializable {
+    ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
+    // id del "serialVersionUID"
+    @Serial
+    private static final long serialVersionUID = 10L;
+
     private Pacco pacco;
     private Cliente mittente;
     private Destinatario destinatario;
@@ -16,9 +24,7 @@ public class Ordine {
     private Corriere ordineDelCorriere;
     private Veicolo ordineDelVeicolo;
 
-    public Ordine(){
-        this.pacco = new Pacco(getMittente(), getDestinatario(), generaPeso(), generaFragile());
-    }
+    public Ordine(){}
 
     public Pacco getPacco() {
         return this.pacco;
@@ -84,14 +90,14 @@ public class Ordine {
         this.ordineDelCorriere = corriere;
     }
 
-    private double generaPeso(){
+    public double generaPeso(){
         Random random = new Random();
 
         int maxSize = 80;
         return ((double) random.nextInt(maxSize)) + 0.1d;
     }
 
-    private boolean generaFragile(){
+    public boolean generaFragile(){
         Random random = new Random();
 
         if((random.nextInt(10) + 1) <= 5){
@@ -100,5 +106,19 @@ public class Ordine {
         else{
             return false;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Ordine{" +
+                "pacco=" + pacco +
+                ", mittente=" + mittente +
+                ", destinatario=" + destinatario +
+                ", statoOrdine=" + statoOrdine +
+                ", dataDiConsegna=" + dataDiConsegna +
+                ", ordineDaAzienda=" + ordineDaAzienda +
+                ", ordineDelCorriere=" + ordineDelCorriere +
+                ", ordineDelVeicolo=" + ordineDelVeicolo +
+                '}';
     }
 }

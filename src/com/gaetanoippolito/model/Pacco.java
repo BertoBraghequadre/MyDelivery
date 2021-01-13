@@ -1,9 +1,17 @@
 package com.gaetanoippolito.model;
 
+import com.gaetanoippolito.model.database.MyDeliveryData;
 import com.gaetanoippolito.model.observerPattern.Destinatario;
 
-public class Pacco {
-    private String codice;
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.Random;
+
+public class Pacco implements Serializable {
+    // id del "serialVersionUID"
+    @Serial
+    private static final long serialVersionUID = 12L;
+    private int codice;
     private Cliente mittente;
     private Destinatario destinatario;
     private double pesoPacco;
@@ -14,10 +22,13 @@ public class Pacco {
         this.destinatario = destinatario;
         this.pesoPacco = pesoPacco;
         this.isFragile = isFragile;
-        // TODO: i codici dovranno essere uguali alla size di tutti gli ordini
+
+        Random random = new Random();
+        int maxRandomNumber = 56000;
+        this.codice = (MyDeliveryData.getInstance().getPacchi().size() + 1) + random.nextInt(maxRandomNumber);
     }
 
-    public String getCodice(){
+    public int getCodice(){
         return this.codice;
     }
 
@@ -51,5 +62,16 @@ public class Pacco {
 
     public void setFragile(boolean fragile) {
         isFragile = fragile;
+    }
+
+    @Override
+    public String toString() {
+        return "Pacco{" +
+                "codice='" + codice + '\'' +
+                ", mittente=" + mittente +
+                ", destinatario=" + destinatario +
+                ", pesoPacco=" + pesoPacco +
+                ", isFragile=" + isFragile +
+                '}';
     }
 }

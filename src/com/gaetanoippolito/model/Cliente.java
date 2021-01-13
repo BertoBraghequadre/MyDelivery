@@ -1,6 +1,7 @@
 package com.gaetanoippolito.model;
 
 import com.gaetanoippolito.model.builderPattern.BuilderOrdine;
+import com.gaetanoippolito.model.builderPattern.ConcreteOrdine;
 import com.gaetanoippolito.model.observerPattern.Corriere;
 import com.gaetanoippolito.model.observerPattern.Destinatario;
 import java.io.Serial;
@@ -17,13 +18,14 @@ public class Cliente extends Utente implements Serializable {
     private BuilderOrdine builderOrdine;
 
     public Cliente(String username, String password, String nome, String cognome, String email, String indirizzo,
-                   String cf, String numeroDiTelefono){
+                   String cf, String numeroDiTelefono, BuilderOrdine ordine){
 
         super(username, password, nome, cognome, email, indirizzo, cf, numeroDiTelefono);
+        this.builderOrdine = ordine;
     }
 
     public Cliente(String username, String password){
-        this(username, password, "", "", "", "", "", "");
+        this(username, password, "", "", "", "", "", "", new ConcreteOrdine());
     }
 
     public BuilderOrdine getBuilderOrdine(){
@@ -42,19 +44,21 @@ public class Cliente extends Utente implements Serializable {
         this.builderOrdine = builderOrdine;
     }
 
-    public void creaOrdine(Destinatario destinatario, Azienda ordineDiAzienda, Veicolo veicoloDiOrdine, Corriere corriere){
+    public Ordine creaOrdine(Cliente mittente, Destinatario destinatario, Azienda ordineDiAzienda, Veicolo veicoloDiOrdine, Corriere corriere){
         Random random = new Random();
         int maxDays = 25;
         long randomDays = random.nextInt(maxDays);
 
         this.builderOrdine.creaOrdine();
-        this.builderOrdine.buildMittente(this);
+        this.builderOrdine.buildMittente(mittente);
         this.builderOrdine.buildDestinatario(destinatario);
         this.builderOrdine.buildStatoOrdine(StatoOrdine.IN_PREPARAZIONE);
         this.builderOrdine.buildDataDiConsegna(LocalDate.now().plusDays(randomDays));
         this.builderOrdine.buildAzienda(ordineDiAzienda);
         this.builderOrdine.buildVeicolo(veicoloDiOrdine);
         this.builderOrdine.buildCorriere(corriere);
+
+        return this.builderOrdine.getOrdine();
     }
 
     /*

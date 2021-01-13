@@ -60,4 +60,15 @@ public class Persona implements Serializable {
     public void setCf(String cf) {
         this.cf = cf;
     }
+
+    @Override
+    public String toString() {
+        return "Persona{" +
+                "nome='" + nome + '\'' +
+                ", cognome='" + cognome + '\'' +
+                ", indirizzo='" + indirizzo + '\'' +
+                ", numeroDiTelefono='" + numeroDiTelefono + '\'' +
+                ", cf='" + cf + '\'' +
+                '}';
+    }
 }

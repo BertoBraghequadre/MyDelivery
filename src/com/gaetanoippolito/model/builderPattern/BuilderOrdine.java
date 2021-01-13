@@ -4,9 +4,15 @@ import com.gaetanoippolito.model.*;
 import com.gaetanoippolito.model.observerPattern.Corriere;
 import com.gaetanoippolito.model.observerPattern.Destinatario;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public abstract class BuilderOrdine {
+public abstract class BuilderOrdine implements Serializable {
+    // id del "serialVersionUID"
+    @Serial
+    private static final long serialVersionUID = 14L;
+
     Ordine ordine;
 
     public abstract void buildMittente(Cliente mittente);

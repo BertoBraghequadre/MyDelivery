@@ -2,7 +2,6 @@ package com.gaetanoippolito.model;
 
 import com.gaetanoippolito.model.database.MyDeliveryData;
 import com.gaetanoippolito.model.observerPattern.Corriere;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ public class Azienda implements Serializable {
     private String partitaIVA;
     /**@see Veicolo*/
     private ArrayList<Veicolo> veicoli;
-    // TODO: Aggiungere i Corrieri
+    /**@see Corriere*/
     private ArrayList<Corriere> corrieri;
 
     //////////////////////////////////// COSTRUTTORE ////////////////////////////////////
@@ -33,9 +32,10 @@ public class Azienda implements Serializable {
      * @param partitaIVA Rappresenta la partita IVA dell'azienda
      * @param veicoli Rappresenta la lista di veicoli presenti nell'azienda
      */
-    public Azienda(String nomeAzienda, String partitaIVA, ArrayList<Veicolo> veicoli){
+    public Azienda(String nomeAzienda, String partitaIVA, ArrayList<Veicolo> veicoli, ArrayList<Corriere> corrieri){
         this.nomeAzienda = nomeAzienda;
         this.partitaIVA = partitaIVA;
+        this.corrieri = corrieri;
 
         if(veicoli.size() == 0){
             this.veicoli = associaVeicoli(nomeAzienda);
@@ -44,7 +44,8 @@ public class Azienda implements Serializable {
             this.veicoli = veicoli;
         }
 
-        this.corrieri = (ArrayList<Corriere>) MyDeliveryData.getInstance().getCorrieri();
+        this.corrieri = corrieri;
+        System.out.println(corrieri);
     }
 
     /**
@@ -53,7 +54,7 @@ public class Azienda implements Serializable {
      * @param partitaIVA Rappresenta la partita IVA dell'azienda
      */
     public Azienda(String nomeAzienda, String partitaIVA){
-        this(nomeAzienda, partitaIVA, new ArrayList<>());
+        this(nomeAzienda, partitaIVA, new ArrayList<>(), new ArrayList<>(MyDeliveryData.getInstance().getCorrieri()));
     }
 
     ///////////////////////////////////// GETTER /////////////////////////////////////
@@ -80,6 +81,10 @@ public class Azienda implements Serializable {
      */
     public ArrayList<Veicolo> getVeicoli() {
         return this.veicoli;
+    }
+
+    public ArrayList<Corriere> getCorrieri(){
+        return this.corrieri;
     }
 
     ////////////////////////////////////// METODI //////////////////////////////////////
@@ -155,7 +160,7 @@ public class Azienda implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("Nome azienda: %s - Partita IVA: %s",
+        return String.format("%s - Partita IVA: %s",
                               this.nomeAzienda, this.partitaIVA);
     }
 }

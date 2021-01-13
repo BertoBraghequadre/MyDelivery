@@ -24,6 +24,7 @@ public class LoginController {
     private final String rootAdminStageFile = "src/com/gaetanoippolito/view/fxml/adminStage.fxml";
     private final String rootRegisterDialogFile = "src/com/gaetanoippolito/view/fxml/dialog/registerDialog.fxml";
     private final String rootClienteStageFile = "src/com/gaetanoippolito/view/fxml/clienteStage.fxml";
+    private Cliente cliente;
 
     // Variabili di istanza che rappresentano il layout del Login
     /**@see GridPane*/
@@ -65,6 +66,10 @@ public class LoginController {
      */
     @FXML
     public void initialize(){}
+
+    public Cliente getCliente(){
+        return this.cliente;
+    }
 
     /**
      * Questo metodo serve ad abilitare il bottone "login" e il bottone "registra" quando i vari ToggleButton sono
@@ -119,9 +124,9 @@ public class LoginController {
             String password = this.passwordLoginField.getText().trim();
 
             try{
-                Cliente cliente = MyDeliveryData.getInstance().loginCliente(new Cliente(username, password));
+                this.cliente = MyDeliveryData.getInstance().loginCliente(new Cliente(username, password));
 
-                vaiAdInterfacciaCliente(cliente);
+                vaiAdInterfacciaCliente();
             } catch (Exception e){
                 this.loginErrorLabel.setVisible(true);
                 this.loginErrorLabel.setText("Username o Password Errati");
@@ -202,24 +207,27 @@ public class LoginController {
         }
     }
 
-    private void vaiAdInterfacciaCliente(Cliente cliente){
+    private void vaiAdInterfacciaCliente(){
         // Chiude la finestra del Login
         Stage stage = (Stage)loginButton.getScene().getWindow();
         stage.close();
 
         // Creazione di una nuova finestra
-        Stage adminStage = new Stage();
+        Stage clienteStage = new Stage();
 
         try{
             FXMLLoader loader = new FXMLLoader();
+            ClienteStageController clienteStageController;
             Parent root = loader.load(new FileInputStream(rootClienteStageFile));
 
-            adminStage.setTitle(cliente.getNome() + " " + cliente.getCognome());
-            adminStage.setScene(new Scene(root, 800, 400));
-            adminStage.show();
+            clienteStage.setTitle(this.cliente.getNome() + " " + this.cliente.getCognome());
+            clienteStage.setScene(new Scene(root, 800, 400));
 
-            ClienteStageController clienteStageController = loader.getController();
-            clienteStageController.clienteStage(cliente);
+            clienteStageController = loader.getController();
+            clienteStageController.setCliente(this.cliente);
+
+            clienteStage.show();
+
         } catch (IOException e){
             e.printStackTrace();
             System.out.println("Errore nel caricamento del file");

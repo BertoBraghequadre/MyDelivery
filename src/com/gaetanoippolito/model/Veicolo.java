@@ -20,6 +20,7 @@ public class Veicolo implements Serializable {
     private TipoVeicolo tipoVeicolo;
     private double capienzaContainer;
     private int codice;
+    private boolean isBusy;
     private String aziendaAssociata;
     /**@see Pacco*/
     private ArrayList<Pacco> pacchiDepositati;
@@ -35,6 +36,7 @@ public class Veicolo implements Serializable {
         this.tipoVeicolo = tipoVeicolo;
         this.capienzaContainer = capienzaContainer;
         this.codice = codice;
+        this.isBusy = false;
     }
 
     /**
@@ -92,6 +94,10 @@ public class Veicolo implements Serializable {
         return this.aziendaAssociata;
     }
 
+    public boolean getIsBusy(){
+        return this.isBusy;
+    }
+
     ///////////////////////////////////// SETTER /////////////////////////////////////
 
     /**
@@ -100,6 +106,10 @@ public class Veicolo implements Serializable {
      */
     public void setPacchiDepositati(ArrayList<Pacco> pacchiDepositati) {
         this.pacchiDepositati = pacchiDepositati;
+    }
+
+    public void setIsBusy(boolean isBusy){
+        this.isBusy = isBusy;
     }
 
     ////////////////////////////////////// METODI //////////////////////////////////////
@@ -137,8 +147,9 @@ public class Veicolo implements Serializable {
                              "Capienza del container: %s - " +
                              "Codice veicolo: %s - " +
                              "Azienda associata: %s - " +
+                             "isBusy: %s - " +
                              "Pacchi depositati: %s\n\t\t\t\t\t\t\t\t\t\t\t\t\t",
                              this.tipoVeicolo, this.capienzaContainer,
-                             this.codice, this.aziendaAssociata, this.pacchiDepositati);
+                             this.codice, this.aziendaAssociata, this.isBusy, this.pacchiDepositati);
     }
 }

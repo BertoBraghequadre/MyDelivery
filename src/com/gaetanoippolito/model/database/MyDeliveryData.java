@@ -1,9 +1,6 @@
 package com.gaetanoippolito.model.database;
 
-import com.gaetanoippolito.model.Admin;
-import com.gaetanoippolito.model.Azienda;
-import com.gaetanoippolito.model.Cliente;
-import com.gaetanoippolito.model.Veicolo;
+import com.gaetanoippolito.model.*;
 import com.gaetanoippolito.model.observerPattern.Corriere;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,6 +24,8 @@ public class MyDeliveryData {
     private static final String filenameVeicoli = "listaVeicoli.txt";
     private static final String filenameClienti = "listaClienti.txt";
     private static final String filenameCorrieri = "listaCorrieri.txt";
+    private static final String filenameOrdini = "listaOrdini.txt";
+    private static final String filenamePacchi = "listaPacchi.txt";
     /**@see Admin*/
     private Admin admin;
     /**@see Azienda*/
@@ -37,6 +36,10 @@ public class MyDeliveryData {
     private ObservableList<Cliente> clienti;
     /**@see Corriere*/
     private ObservableList<Corriere> corrieri;
+    /**@see Ordine*/
+    private ObservableList<Ordine> ordini;
+    /**@see Pacco*/
+    private ObservableList<Pacco> pacchi;
 
     //////////////////////////////////// COSTRUTTORE ////////////////////////////////////
     /**
@@ -49,6 +52,8 @@ public class MyDeliveryData {
         this.veicoli = FXCollections.observableArrayList();
         this.clienti = FXCollections.observableArrayList();
         this.corrieri = FXCollections.observableArrayList();
+        this.ordini = FXCollections.observableArrayList();
+        this.pacchi = FXCollections.observableArrayList();
     }
 
     ///////////////////////////////////// GETTER /////////////////////////////////////
@@ -81,10 +86,28 @@ public class MyDeliveryData {
     /**
      * Metodo che ritorna l'ObserableList in cui sono contenuti i corrieri
      * @return Ritorna una ObservableList di Corriere
-     * @see Veicolo
+     * @see Corriere
      */
     public ObservableList<Corriere> getCorrieri() {
         return this.corrieri;
+    }
+
+    /**
+     * Metodo che ritorna l'ObserableList in cui sono contenuti gli ordini
+     * @return Ritorna una ObservableList di Ordini
+     * @see Ordine
+     */
+    public ObservableList<Ordine> getOrdini() {
+        return this.ordini;
+    }
+
+    /**
+     * Metodo che ritorna l'ObserableList in cui sono contenuti i pacchi
+     * @return Ritorna una ObservableList di Pacchi
+     * @see Pacco
+     */
+    public ObservableList<Ordine> getPacchi() {
+        return this.ordini;
     }
 
     ///////////////////////////////////// SETTER /////////////////////////////////////
@@ -316,6 +339,28 @@ public class MyDeliveryData {
         }
     }
 
+    public ArrayList<Veicolo> getVeicoloAzienda(Azienda azienda){
+        ArrayList<Veicolo> veicoliAzienda = new ArrayList<>();
+
+        for(Veicolo veicolo : azienda.getVeicoli()){
+            veicoliAzienda.add(veicolo);
+        }
+
+        return veicoliAzienda;
+    }
+
+    public Veicolo getVeicoloDisponibile(Azienda azienda){
+        for(Veicolo veicolo : azienda.getVeicoli()){
+            if(!veicolo.getIsBusy()){
+                return veicolo;
+            }
+            else{
+                return null;
+            }
+        }
+        return null;
+    }
+
     /**
      * Questo metodo lo si utilizza per salvare i dati di Azienda all'interno del file "listaVeicoli.txt"
      * @throws IOException
@@ -363,6 +408,19 @@ public class MyDeliveryData {
         }
     }
 
+    public Corriere getCorriereDisponibile(Azienda azienda){
+        for(Corriere corriere : azienda.getCorrieri()){
+            if(!corriere.getIsBusy()){
+                return corriere;
+            }
+            else{
+                return null;
+            }
+        }
+
+        return null;
+    }
+
     public void storeCorrieri() throws IOException{
         try (ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filenameCorrieri)))){
 
@@ -374,6 +432,92 @@ public class MyDeliveryData {
 
         } catch (IOException e) {
             System.out.println("Errore nel salvataggio del File \"listaCorrieri.txt\"");
+            e.printStackTrace();
+        }
+    }
+
+    ////////////////////////////// METODI: ZONA ORDINI ///////////////////////////////////
+    public void loadOrdini() throws IOException{
+        try(ObjectInputStream objectIn = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filenameOrdini)))) {
+            try{
+                this.ordini.setAll((ArrayList<Ordine>)objectIn.readObject());
+            } catch (ClassNotFoundException e){
+                e.printStackTrace();
+            }
+
+            System.out.println(this.ordini);
+            System.out.println("File \"listaOrdine.txt\" caricato con successo");
+
+        } catch (Exception e) {
+            System.out.println("Errore nel caricamento del File \"listaOrdine\"");
+            e.printStackTrace();
+        }
+    }
+
+    public void aggiungiOrdine(Ordine ordine){
+        this.ordini.add(ordine);
+
+        try{
+            storeOrdini();
+        } catch (IOException e){
+            System.out.println("Errore nel salvataggio degli ordini");
+        }
+    }
+
+    public void storeOrdini() throws IOException{
+        try (ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filenameOrdini)))){
+
+            ArrayList<Ordine> ordini = new ArrayList<>(this.ordini);
+
+            objectOut.writeObject(ordini);
+            System.out.println(ordini);
+            System.out.println("Il file \"listaOrdine.txt\" è stato salvato con successo");
+
+        } catch (IOException e) {
+            System.out.println("Errore nel salvataggio del File \"listaOrdine.txt\"");
+            e.printStackTrace();
+        }
+    }
+
+    ///////////////////////////// METODI: ZONA CLIENTI /////////////////////////////////
+    public void loadPacchi() throws IOException{
+        try(ObjectInputStream objectIn = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filenamePacchi)))) {
+            try{
+                this.pacchi.setAll((ArrayList<Pacco>)objectIn.readObject());
+            } catch (ClassNotFoundException e){
+                e.printStackTrace();
+            }
+
+            System.out.println(this.pacchi);
+            System.out.println("File \"listaPacchi.txt\" caricato con successo");
+
+        } catch (Exception e) {
+            System.out.println("Errore nel caricamento del File \"listaPacchi\"");
+            e.printStackTrace();
+        }
+    }
+
+    public void aggiungiPacco(Pacco pacco){
+        this.pacchi.add(pacco);
+
+        try{
+            storePacchi();
+        } catch (IOException e){
+            System.out.println("Errore nel salvagaggio dei pacchi");
+        }
+    }
+
+    public void storePacchi() throws IOException{
+        try (ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filenamePacchi)))){
+
+            ArrayList<Pacco> pacchi = new ArrayList<>(this.pacchi);
+
+            objectOut.writeObject(pacchi);
+            System.out.println(pacchi);
+            System.out.println("Il file \"listaPacchi.txt\" è stato salvato con successo");
+
+        } catch (IOException e) {
+            System.out.println("Errore nel salvataggio del File \"listaPacchi.txt\"");
             e.printStackTrace();
         }
     }
@@ -402,6 +546,13 @@ public class MyDeliveryData {
 
         if(this.clienti.size() == 0){
             this.clienti.add(clienteNuovo);
+
+            try{
+                storeClienti();
+            } catch (IOException e){
+                System.out.println("Errore nel salvataggio del File \"listaClienti\"");
+            }
+
             return true;
         }
         else{

@@ -18,10 +18,14 @@ public class Destinatario extends Persona implements ObserverDestinatario, Seria
     public Destinatario(String nome, String cognome, String indirizzo, String numeroDiTelefono, String cf,
                         StatoOrdine statoOrdine, ObservableCorriere corriereDelPacco){
         super(nome, cognome, indirizzo, numeroDiTelefono, cf);
-        this.statoOrdine = statoOrdine;
 
+        this.statoOrdine = statoOrdine;
         this.listaCorrieriDiOrdine = new ArrayList<>();
         this.listaCorrieriDiOrdine.add(corriereDelPacco);
+    }
+
+    public Destinatario(String nome, String cognome, String indirizzo, String numeroDiTelefono, String cf){
+        this(nome, cognome, indirizzo, numeroDiTelefono, cf, StatoOrdine.IN_PREPARAZIONE, null);
     }
 
     public StatoOrdine getStatoOrdine() {
@@ -43,5 +47,17 @@ public class Destinatario extends Persona implements ObserverDestinatario, Seria
     @Override
     public void updateStatoOrdine(StatoOrdine statOrdine){
         setStatoOrdine(statOrdine);
+    }
+
+    @Override
+    public String toString() {
+        return "Persona{" +
+                "nome='" + super.getNome() + '\'' +
+                ", cognome='" + super.getCognome() + '\'' +
+                ", indirizzo='" + super.getIndirizzo() + '\'' +
+                ", numeroDiTelefono='" + super.getNumeroDiTelefono() + '\'' +
+                ", cf='" + super.getCf() + '\'' +
+                ", Stato Ordine='" + this.statoOrdine + '\'' +
+                '}';
     }
 }

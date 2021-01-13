@@ -3,6 +3,7 @@ package com.gaetanoippolito.model.observerPattern;
 import com.gaetanoippolito.model.Ordine;
 import com.gaetanoippolito.model.StatoOrdine;
 import com.gaetanoippolito.model.Utente;
+import com.gaetanoippolito.model.Veicolo;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -17,12 +18,14 @@ public class Corriere extends Utente implements ObservableCorriere, Serializable
     private int idCorriere;
     private Ordine ordineAssociato;
     private ArrayList<ObserverDestinatario> listaDestinatari;
+    private boolean isBusy;
 
     public Corriere(String username, String password, String nome, String cognome, String email, int idCorriere,
                     Ordine ordineAssociato, Destinatario destinatario){
         super(username, password, nome, cognome, email);
         this.idCorriere = idCorriere;
         this.ordineAssociato = ordineAssociato;
+        this.isBusy = false;
 
         this.listaDestinatari = new ArrayList<>();
         this.listaDestinatari.add(destinatario);
@@ -44,6 +47,10 @@ public class Corriere extends Utente implements ObservableCorriere, Serializable
         return listaDestinatari;
     }
 
+    public boolean getIsBusy(){
+        return this.isBusy;
+    }
+
     public void setIdCorriere(int idCorriere) {
         this.idCorriere = idCorriere;
     }
@@ -54,6 +61,10 @@ public class Corriere extends Utente implements ObservableCorriere, Serializable
 
     public void setListaDestinatari(ArrayList<ObserverDestinatario> listaDestinatari) {
         this.listaDestinatari = listaDestinatari;
+    }
+
+    public void setIsBusy(boolean isBusy){
+        this.isBusy = isBusy;
     }
 
     @Override
@@ -79,7 +90,8 @@ public class Corriere extends Utente implements ObservableCorriere, Serializable
     public String toString(){
         return String.format("Nome: %s\n" +
                              "Cognome: %s\n" +
-                             "IdCorriere: %s",
-                             super.getNome(), super.getCognome(), this.idCorriere);
+                             "IdCorriere: %s\n" +
+                             "isBusy: %s",
+                             super.getNome(), super.getCognome(), this.idCorriere, this.isBusy);
     }
 }

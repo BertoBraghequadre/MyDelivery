@@ -3,10 +3,17 @@ package com.gaetanoippolito.model.builderPattern;
 import com.gaetanoippolito.model.*;
 import com.gaetanoippolito.model.observerPattern.Corriere;
 import com.gaetanoippolito.model.observerPattern.Destinatario;
+
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 
-public class ConcreteOrdine extends BuilderOrdine {
+public class ConcreteOrdine extends BuilderOrdine implements Serializable {
+    // id del "serialVersionUID"
+    @Serial
+    private static final long serialVersionUID = 13L;
+
     @Override
     public void buildMittente(Cliente mittente){
         ordine.setMittente(mittente);

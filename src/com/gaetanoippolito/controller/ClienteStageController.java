@@ -21,6 +21,7 @@ import java.util.Optional;
 
 public class ClienteStageController {
     private final String rootCreaOrdineDialog = "src/com/gaetanoippolito/view/fxml/dialog/creaOrdineDialog.fxml";
+    private LoginController loginController;
     private Cliente cliente;
 
     @FXML
@@ -50,8 +51,12 @@ public class ClienteStageController {
         this.nomeAziendaColonna.setMaxWidth(Integer.MAX_VALUE * 20D);   //20%
     }
 
-    public void clienteStage(Cliente cliente){
+    public void setCliente(Cliente cliente){
         this.cliente = cliente;
+    }
+
+    public Cliente getCliente(){
+        return this.cliente;
     }
 
     @FXML
@@ -80,21 +85,28 @@ public class ClienteStageController {
         // inizializziamo  il controller
         creaOrdineController = loader.getController();
 
+        creaOrdineController.setMittente(this.cliente);
+
+        // Settiamo il bottone a "non cliccabile" in base al ritorno dinamico del testo dei vari TextField
+        creaOrdineDialog.getDialogPane().lookupButton(ButtonType.OK).disableProperty().bind(creaOrdineController.disabilitaOkButton());
+
         // Aspettiamo l'input dell'utente
         Optional<ButtonType> result = creaOrdineDialog.showAndWait();
 
-        /*
         // Se il tasto "OK" è stato cliccato rimuovi l'azienda, altrimenti annulla l'operazione
-        if(result.isPresent() && result.get() == ButtonType.OK){
+        if(result.isPresent() && result.get() == ButtonType.OK) {
             if(creaOrdineController.processaCreazioneOrdine()){
-                System.out.println("Rimozione avvenuta con successo!");
+                System.out.println("Operazione Riuscita");
             }
             else{
+                System.out.println("Corrieri o veicoli non disponibili");
             }
+
+            // Visualizza l'ordine
         }
         else{
-            System.out.println("Operazione Annullata");
+            System.out.println("Operazione fallita");
         }
-        */
+
     }
 }

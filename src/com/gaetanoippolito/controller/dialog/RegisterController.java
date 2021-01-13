@@ -1,6 +1,7 @@
 package com.gaetanoippolito.controller.dialog;
 
 import com.gaetanoippolito.model.Cliente;
+import com.gaetanoippolito.model.builderPattern.ConcreteOrdine;
 import com.gaetanoippolito.model.database.MyDeliveryData;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanExpression;
@@ -36,7 +37,7 @@ public class RegisterController {
         String cf = this.cfTextField.getText().trim();
         String numeroDiTelefono = this.numeroDiTelefonoTextField.getText().trim();
 
-        Cliente cliente = new Cliente(username, password, nome, cognome, email, indirizzo, cf, numeroDiTelefono);
+        Cliente cliente = new Cliente(username, password, nome, cognome, email, indirizzo, cf, numeroDiTelefono, new ConcreteOrdine());
         if(MyDeliveryData.getInstance().aggiungiCliente(cliente)){
             return "Account Registrato!";
         }
