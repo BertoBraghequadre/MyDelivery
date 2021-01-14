@@ -41,6 +41,13 @@
                promptText="Username"
                fx:id="usernameLoginField"/>
 
+    <TextField GridPane.rowIndex="0"
+               GridPane.columnIndex="2"
+               maxWidth="170"
+               promptText="Cognome"
+               visible="false"
+               fx:id="cognomeLoginField"/>
+
     <PasswordField GridPane.rowIndex="1"
                    GridPane.columnIndex="1"
                    promptText="Password"
@@ -72,6 +79,7 @@
     <TextArea GridPane.rowIndex="5"
               GridPane.columnIndex="2"
               fx:id="informazioniPaccoTextArea"
+              maxWidth="250"
               editable="false"
               visible="false"/>
 </GridPane>

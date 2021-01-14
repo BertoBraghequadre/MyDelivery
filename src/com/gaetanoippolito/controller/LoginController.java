@@ -57,6 +57,8 @@ public class LoginController {
     /**@see PasswordField*/
     @FXML
     private PasswordField passwordLoginField;
+    @FXML
+    private TextField cognomeLoginField;
 
     /**@see Label*/
     @FXML
@@ -80,25 +82,32 @@ public class LoginController {
 
     /**
      * Questo metodo serve ad abilitare il bottone "login" e il bottone "registra" quando i vari ToggleButton sono
-     * selezionati.
+     * selezionati e, nel caso in cui il ToggleButton corriere fosse selezionato, permette di mostrare il TextField
+     * per selezionare il cognome e cambia il PromptText del Username a Nome
      */
     @FXML
     public void attivaBottoneLogin(){
-        // Se il toggleAdmin o il toggleCorriere sono selezionati, abilitiamo il tasto login, ma disabilitiamo
-        // il tasto per la registrazione
-        if(toggleAdmin.isSelected() || toggleCorriere.isSelected()){
-            loginButton.setDisable(false);
-            registerButton.setDisable(true);
+        if(this.toggleAdmin.isSelected()){
+            this.loginButton.setDisable(false);
+            this.registerButton.setDisable(true);
+            this.cognomeLoginField.setVisible(false);
+            this.usernameLoginField.setPromptText("Username");
         }
-        // Se il toggleCliente è selezionato, abilitiamo entrambi i bottoni
-        else if(toggleCliente.isSelected()){
-            loginButton.setDisable(false);
-            registerButton.setDisable(false);
+        else if(this.toggleCliente.isSelected()){
+            this.loginButton.setDisable(false);
+            this.registerButton.setDisable(false);
+            this.cognomeLoginField.setVisible(false);
+            this.usernameLoginField.setPromptText("Username");
         }
-        // Se tutti i toggleButton sono deselezionati allora disabilitiamo i tasti
+        else if(this.toggleCorriere.isSelected()){
+            this.loginButton.setDisable(false);
+            this.registerButton.setDisable(true);
+            this.cognomeLoginField.setVisible(true);
+            this.usernameLoginField.setPromptText("Nome");
+        }
         else{
-            loginButton.setDisable(true);
-            registerButton.setDisable(true);
+            this.loginButton.setDisable(true);
+            this.registerButton.setDisable(true);
         }
     }
 
@@ -137,6 +146,22 @@ public class LoginController {
             } catch (Exception e){
                 this.loginErrorLabel.setVisible(true);
                 this.loginErrorLabel.setText("Username o Password Errati");
+            }
+        }
+
+        if(this.toggleCorriere.isSelected()){
+            // Salvo il valore in input digitato dall'utente nei vari TextField
+            String nome = this.usernameLoginField.getText().trim();
+            String cognome = this.cognomeLoginField.getText().trim();
+            String password = this.passwordLoginField.getText().trim();
+
+            try{
+                this.cliente = MyDeliveryData.getInstance().loginCliente(new Cliente(nome, password));
+
+                vaiAdInterfacciaCliente();
+            } catch (Exception e){
+                this.loginErrorLabel.setVisible(true);
+                this.loginErrorLabel.setText("Corriere non riconosciuto");
             }
         }
     }

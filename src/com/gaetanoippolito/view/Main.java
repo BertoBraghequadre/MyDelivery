@@ -22,7 +22,7 @@ public class Main extends Application {
         setUserAgentStylesheet(STYLESHEET_CASPIAN);
 
         primaryStage.setTitle("My Delivery");
-        primaryStage.setScene(new Scene(root, 800, 600));
+        primaryStage.setScene(new Scene(root, 550, 450));
         primaryStage.show();
     }
 
