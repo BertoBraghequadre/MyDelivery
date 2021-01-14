@@ -15,10 +15,15 @@
                     </tooltip>
                 </Button>
 
-                <Button onAction="#popolaCelle" text="Visualizza Ordini">
+                <Button onAction="#popolaCelle" text="Visualizza Ordini" fx:id="visualizzaOrdiniButton">
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin></Button>
+
+                <Button onAction="#ritornaInterfacciaLogin" text="Logout" fx:id="logoutButton">
+                    <HBox.margin>
+                        <Insets left="10.0" />
+                    </HBox.margin></Button>
             </HBox>
         </ToolBar>
     </top>

@@ -2,6 +2,7 @@ package com.gaetanoippolito.controller;
 
 import com.gaetanoippolito.controller.dialog.AggiungiAziendaController;
 import com.gaetanoippolito.controller.dialog.RimuoviAziendaController;
+import com.gaetanoippolito.model.Admin;
 import com.gaetanoippolito.model.Azienda;
 import com.gaetanoippolito.model.Veicolo;
 import com.gaetanoippolito.model.database.MyDeliveryData;
@@ -10,8 +11,10 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Optional;
@@ -22,6 +25,7 @@ import java.util.Optional;
  */
 public class AdminStageController {
     ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
+    private final String rootLoginStageFile = "src/com/gaetanoippolito/view/fxml/login.fxml";
     private final String rootAdminStageFile = "src/com/gaetanoippolito/view/fxml/adminStage.fxml";
     private final String rootAggiungiAziendaDialog = "src/com/gaetanoippolito/view/fxml/dialog/aggiungiAziendaDialog.fxml";
     private final String rootRimuoviAziendaDialog = "src/com/gaetanoippolito/view/fxml/dialog/rimuoviAziendaDialog.fxml";
@@ -109,6 +113,11 @@ public class AdminStageController {
         });
 
         // TODO: visualizzare i colli
+
+
+        exitItem.setOnAction(event -> {
+            ritornaInterfacciaLogin();
+        });
     }
 
     /**
@@ -346,5 +355,29 @@ public class AdminStageController {
         });
 
         return tableColumn;
+    }
+
+    private void ritornaInterfacciaLogin(){
+        // Chiude la finestra dell'Admin
+        Stage stage = (Stage)vboxAdminStage.getScene().getWindow();
+        stage.close();
+
+        // Creazione di una nuova finestra
+        Stage loginStage = new Stage();
+
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            Parent root = loader.load(new FileInputStream(rootLoginStageFile));
+
+            loginStage.setTitle("My Delivery");
+            loginStage.setScene(new Scene(root, 550, 450));
+            loginStage.show();
+
+            loginStage.show();
+
+        } catch (IOException e){
+            e.printStackTrace();
+            System.out.println("Errore nel caricamento del file");
+        }
     }
 }

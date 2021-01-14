@@ -9,13 +9,16 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Optional;
 
 public class ClienteStageController {
+    private final String rootLoginStageFile = "src/com/gaetanoippolito/view/fxml/login.fxml";
     private final String rootCreaOrdineDialog = "src/com/gaetanoippolito/view/fxml/dialog/creaOrdineDialog.fxml";
     private LoginController loginController;
     private Cliente cliente;
@@ -38,6 +41,12 @@ public class ClienteStageController {
     private TableColumn<Ordine, String> nomeAziendaColonna;
     @FXML
     private TableColumn<Ordine, String> codicePaccoColonna;
+
+    @FXML
+    private Button visualizzaOrdiniButton;
+
+    @FXML
+    private Button logoutButton;
 
     @FXML
     public void initialize(){
@@ -124,6 +133,31 @@ public class ClienteStageController {
             System.out.println("Operazione fallita");
         }
 
+    }
+
+    @FXML
+    public void ritornaInterfacciaLogin(){
+        // Chiude la finestra dell'Admin
+        Stage stage = (Stage)this.logoutButton.getScene().getWindow();
+        stage.close();
+
+        // Creazione di una nuova finestra
+        Stage loginStage = new Stage();
+
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            Parent root = loader.load(new FileInputStream(rootLoginStageFile));
+
+            loginStage.setTitle("My Delivery");
+            loginStage.setScene(new Scene(root, 550, 450));
+            loginStage.show();
+
+            loginStage.show();
+
+        } catch (IOException e){
+            e.printStackTrace();
+            System.out.println("Errore nel caricamento del file");
+        }
     }
 
     private void visualizzaColonnaMittente(){
