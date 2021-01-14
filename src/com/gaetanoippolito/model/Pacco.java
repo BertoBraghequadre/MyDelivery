@@ -16,12 +16,14 @@ public class Pacco implements Serializable {
     private Destinatario destinatario;
     private double pesoPacco;
     private boolean isFragile;
+    private StatoPacco statoPacco;
 
     public Pacco(Cliente mittente, Destinatario destinatario, double pesoPacco, boolean isFragile){
         this.mittente = mittente;
         this.destinatario = destinatario;
         this.pesoPacco = pesoPacco;
         this.isFragile = isFragile;
+        this.statoPacco = StatoPacco.IN_PREPARAZIONE;
 
         Random random = new Random();
         int maxRandomNumber = 56000;
@@ -48,6 +50,10 @@ public class Pacco implements Serializable {
         return this.isFragile;
     }
 
+    public StatoPacco getStatoPacco(){
+        return this.statoPacco;
+    }
+
     public void setMittente(Cliente mittente) {
         this.mittente = mittente;
     }
@@ -62,6 +68,10 @@ public class Pacco implements Serializable {
 
     public void setFragile(boolean fragile) {
         isFragile = fragile;
+    }
+
+    public void setStatoPacco(StatoPacco statoPacco){
+        this.statoPacco = statoPacco;
     }
 
     @Override

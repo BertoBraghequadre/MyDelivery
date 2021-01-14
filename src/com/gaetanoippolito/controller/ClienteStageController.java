@@ -1,19 +1,15 @@
 package com.gaetanoippolito.controller;
 
 import com.gaetanoippolito.controller.dialog.CreaOrdineController;
-import com.gaetanoippolito.model.Azienda;
 import com.gaetanoippolito.model.Cliente;
 import com.gaetanoippolito.model.Ordine;
-import com.gaetanoippolito.model.StatoOrdine;
-import com.gaetanoippolito.model.observerPattern.Corriere;
-import com.gaetanoippolito.model.observerPattern.Destinatario;
+import com.gaetanoippolito.model.database.MyDeliveryData;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,6 +19,7 @@ public class ClienteStageController {
     private final String rootCreaOrdineDialog = "src/com/gaetanoippolito/view/fxml/dialog/creaOrdineDialog.fxml";
     private LoginController loginController;
     private Cliente cliente;
+    private ObservableList<Ordine> ordini;
 
     @FXML
     private BorderPane stageClienteBorderPane;
@@ -30,33 +27,51 @@ public class ClienteStageController {
     @FXML
     private TableView<Ordine> ordineView;
     @FXML
-    private TableColumn<Cliente, String> mittenteColonna;
+    private TableColumn<Ordine, String> mittenteColonna;
     @FXML
-    private TableColumn<Destinatario, String> destinatarioColonna;
+    private TableColumn<Ordine, String> destinatarioColonna;
     @FXML
-    private TableColumn<Ordine, StatoOrdine> statoOrdineColonna;
+    private TableColumn<Ordine, String> statoOrdineColonna;
     @FXML
-    private TableColumn<Corriere, String> corriereColonna;
+    private TableColumn<Ordine, String> corriereColonna;
     @FXML
-    private TableColumn<Azienda, String> nomeAziendaColonna;
+    private TableColumn<Ordine, String> nomeAziendaColonna;
+    @FXML
+    private TableColumn<Ordine, String> codicePaccoColonna;
 
     @FXML
     public void initialize(){
         // Impostiamo la grandezza massima della TableView per ogni colonna
         this.ordineView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        this.mittenteColonna.setMaxWidth(Integer.MAX_VALUE * 20D);      //20%
-        this.destinatarioColonna.setMaxWidth(Integer.MAX_VALUE * 20D);  //20%
-        this.statoOrdineColonna.setMaxWidth(Integer.MAX_VALUE * 20D);   //20%
-        this.corriereColonna.setMaxWidth(Integer.MAX_VALUE * 20D);      //20%
-        this.nomeAziendaColonna.setMaxWidth(Integer.MAX_VALUE * 20D);   //20%
+        this.mittenteColonna.setMaxWidth(Integer.MAX_VALUE * 16D);      //16%
+        this.destinatarioColonna.setMaxWidth(Integer.MAX_VALUE * 16D);  //16%
+        this.statoOrdineColonna.setMaxWidth(Integer.MAX_VALUE * 16D);   //16%
+        this.corriereColonna.setMaxWidth(Integer.MAX_VALUE * 16D);      //16%
+        this.nomeAziendaColonna.setMaxWidth(Integer.MAX_VALUE * 16D);   //16%
+        this.codicePaccoColonna.setMaxWidth(Integer.MAX_VALUE * 16D);   //16%
+
+        visualizzaColonnaMittente();
+        visualizzaColonnaDestinatario();
+        visualizzaColonnaStatoOrdine();
+        visualizzaColonnaCorriere();
+        visualizzaColonnaAzienda();
+        visualizzaColonnaCodicePacco();
     }
 
     public void setCliente(Cliente cliente){
         this.cliente = cliente;
     }
 
+    public void setOrdini(ObservableList<Ordine> ordini){
+        this.ordini = ordini;
+    }
+
     public Cliente getCliente(){
         return this.cliente;
+    }
+
+    public ObservableList<Ordine> getOrdini(){
+        return this.ordini;
     }
 
     @FXML
@@ -97,6 +112,7 @@ public class ClienteStageController {
         if(result.isPresent() && result.get() == ButtonType.OK) {
             if(creaOrdineController.processaCreazioneOrdine()){
                 System.out.println("Operazione Riuscita");
+                popolaCelle();
             }
             else{
                 System.out.println("Corrieri o veicoli non disponibili");
@@ -108,5 +124,125 @@ public class ClienteStageController {
             System.out.println("Operazione fallita");
         }
 
+    }
+
+    private void visualizzaColonnaMittente(){
+        // "SimpleStringProperty" rende una stringa osservabile data una stringa
+        this.mittenteColonna.setCellValueFactory(ordine -> new SimpleStringProperty(
+                     ordine.getValue().getMittente().getNome() + " " +
+                        ordine.getValue().getMittente().getCognome()));
+
+        // Personalizziamo la cella e quello che vogliamo vedere
+        this.mittenteColonna.setCellFactory(mittenteColonna -> new TableCell<>(){
+            @Override
+            protected void updateItem(String nomeCognomeMittente, boolean empty){
+                super.updateItem(nomeCognomeMittente, empty);
+                if(empty || nomeCognomeMittente == null){
+                    setText(null);
+                } else {
+                    setText(nomeCognomeMittente);
+                }
+            }
+        });
+    }
+
+    private void visualizzaColonnaDestinatario(){
+        // "SimpleStringProperty" rende una stringa osservabile data una stringa
+        this.destinatarioColonna.setCellValueFactory(ordine -> new SimpleStringProperty(
+                     ordine.getValue().getDestinatario().getNome() + " " +
+                        ordine.getValue().getDestinatario().getCognome()));
+
+        // Personalizziamo la cella e quello che vogliamo vedere
+        this.destinatarioColonna.setCellFactory(destinatarioColonna -> new TableCell<>(){
+            @Override
+            protected void updateItem(String destinatarioNomeCognome, boolean empty){
+                super.updateItem(destinatarioNomeCognome, empty);
+                if(empty || destinatarioNomeCognome == null){
+                    setText(null);
+                } else {
+                    setText(destinatarioNomeCognome);
+                }
+            }
+        });
+    }
+
+    private void visualizzaColonnaStatoOrdine(){
+        // "SimpleStringProperty" rende una stringa osservabile data una stringa
+        this.statoOrdineColonna.setCellValueFactory(ordine -> new SimpleStringProperty(
+                                                              String.valueOf(ordine.getValue().getPacco().getStatoPacco())));
+
+        // Personalizziamo la cella e quello che vogliamo vedere
+        this.statoOrdineColonna.setCellFactory(statoOrdineColonna -> new TableCell<>(){
+            @Override
+            protected void updateItem(String statoOrdine, boolean empty){
+                super.updateItem(statoOrdine, empty);
+                if(empty || statoOrdine == null){
+                    setText(null);
+                } else {
+                    setText(statoOrdine);
+                }
+            }
+        });
+    }
+
+    private void visualizzaColonnaCorriere(){
+        // "SimpleStringProperty" rende una stringa osservabile data una stringa
+        this.corriereColonna.setCellValueFactory(ordine -> new SimpleStringProperty(
+                     ordine.getValue().getOrdineDelCorriere().getNome() + " " +
+                        ordine.getValue().getOrdineDelCorriere().getCognome()));
+
+        // Personalizziamo la cella e quello che vogliamo vedere
+        this.corriereColonna.setCellFactory(corriereColonna -> new TableCell<>(){
+            @Override
+            protected void updateItem(String nomeCognomeCorriere, boolean empty){
+                super.updateItem(nomeCognomeCorriere, empty);
+                if(empty || nomeCognomeCorriere == null){
+                    setText(null);
+                } else {
+                    setText(nomeCognomeCorriere);
+                }
+            }
+        });
+    }
+
+    private void visualizzaColonnaAzienda(){
+        // "SimpleStringProperty" rende una stringa osservabile data una stringa
+        this.nomeAziendaColonna.setCellValueFactory(ordine -> new SimpleStringProperty(
+                ordine.getValue().getOrdineDaAzienda().getNome()));
+
+        // Personalizziamo la cella e quello che vogliamo vedere
+        this.nomeAziendaColonna.setCellFactory(aziendaColonna -> new TableCell<>(){
+            @Override
+            protected void updateItem(String nomeAzienda, boolean empty){
+                super.updateItem(nomeAzienda, empty);
+                if(empty || nomeAzienda == null){
+                    setText(null);
+                } else {
+                    setText(nomeAzienda);
+                }
+            }
+        });
+    }
+
+    private void visualizzaColonnaCodicePacco(){
+        // "SimpleStringProperty" rende una stringa osservabile data una stringa
+        this.codicePaccoColonna.setCellValueFactory(ordine -> new SimpleStringProperty(String.valueOf(ordine.getValue().getPacco().getCodice())));
+
+        // Personalizziamo la cella e quello che vogliamo vedere
+        this.codicePaccoColonna.setCellFactory(codicePaccoColonna -> new TableCell<>(){
+            @Override
+            protected void updateItem(String codicePacco, boolean empty){
+                super.updateItem(codicePacco, empty);
+                if(empty || codicePacco == null){
+                    setText(null);
+                } else {
+                    setText(codicePacco);
+                }
+            }
+        });
+    }
+
+    public void popolaCelle(){
+        this.ordineView.setItems(MyDeliveryData.getInstance().getMittenteOrdini(this.cliente));
     }
 }

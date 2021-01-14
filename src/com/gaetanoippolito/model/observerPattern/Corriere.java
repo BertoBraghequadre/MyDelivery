@@ -1,10 +1,9 @@
 package com.gaetanoippolito.model.observerPattern;
 
 import com.gaetanoippolito.model.Ordine;
-import com.gaetanoippolito.model.StatoOrdine;
+import com.gaetanoippolito.model.Pacco;
+import com.gaetanoippolito.model.StatoPacco;
 import com.gaetanoippolito.model.Utente;
-import com.gaetanoippolito.model.Veicolo;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,6 +16,7 @@ public class Corriere extends Utente implements ObservableCorriere, Serializable
 
     private int idCorriere;
     private Ordine ordineAssociato;
+    private Pacco paccoAssociato;
     private ArrayList<ObserverDestinatario> listaDestinatari;
     private boolean isBusy;
 
@@ -26,6 +26,7 @@ public class Corriere extends Utente implements ObservableCorriere, Serializable
         this.idCorriere = idCorriere;
         this.ordineAssociato = ordineAssociato;
         this.isBusy = false;
+        this.paccoAssociato = this.ordineAssociato.getPacco();
 
         this.listaDestinatari = new ArrayList<>();
         this.listaDestinatari.add(destinatario);
@@ -78,11 +79,11 @@ public class Corriere extends Utente implements ObservableCorriere, Serializable
     }
 
     @Override
-    public void notificaDestintari(StatoOrdine ordine){
-        this.ordineAssociato.setStatoOrdine(ordine);
+    public void notificaDestintari(StatoPacco statoPacco){
+        this.paccoAssociato.setStatoPacco(statoPacco);
 
         for(ObserverDestinatario destinatario : this.listaDestinatari){
-            destinatario.updateStatoOrdine(this.ordineAssociato.getStatoOrdine());
+            destinatario.updateStatoPacco(this.paccoAssociato.getStatoPacco());
         }
     }
 

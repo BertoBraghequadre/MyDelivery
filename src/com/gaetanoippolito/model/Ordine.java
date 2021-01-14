@@ -1,9 +1,7 @@
 package com.gaetanoippolito.model;
 
-import com.gaetanoippolito.model.database.MyDeliveryData;
 import com.gaetanoippolito.model.observerPattern.Corriere;
 import com.gaetanoippolito.model.observerPattern.Destinatario;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -18,7 +16,6 @@ public class Ordine implements Serializable {
     private Pacco pacco;
     private Cliente mittente;
     private Destinatario destinatario;
-    private StatoOrdine statoOrdine;
     private LocalDate dataDiConsegna;
     private Azienda ordineDaAzienda;
     private Corriere ordineDelCorriere;
@@ -28,10 +25,6 @@ public class Ordine implements Serializable {
 
     public Pacco getPacco() {
         return this.pacco;
-    }
-
-    public StatoOrdine getStatoOrdine() {
-        return this.statoOrdine;
     }
 
     public LocalDate getDataDiConsegna() {
@@ -60,10 +53,6 @@ public class Ordine implements Serializable {
 
     public void setPacco(Pacco pacco) {
         this.pacco = pacco;
-    }
-
-    public void setStatoOrdine(StatoOrdine statoOrdine) {
-        this.statoOrdine = statoOrdine;
     }
 
     public void setDataDiConsegna(LocalDate dataDiConsegna) {
@@ -114,7 +103,6 @@ public class Ordine implements Serializable {
                 "pacco=" + pacco +
                 ", mittente=" + mittente +
                 ", destinatario=" + destinatario +
-                ", statoOrdine=" + statoOrdine +
                 ", dataDiConsegna=" + dataDiConsegna +
                 ", ordineDaAzienda=" + ordineDaAzienda +
                 ", ordineDelCorriere=" + ordineDelCorriere +

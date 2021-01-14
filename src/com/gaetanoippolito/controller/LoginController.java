@@ -218,6 +218,7 @@ public class LoginController {
         try{
             FXMLLoader loader = new FXMLLoader();
             ClienteStageController clienteStageController;
+
             Parent root = loader.load(new FileInputStream(rootClienteStageFile));
 
             clienteStage.setTitle(this.cliente.getNome() + " " + this.cliente.getCognome());
@@ -225,6 +226,7 @@ public class LoginController {
 
             clienteStageController = loader.getController();
             clienteStageController.setCliente(this.cliente);
+            clienteStageController.setOrdini(MyDeliveryData.getInstance().getMittenteOrdini(this.cliente));
 
             clienteStage.show();
 

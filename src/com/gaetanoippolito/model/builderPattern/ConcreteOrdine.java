@@ -25,11 +25,6 @@ public class ConcreteOrdine extends BuilderOrdine implements Serializable {
     }
 
     @Override
-    public void buildStatoOrdine(StatoOrdine stato){
-        ordine.setStatoOrdine(stato);
-    }
-
-    @Override
     public void buildDataDiConsegna(LocalDate dataDiConsegna){
         ordine.setDataDiConsegna(dataDiConsegna);
     }

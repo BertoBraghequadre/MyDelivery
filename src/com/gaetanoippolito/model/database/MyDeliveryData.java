@@ -464,6 +464,18 @@ public class MyDeliveryData {
         }
     }
 
+    public ObservableList<Ordine> getMittenteOrdini(Cliente mittente){
+        ObservableList<Ordine> listaMittenteOrdini = FXCollections.observableArrayList();
+
+        for(Ordine ordine : this.ordini){
+            if(ordine.getMittente().equals(mittente)){
+                listaMittenteOrdini.add(ordine);
+            }
+        }
+
+        return listaMittenteOrdini;
+    }
+
     public void storeOrdini() throws IOException{
         try (ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filenameOrdini)))){
 

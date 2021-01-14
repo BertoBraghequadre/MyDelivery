@@ -1,8 +1,7 @@
 package com.gaetanoippolito.model.observerPattern;
 
 import com.gaetanoippolito.model.Persona;
-import com.gaetanoippolito.model.StatoOrdine;
-
+import com.gaetanoippolito.model.StatoPacco;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,28 +11,28 @@ public class Destinatario extends Persona implements ObserverDestinatario, Seria
     // id del "serialVersionUID"
     @Serial
     private static final long serialVersionUID = 9L;
-    private StatoOrdine statoOrdine;
+    private StatoPacco statoPacco;
     private ArrayList<ObservableCorriere> listaCorrieriDiOrdine;
 
     public Destinatario(String nome, String cognome, String indirizzo, String numeroDiTelefono, String cf,
-                        StatoOrdine statoOrdine, ObservableCorriere corriereDelPacco){
+                        StatoPacco statoPacco, ObservableCorriere corriereDelPacco){
         super(nome, cognome, indirizzo, numeroDiTelefono, cf);
 
-        this.statoOrdine = statoOrdine;
+        this.statoPacco = statoPacco;
         this.listaCorrieriDiOrdine = new ArrayList<>();
         this.listaCorrieriDiOrdine.add(corriereDelPacco);
     }
 
     public Destinatario(String nome, String cognome, String indirizzo, String numeroDiTelefono, String cf){
-        this(nome, cognome, indirizzo, numeroDiTelefono, cf, StatoOrdine.IN_PREPARAZIONE, null);
+        this(nome, cognome, indirizzo, numeroDiTelefono, cf, StatoPacco.IN_PREPARAZIONE, null);
     }
 
-    public StatoOrdine getStatoOrdine() {
-        return statoOrdine;
+    public StatoPacco getStatoPacco() {
+        return statoPacco;
     }
 
-    public void setStatoOrdine(StatoOrdine statoOrdine) {
-        this.statoOrdine = statoOrdine;
+    public void setStatoPacco(StatoPacco statoPacco) {
+        this.statoPacco = statoPacco;
     }
 
     public ArrayList<ObservableCorriere> getListaCorrieriDiOrdine() {
@@ -45,8 +44,8 @@ public class Destinatario extends Persona implements ObserverDestinatario, Seria
     }
 
     @Override
-    public void updateStatoOrdine(StatoOrdine statOrdine){
-        setStatoOrdine(statOrdine);
+    public void updateStatoPacco(StatoPacco statoPacco){
+        setStatoPacco(statoPacco);
     }
 
     @Override
@@ -57,7 +56,7 @@ public class Destinatario extends Persona implements ObserverDestinatario, Seria
                 ", indirizzo='" + super.getIndirizzo() + '\'' +
                 ", numeroDiTelefono='" + super.getNumeroDiTelefono() + '\'' +
                 ", cf='" + super.getCf() + '\'' +
-                ", Stato Ordine='" + this.statoOrdine + '\'' +
+                ", Stato Ordine='" + this.statoPacco + '\'' +
                 '}';
     }
 }

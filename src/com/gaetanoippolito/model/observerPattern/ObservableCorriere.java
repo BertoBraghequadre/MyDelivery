@@ -1,8 +1,6 @@
 package com.gaetanoippolito.model.observerPattern;
 
-import com.gaetanoippolito.model.StatoOrdine;
-
-import java.io.Serial;
+import com.gaetanoippolito.model.StatoPacco;
 import java.io.Serializable;
 
 public interface ObservableCorriere extends Serializable {
@@ -11,5 +9,5 @@ public interface ObservableCorriere extends Serializable {
 
     void aggiungiDestinatario(Destinatario destinatario);
     void rimuoviDestinatario(Destinatario destinatario);
-    void notificaDestintari(StatoOrdine statoOrdine);
+    void notificaDestintari(StatoPacco statoPacco);
 }

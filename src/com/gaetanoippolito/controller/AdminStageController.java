@@ -107,6 +107,8 @@ public class AdminStageController {
         listaVeicoliItem.setOnAction(event -> {
             visualizzaVeicoli();
         });
+
+        // TODO: visualizzare i colli
     }
 
     /**
