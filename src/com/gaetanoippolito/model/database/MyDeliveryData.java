@@ -106,8 +106,8 @@ public class MyDeliveryData {
      * @return Ritorna una ObservableList di Pacchi
      * @see Pacco
      */
-    public ObservableList<Ordine> getPacchi() {
-        return this.ordini;
+    public ObservableList<Pacco> getPacchi() {
+        return this.pacchi;
     }
 
     ///////////////////////////////////// SETTER /////////////////////////////////////
@@ -491,7 +491,7 @@ public class MyDeliveryData {
         }
     }
 
-    ///////////////////////////// METODI: ZONA CLIENTI /////////////////////////////////
+    ///////////////////////////// METODI: ZONA PACCHI /////////////////////////////////
     public void loadPacchi() throws IOException{
         try(ObjectInputStream objectIn = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filenamePacchi)))) {
             try{

@@ -2,9 +2,7 @@ package com.gaetanoippolito.controller;
 
 import com.gaetanoippolito.controller.dialog.AggiungiAziendaController;
 import com.gaetanoippolito.controller.dialog.RimuoviAziendaController;
-import com.gaetanoippolito.model.Admin;
-import com.gaetanoippolito.model.Azienda;
-import com.gaetanoippolito.model.Veicolo;
+import com.gaetanoippolito.model.*;
 import com.gaetanoippolito.model.database.MyDeliveryData;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
@@ -26,7 +24,6 @@ import java.util.Optional;
 public class AdminStageController {
     ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
     private final String rootLoginStageFile = "src/com/gaetanoippolito/view/fxml/login.fxml";
-    private final String rootAdminStageFile = "src/com/gaetanoippolito/view/fxml/adminStage.fxml";
     private final String rootAggiungiAziendaDialog = "src/com/gaetanoippolito/view/fxml/dialog/aggiungiAziendaDialog.fxml";
     private final String rootRimuoviAziendaDialog = "src/com/gaetanoippolito/view/fxml/dialog/rimuoviAziendaDialog.fxml";
 
@@ -35,15 +32,17 @@ public class AdminStageController {
     private VBox vboxAdminStage;
 
     /**@see Azienda*/
-    TableView<Azienda> aziendaTableView = new TableView<>();
+    private TableView<Azienda> aziendaTableView = new TableView<>();
 
     // Questa TableView viene assegnata la prima volta dal metodo "visualizzaVeicoli()"
     /**@see Veicolo*/
-    TableView<Veicolo> veicoloTableView;
-    // TableView<Ordine> ordineTableView = new TableView<>();
+    private TableView<Veicolo> veicoloTableView;
+    /**@see*/
+    private TableView<Pacco> colliTableView;
 
     private ObservableList<Azienda> aziende = MyDeliveryData.getInstance().getAziende();
     private ObservableList<Veicolo> veicoli = MyDeliveryData.getInstance().getVeicoli();
+    private ObservableList<Pacco> pacchi = MyDeliveryData.getInstance().getPacchi();
 
     ////////////////////////////////////// METODI //////////////////////////////////////
     /**
@@ -113,6 +112,9 @@ public class AdminStageController {
         });
 
         // TODO: visualizzare i colli
+        listaColliDaConsegnareItem.setOnAction(event -> {
+            visualizzaColliDaConsegnare();
+        });
 
 
         exitItem.setOnAction(event -> {
@@ -312,6 +314,75 @@ public class AdminStageController {
         else{
             this.vboxAdminStage.getChildren().add(i - 1, this.veicoloTableView);
         }
+    }
+
+    public void visualizzaColliDaConsegnare(){
+        // Salviamo la grandezza della Vbox in a quanti nodi sono presenti al suo interno. Serve per controllare se
+        // una tabella è già presente all'interno della VBox.
+        int i = this.vboxAdminStage.getChildren().size();
+
+        // Visto che la lista delle aziende viene visualizzata di default, quando viene richiamato questo metodo
+        // rimuoviamo la lista delle aziende
+        this.vboxAdminStage.getChildren().remove(i - 1);
+
+        // Durante questo if statement viene creato per la prima volta la tabella e inizializzata.
+        if(i == 2 && this.colliTableView == null){
+            this.colliTableView = new TableView<>();
+
+            // Creazione delle colonne e del nome dell'intestazione
+            TableColumn<Pacco, String> colonnaCodicePacco = new TableColumn<>("Codice Pacco");
+            TableColumn<Pacco, String> colonnaPesoPacco = new TableColumn<>("Peso Pacco");
+            TableColumn<Pacco, String> colonnaStatoPacco = new TableColumn<>("Stato Pacco");
+
+            // Si setta il valore delle celle in base al ritorno della funzione lamba
+            // "SimpleStringProperty" rende una stringa osservabile data una stringa
+            colonnaCodicePacco.setCellValueFactory(codicePacco -> new SimpleStringProperty(String.valueOf(codicePacco.getValue().getCodice())));
+            this.colliTableView.getColumns().add(popolaCellePacchi(colonnaCodicePacco));
+
+            colonnaPesoPacco.setCellValueFactory(pesoPacco -> new SimpleStringProperty(String.valueOf(pesoPacco.getValue().getPesoPacco())));
+            this.colliTableView.getColumns().add(popolaCellePacchi(colonnaPesoPacco));
+
+            colonnaStatoPacco.setCellValueFactory(statoPacco -> new SimpleStringProperty(String.valueOf(statoPacco.getValue().getStatoPacco())));
+            this.colliTableView.getColumns().add(popolaCellePacchi(colonnaStatoPacco));
+
+
+            // Impostiamo la grandezza massima della TableView per ogni colonna
+            this.colliTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+            colonnaCodicePacco.setMaxWidth(Integer.MAX_VALUE * 33D); // 33%
+            colonnaPesoPacco.setMaxWidth(Integer.MAX_VALUE * 33D);   // 33%
+            colonnaStatoPacco.setMaxWidth(Integer.MAX_VALUE * 33D);  // 33%
+
+            this.colliTableView.setItems(this.pacchi);
+
+            // Aggiungiamo alla VBox la tabella dopo il MenuBar creato durante l'initialize
+            this.vboxAdminStage.getChildren().add(i - 1, this.colliTableView);
+        }
+        // Questo else viene chiamato se e solo se la tabella dei veicoli è stata già creata (ciò che avviene nel blocco
+        // if). In questo blocco viene aggiunta la tabella nella VBox.
+        else{
+            this.vboxAdminStage.getChildren().add(i - 1, this.colliTableView);
+        }
+    }
+
+    /**
+     * Questo metodo viene chiamato quando bisogna aggiungere elementi alla lista dei veicoli.
+     * @param tableColumn rappresenta la colonna che deve essere popolata
+     * @return Ritorna la tabella popolata
+     */
+    private TableColumn<Pacco, String> popolaCellePacchi(TableColumn<Pacco, String> tableColumn){
+        tableColumn.setCellFactory(column -> new TableCell<>(){
+            @Override
+            protected void updateItem(String string, boolean empty){
+                super.updateItem(string, empty);
+                if(empty || string == null){
+                    setText(null);
+                } else {
+                    setText(string);
+                }
+            }
+        });
+
+        return tableColumn;
     }
 
     /**
