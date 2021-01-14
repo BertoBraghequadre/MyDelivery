@@ -18,9 +18,8 @@ public class TrovaPaccoController {
         int codiceInserito = Integer.parseInt(this.codicePaccoTextField.getText().trim());
 
         Pacco paccoDaCercare = MyDeliveryData.getInstance().tracciaPacco(codiceInserito);
-        System.out.println("ciao");
+
         if(paccoDaCercare != null){
-            System.out.println("ciao");
             this.pacco = paccoDaCercare;
             return this.pacco;
         }

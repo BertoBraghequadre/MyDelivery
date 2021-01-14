@@ -9,6 +9,9 @@ import javafx.beans.binding.BooleanExpression;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import java.io.IOError;
+import java.io.IOException;
+
 public class CreaOrdineController {
     private Cliente mittente;
 
@@ -59,9 +62,18 @@ public class CreaOrdineController {
         ordine.setPacco(new Pacco(mittente, destinatario, ordine.generaPeso(), ordine.generaFragile()));
         Pacco pacco = ordine.getPacco();
 
+        corriereDisponibile.setOrdineAssociato(ordine);
+        corriereDisponibile.setPaccoAssociato(pacco);
+
         MyDeliveryData.getInstance().aggiungiOrdine(ordine);
         MyDeliveryData.getInstance().aggiungiPacco(pacco);
-        // TODO: Aggiungi destinatario
+
+        try{
+            MyDeliveryData.getInstance().storeCorrieri();
+        } catch (IOException e){
+            System.out.println("Errore nel salvataggio del corriere");
+        }
+
         return true;
     }
 
@@ -75,11 +87,13 @@ public class CreaOrdineController {
         // Ritorna una espressione booleana ad ogni cambiamento del testo dei vari TextField
         // "textProperty" ritorna il testo corrente
         /**@see Bindings*/
-        return Bindings.createBooleanBinding(() -> this.nomeTextField.getText().trim().isEmpty() ||
+        return Bindings.createBooleanBinding(() -> this.aziendeChoiceBox.getValue() == null ||
+                                                   this.nomeTextField.getText().trim().isEmpty() ||
                                                    this.cognomeTextField.getText().trim().isEmpty() ||
                                                    this.indirizzoTextField.getText().trim().isEmpty() ||
                                                    this.cfTextField.getText().trim().isEmpty() ||
                                                    this.numeroDiTelefonoTextField.getText().trim().isEmpty(),
+                                                   this.aziendeChoiceBox.valueProperty(),
                                                    this.nomeTextField.textProperty(),
                                                    this.cognomeTextField.textProperty(),
                                                    this.indirizzoTextField.textProperty(),

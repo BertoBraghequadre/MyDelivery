@@ -14,45 +14,47 @@ public class Corriere extends Utente implements ObservableCorriere, Serializable
     @Serial
     private static final long serialVersionUID = 7L;
 
-    private int idCorriere;
+    private String idCorriere;
     private Ordine ordineAssociato;
     private Pacco paccoAssociato;
     private ArrayList<ObserverDestinatario> listaDestinatari;
     private boolean isBusy;
 
-    public Corriere(String username, String password, String nome, String cognome, String email, int idCorriere,
-                    Ordine ordineAssociato, Destinatario destinatario){
+    public Corriere(String username, String password, String nome, String cognome, String email, String idCorriere,
+                    Destinatario destinatario){
         super(username, password, nome, cognome, email);
         this.idCorriere = idCorriere;
-        this.ordineAssociato = ordineAssociato;
         this.isBusy = false;
-        this.paccoAssociato = this.ordineAssociato.getPacco();
 
         this.listaDestinatari = new ArrayList<>();
         this.listaDestinatari.add(destinatario);
     }
 
-    public Corriere(String nome, String cognome, int idCorriere){
-        this("", "", nome, cognome, "", idCorriere, null, null);
+    public Corriere(String nome, String cognome, String idCorriere){
+        this("", "", nome, cognome, "", idCorriere, null);
     }
 
-    public int getIdCorriere() {
-        return idCorriere;
+    public String getIdCorriere() {
+        return this.idCorriere;
     }
 
     public Ordine getOrdineAssociato() {
-        return ordineAssociato;
+        return this.ordineAssociato;
     }
 
     public ArrayList<ObserverDestinatario> getListaDestinatari() {
-        return listaDestinatari;
+        return this.listaDestinatari;
     }
 
     public boolean getIsBusy(){
         return this.isBusy;
     }
 
-    public void setIdCorriere(int idCorriere) {
+    public Pacco getPaccoAssociato(){
+        return this.paccoAssociato;
+    }
+
+    public void setIdCorriere(String idCorriere) {
         this.idCorriere = idCorriere;
     }
 
@@ -66,6 +68,10 @@ public class Corriere extends Utente implements ObservableCorriere, Serializable
 
     public void setIsBusy(boolean isBusy){
         this.isBusy = isBusy;
+    }
+
+    public void setPaccoAssociato(Pacco pacco){
+        this.paccoAssociato = pacco;
     }
 
     @Override

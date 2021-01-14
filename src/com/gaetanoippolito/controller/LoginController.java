@@ -1,12 +1,15 @@
 package com.gaetanoippolito.controller;
 
 import com.gaetanoippolito.controller.dialog.RegisterController;
+import com.gaetanoippolito.controller.dialog.RegisterCorriereController;
 import com.gaetanoippolito.controller.dialog.TrovaPaccoController;
 import com.gaetanoippolito.model.Admin;
 import com.gaetanoippolito.model.Cliente;
 import com.gaetanoippolito.model.Ordine;
 import com.gaetanoippolito.model.Pacco;
 import com.gaetanoippolito.model.database.MyDeliveryData;
+import com.gaetanoippolito.model.observerPattern.Corriere;
+import com.gaetanoippolito.model.observerPattern.ObservableCorriere;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,6 +19,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 /**
@@ -25,10 +29,13 @@ import java.util.Optional;
 public class LoginController {
     ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
     private final String rootAdminStageFile = "src/com/gaetanoippolito/view/fxml/adminStage.fxml";
-    private final String rootRegisterDialogFile = "src/com/gaetanoippolito/view/fxml/dialog/registerDialog.fxml";
     private final String rootClienteStageFile = "src/com/gaetanoippolito/view/fxml/clienteStage.fxml";
+    private final String rootCorriereStageFile = "src/com/gaetanoippolito/view/fxml/corriereStage.fxml";
+    private final String rootRegisterDialogFile = "src/com/gaetanoippolito/view/fxml/dialog/registerDialog.fxml";
+    private final String rootRegisterCorriereDialogFile = "src/com/gaetanoippolito/view/fxml/dialog/registerCorriereDialog.fxml";
     private final String rootTrovaPaccoDialogFile = "src/com/gaetanoippolito/view/fxml/dialog/trovaPaccoDialog.fxml";
     private Cliente cliente;
+    private ArrayList<ObservableCorriere> corrieri = new ArrayList<>(MyDeliveryData.getInstance().getCorrieri());
 
     // Variabili di istanza che rappresentano il layout del Login
     /**@see GridPane*/
@@ -93,18 +100,21 @@ public class LoginController {
             this.registerButton.setDisable(true);
             this.cognomeLoginField.setVisible(false);
             this.usernameLoginField.setPromptText("Username");
+            this.passwordLoginField.setPromptText("Password");
         }
         else if(this.toggleCliente.isSelected()){
             this.loginButton.setDisable(false);
             this.registerButton.setDisable(false);
             this.cognomeLoginField.setVisible(false);
             this.usernameLoginField.setPromptText("Username");
+            this.passwordLoginField.setPromptText("Password");
         }
         else if(this.toggleCorriere.isSelected()){
             this.loginButton.setDisable(false);
-            this.registerButton.setDisable(true);
+            this.registerButton.setDisable(false);
             this.cognomeLoginField.setVisible(true);
             this.usernameLoginField.setPromptText("Nome");
+            this.passwordLoginField.setPromptText("ID");
         }
         else{
             this.loginButton.setDisable(true);
@@ -154,16 +164,23 @@ public class LoginController {
             // Salvo il valore in input digitato dall'utente nei vari TextField
             String nome = this.usernameLoginField.getText().trim();
             String cognome = this.cognomeLoginField.getText().trim();
-            String password = this.passwordLoginField.getText().trim();
+            String id = this.passwordLoginField.getText().trim();
+
+            System.out.println(this.corrieri);
 
             try{
-                this.cliente = MyDeliveryData.getInstance().loginCliente(new Cliente(nome, password));
+                Corriere corriere = MyDeliveryData.getInstance().loginCorriere(id);
 
-                vaiAdInterfacciaCliente();
+                vaiAdInterfacciaCorriere(corriere);
+
             } catch (Exception e){
                 this.loginErrorLabel.setVisible(true);
                 this.loginErrorLabel.setText("Corriere non riconosciuto");
             }
+        }
+        else{
+            this.loginErrorLabel.setVisible(true);
+            this.loginErrorLabel.setText("Scegliere un profilo");
         }
     }
 
@@ -172,45 +189,89 @@ public class LoginController {
      */
     @FXML
     public void gestisciRegistrazione(){
-        RegisterController registerController;
-        Dialog<ButtonType> registerDialog = new Dialog<>();
-        FXMLLoader loader = new FXMLLoader();
+        if(this.toggleCliente.isSelected()){
+            RegisterController registerController;
+            Dialog<ButtonType> registerDialog = new Dialog<>();
+            FXMLLoader loader = new FXMLLoader();
 
-        // Impostiamo il proprietario del Dialog che si deve aprire e il titolo del Dialog
-        registerDialog.initOwner(this.loginRoot.getScene().getWindow());
-        registerDialog.setTitle("Registra un Account");
+            // Impostiamo il proprietario del Dialog che si deve aprire e il titolo del Dialog
+            registerDialog.initOwner(this.loginRoot.getScene().getWindow());
+            registerDialog.setTitle("Registra un Account");
 
-        // Carichiamo il file fxml che rappresenterà la finestra con cui registrarsi
-        try{
-            Parent root = loader.load(new FileInputStream(rootRegisterDialogFile));
-            registerDialog.getDialogPane().setContent(root);
-        } catch (IOException e){
-            System.out.println("File not found");
-            e.printStackTrace();
-        }
-        registerController = loader.getController();
+            // Carichiamo il file fxml che rappresenterà la finestra con cui registrarsi
+            try{
+                Parent root = loader.load(new FileInputStream(rootRegisterDialogFile));
+                registerDialog.getDialogPane().setContent(root);
+            } catch (IOException e){
+                System.out.println("File not found");
+                e.printStackTrace();
+            }
+            registerController = loader.getController();
 
-        // Aggiungiamo i Bottoni nel dialog
-        registerDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-        registerDialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+            // Aggiungiamo i Bottoni nel dialog
+            registerDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+            registerDialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
 
-        // Settiamo il bottone a "non cliccabile" in base al ritorno dinamico del testo dei vari TextField
-        registerDialog.getDialogPane().lookupButton(ButtonType.OK).disableProperty().bind(registerController.disabilitaTastoOK());
+            // Settiamo il bottone a "non cliccabile" in base al ritorno dinamico del testo dei vari TextField
+            registerDialog.getDialogPane().lookupButton(ButtonType.OK).disableProperty().bind(registerController.disabilitaTastoOK());
 
-        // Aspettiamo l'input dell'utente
-        Optional<ButtonType> result = registerDialog.showAndWait();
+            // Aspettiamo l'input dell'utente
+            Optional<ButtonType> result = registerDialog.showAndWait();
 
-        if(result.isPresent() && result.get() == ButtonType.OK){
-            this.loginErrorLabel.setVisible(true);
-            this.loginErrorLabel.setText(registerController.aggiungiNuovoAccount());
-        }
-        else if(result.isPresent() && result.get() == ButtonType.CANCEL){
-            this.loginErrorLabel.setVisible(true);
-            this.loginErrorLabel.setText("Operazione annullata");
+            if(result.isPresent() && result.get() == ButtonType.OK){
+                this.loginErrorLabel.setVisible(true);
+                this.loginErrorLabel.setText(registerController.aggiungiNuovoAccount());
+            }
+            else if(result.isPresent() && result.get() == ButtonType.CANCEL){
+                this.loginErrorLabel.setVisible(true);
+                this.loginErrorLabel.setText("Operazione annullata");
+            }
+            else{
+                this.loginErrorLabel.setVisible(true);
+                this.loginErrorLabel.setText("Account esistente");
+            }
         }
         else{
-            this.loginErrorLabel.setVisible(true);
-            this.loginErrorLabel.setText("Account esistente");
+            RegisterCorriereController registerCorriereController;
+            Dialog<ButtonType> registerControllerDialog = new Dialog<>();
+            FXMLLoader loader = new FXMLLoader();
+
+            // Impostiamo il proprietario del Dialog che si deve aprire e il titolo del Dialog
+            registerControllerDialog.initOwner(this.loginRoot.getScene().getWindow());
+            registerControllerDialog.setTitle("Registra un corriere");
+
+            // Carichiamo il file fxml che rappresenterà la finestra con cui registrarsi
+            try{
+                Parent root = loader.load(new FileInputStream(rootRegisterCorriereDialogFile));
+                registerControllerDialog.getDialogPane().setContent(root);
+            } catch (IOException e){
+                System.out.println("File not found");
+                e.printStackTrace();
+            }
+            registerCorriereController = loader.getController();
+
+            // Aggiungiamo i Bottoni nel dialog
+            registerControllerDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+            registerControllerDialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+
+            // Settiamo il bottone a "non cliccabile" in base al ritorno dinamico del testo dei vari TextField
+            registerControllerDialog.getDialogPane().lookupButton(ButtonType.OK).disableProperty().bind(registerCorriereController.disabilitaTastoOK());
+
+            // Aspettiamo l'input dell'utente
+            Optional<ButtonType> result = registerControllerDialog.showAndWait();
+
+            if(result.isPresent() && result.get() == ButtonType.OK){
+                this.loginErrorLabel.setVisible(true);
+                this.loginErrorLabel.setText(registerCorriereController.aggiungiNuovoAccount());
+            }
+            else if(result.isPresent() && result.get() == ButtonType.CANCEL){
+                this.loginErrorLabel.setVisible(true);
+                this.loginErrorLabel.setText("Operazione annullata");
+            }
+            else{
+                this.loginErrorLabel.setVisible(true);
+                this.loginErrorLabel.setText("Account esistente");
+            }
         }
     }
 
@@ -322,6 +383,38 @@ public class LoginController {
             clienteStageController.setOrdini(MyDeliveryData.getInstance().getMittenteOrdini(this.cliente));
 
             clienteStage.show();
+
+        } catch (IOException e){
+            e.printStackTrace();
+            System.out.println("Errore nel caricamento del file");
+        }
+    }
+
+    private void vaiAdInterfacciaCorriere(Corriere corriere){
+        // Chiude la finestra del Login
+        Stage stage = (Stage)loginButton.getScene().getWindow();
+        stage.close();
+
+        // Creazione di una nuova finestra
+        Stage corriereStage = new Stage();
+
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            CorriereStageController corriereStageController;
+
+            Parent root = loader.load(new FileInputStream(rootCorriereStageFile));
+
+            corriereStage.setTitle(corriere.getNome() + " " + corriere.getCognome());
+            corriereStage.setScene(new Scene(root, 800, 400));
+
+            /*
+            corriereStageController = loader.getController();
+            clienteStageController.setCliente(this.cliente);
+            clienteStageController.setOrdini(MyDeliveryData.getInstance().getMittenteOrdini(this.cliente));
+             */
+
+
+            corriereStage.show();
 
         } catch (IOException e){
             e.printStackTrace();

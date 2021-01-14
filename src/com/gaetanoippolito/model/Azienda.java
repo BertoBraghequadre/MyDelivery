@@ -86,6 +86,10 @@ public class Azienda implements Serializable {
     public ArrayList<Corriere> getCorrieri(){
         return this.corrieri;
     }
+    ///////////////////////////////////// SETTER /////////////////////////////////////
+    public void setCorrieri(Corriere corriere){
+        this.corrieri.add(corriere);
+    }
 
     ////////////////////////////////////// METODI //////////////////////////////////////
     /**

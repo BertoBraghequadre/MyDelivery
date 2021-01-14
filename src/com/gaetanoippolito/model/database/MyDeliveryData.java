@@ -272,7 +272,7 @@ public class MyDeliveryData {
      * Questo metodo lo si utilizza per salvare i dati di Azienda all'interno del file "listaAziende.txt"
      * @throws IOException
      */
-    private void storeAziende() throws IOException{
+    public void storeAziende() throws IOException{
         try (ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filenameAzienda)))){
 
             ArrayList<Azienda> aziende = new ArrayList<>(this.aziende);
@@ -398,14 +398,45 @@ public class MyDeliveryData {
         }
     }
 
-    public void aggiungiCorrieri(Corriere corriere){
-        this.corrieri.add(corriere);
+    public Corriere loginCorriere(String id) throws Exception{
+            for(Corriere corriere : this.corrieri){
+                if(corriere.getIdCorriere().equals(id)){
+
+                    return corriere;
+                }
+            }
+
+        throw new Exception();
+    }
+
+    /*
+    private boolean cercaEsistenzaCorriere(String nomeCorriere){
+        for(Corriere corriere : this.corrieri){
+            if(corriere.getUsername().equals(nomeCorriere)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+    */
+
+    public boolean aggiungiCorrieri(Corriere corriereNuovo){
+        for(Corriere corriere : this.corrieri){
+            if(corriere.getIdCorriere().equals(corriereNuovo.getIdCorriere())){
+                return false;
+            }
+        }
+
+        this.corrieri.add(corriereNuovo);
 
         try{
             storeCorrieri();
         } catch(IOException e){
             System.out.println("Errore nel salvataggio dei corrieri");
         }
+
+        return true;
     }
 
     public Corriere getCorriereDisponibile(Azienda azienda){
