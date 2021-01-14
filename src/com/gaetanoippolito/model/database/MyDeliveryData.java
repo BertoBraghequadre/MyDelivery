@@ -519,6 +519,16 @@ public class MyDeliveryData {
         }
     }
 
+    public Pacco tracciaPacco(int codicePacco){
+        for(Pacco pacco : this.pacchi){
+            if(pacco.getCodice() == codicePacco){
+                return pacco;
+            }
+        }
+
+        return null;
+    }
+
     public void storePacchi() throws IOException{
         try (ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filenamePacchi)))){
 

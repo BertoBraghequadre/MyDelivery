@@ -6,6 +6,7 @@
 <?import javafx.scene.control.PasswordField?>
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
 <GridPane fx:controller="com.gaetanoippolito.controller.LoginController"
           xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10"
           fx:id="loginRoot">
@@ -52,6 +53,12 @@
             onAction="#gestioneLogin"/>
 
     <Button GridPane.rowIndex="3"
+            GridPane.columnIndex="0"
+            text="Traccia Pacco"
+            fx:id="trovaPaccoButton"
+            onAction="#gestisciTracciamentoPacco"/>
+
+    <Button GridPane.rowIndex="3"
             GridPane.columnIndex="1"
             text="Registrati" disable="true"
             fx:id="registerButton"
@@ -61,4 +68,10 @@
            GridPane.columnIndex="1"
            visible="false"
            fx:id="loginErrorLabel"/>
+
+    <TextArea GridPane.rowIndex="5"
+              GridPane.columnIndex="2"
+              fx:id="informazioniPaccoTextArea"
+              editable="false"
+              visible="false"/>
 </GridPane>

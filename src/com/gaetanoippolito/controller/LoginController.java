@@ -1,8 +1,10 @@
 package com.gaetanoippolito.controller;
 
 import com.gaetanoippolito.controller.dialog.RegisterController;
+import com.gaetanoippolito.controller.dialog.TrovaPaccoController;
 import com.gaetanoippolito.model.Admin;
 import com.gaetanoippolito.model.Cliente;
+import com.gaetanoippolito.model.Pacco;
 import com.gaetanoippolito.model.database.MyDeliveryData;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,6 +26,7 @@ public class LoginController {
     private final String rootAdminStageFile = "src/com/gaetanoippolito/view/fxml/adminStage.fxml";
     private final String rootRegisterDialogFile = "src/com/gaetanoippolito/view/fxml/dialog/registerDialog.fxml";
     private final String rootClienteStageFile = "src/com/gaetanoippolito/view/fxml/clienteStage.fxml";
+    private final String rootTrovaPaccoDialogFile = "src/com/gaetanoippolito/view/fxml/dialog/trovaPaccoDialog.fxml";
     private Cliente cliente;
 
     // Variabili di istanza che rappresentano il layout del Login
@@ -58,6 +61,10 @@ public class LoginController {
     /**@see Label*/
     @FXML
     private Label loginErrorLabel;
+
+    /**@see TextArea*/
+    @FXML
+    private TextArea informazioniPaccoTextArea;
 
 
     ////////////////////////////////////// METODI //////////////////////////////////////
@@ -178,6 +185,61 @@ public class LoginController {
         else{
             this.loginErrorLabel.setVisible(true);
             this.loginErrorLabel.setText("Account esistente");
+        }
+    }
+
+    @FXML
+    public void gestisciTracciamentoPacco(){
+        TrovaPaccoController trovaPaccoController;
+        Dialog<ButtonType> trovaPaccoDialog = new Dialog<>();
+        FXMLLoader loader = new FXMLLoader();
+
+        // Impostiamo il proprietario del Dialog che si deve aprire e il titolo del Dialog
+        trovaPaccoDialog.initOwner(this.loginRoot.getScene().getWindow());
+        trovaPaccoDialog.setTitle("Traccia un Pacco");
+
+        // Carichiamo il file fxml che rappresenterà la finestra con cui registrarsi
+        try{
+            Parent root = loader.load(new FileInputStream(rootTrovaPaccoDialogFile));
+            trovaPaccoDialog.getDialogPane().setContent(root);
+        } catch (IOException e){
+            System.out.println("File not found");
+            e.printStackTrace();
+        }
+        trovaPaccoController = loader.getController();
+
+        // Aggiungiamo i Bottoni nel dialog
+        trovaPaccoDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        trovaPaccoDialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+
+        // Settiamo il bottone a "non cliccabile" in base al ritorno dinamico del testo dei vari TextField
+        trovaPaccoDialog.getDialogPane().lookupButton(ButtonType.OK).disableProperty().bind(trovaPaccoController.disabilitaOkButton());
+
+        // Aspettiamo l'input dell'utente
+        Optional<ButtonType> result = trovaPaccoDialog.showAndWait();
+
+        if(result.isPresent() && result.get() == ButtonType.OK){
+            Pacco paccoDaMostrare = trovaPaccoController.processaTracciamentoPacco();
+
+            if(paccoDaMostrare != null){
+                this.informazioniPaccoTextArea.setVisible(true);
+                this.informazioniPaccoTextArea.setText(String.format(
+                                "Mittente: %s %s\n" +
+                                "Destinatario: %s %s\n" +
+                                "Stato pacco: %s\n" +
+                                "Codice pacco: %s",
+                        paccoDaMostrare.getMittente().getNome(), paccoDaMostrare.getMittente().getCognome(),
+                        paccoDaMostrare.getDestinatario().getNome(), paccoDaMostrare.getDestinatario().getCognome(),
+                        paccoDaMostrare.getStatoPacco(), paccoDaMostrare.getCodice()));
+            }
+            else{
+                this.informazioniPaccoTextArea.setVisible(true);
+                this.informazioniPaccoTextArea.setText("Questo pacco non esiste");
+            }
+        }
+        else{
+            this.loginErrorLabel.setVisible(true);
+            this.loginErrorLabel.setText("Operazione annullata");
         }
     }
 
