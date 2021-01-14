@@ -36,6 +36,8 @@ public class ClienteStageController {
     @FXML
     private TableColumn<Ordine, String> statoOrdineColonna;
     @FXML
+    private TableColumn<Ordine, String> dataDiConsegnaColonna;
+    @FXML
     private TableColumn<Ordine, String> corriereColonna;
     @FXML
     private TableColumn<Ordine, String> nomeAziendaColonna;
@@ -52,16 +54,18 @@ public class ClienteStageController {
     public void initialize(){
         // Impostiamo la grandezza massima della TableView per ogni colonna
         this.ordineView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        this.mittenteColonna.setMaxWidth(Integer.MAX_VALUE * 16D);      //16%
-        this.destinatarioColonna.setMaxWidth(Integer.MAX_VALUE * 16D);  //16%
-        this.statoOrdineColonna.setMaxWidth(Integer.MAX_VALUE * 16D);   //16%
-        this.corriereColonna.setMaxWidth(Integer.MAX_VALUE * 16D);      //16%
-        this.nomeAziendaColonna.setMaxWidth(Integer.MAX_VALUE * 16D);   //16%
-        this.codicePaccoColonna.setMaxWidth(Integer.MAX_VALUE * 16D);   //16%
+        this.mittenteColonna.setMaxWidth(Integer.MAX_VALUE * 14D);         //14%
+        this.destinatarioColonna.setMaxWidth(Integer.MAX_VALUE * 14D);     //14%
+        this.statoOrdineColonna.setMaxWidth(Integer.MAX_VALUE * 14D);      //14%
+        this.dataDiConsegnaColonna.setMaxWidth(Integer.MAX_VALUE * 14D);   //14%
+        this.corriereColonna.setMaxWidth(Integer.MAX_VALUE * 14D);         //14%
+        this.nomeAziendaColonna.setMaxWidth(Integer.MAX_VALUE * 14D);      //14%
+        this.codicePaccoColonna.setMaxWidth(Integer.MAX_VALUE * 14D);      //14%
 
         visualizzaColonnaMittente();
         visualizzaColonnaDestinatario();
         visualizzaColonnaStatoOrdine();
+        visualizzaColonnaDataDiConsegna();
         visualizzaColonnaCorriere();
         visualizzaColonnaAzienda();
         visualizzaColonnaCodicePacco();
@@ -214,6 +218,26 @@ public class ClienteStageController {
                     setText(null);
                 } else {
                     setText(statoOrdine);
+                }
+            }
+        });
+    }
+
+    private void visualizzaColonnaDataDiConsegna(){
+        // "SimpleStringProperty" rende una stringa osservabile data una stringa
+        this.dataDiConsegnaColonna.setCellValueFactory(ordine -> new SimpleStringProperty(
+                String.valueOf(ordine.getValue().getDataDiConsegna())
+        ));
+
+        // Personalizziamo la cella e quello che vogliamo vedere
+        this.dataDiConsegnaColonna.setCellFactory(dataColonna -> new TableCell<>(){
+            @Override
+            protected void updateItem(String dataArrivoOrdine, boolean empty){
+                super.updateItem(dataArrivoOrdine, empty);
+                if(empty || dataArrivoOrdine == null){
+                    setText(null);
+                } else {
+                    setText(dataArrivoOrdine);
                 }
             }
         });

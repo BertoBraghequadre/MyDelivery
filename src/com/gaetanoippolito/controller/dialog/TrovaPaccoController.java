@@ -1,5 +1,6 @@
 package com.gaetanoippolito.controller.dialog;
 
+import com.gaetanoippolito.model.Ordine;
 import com.gaetanoippolito.model.Pacco;
 import com.gaetanoippolito.model.database.MyDeliveryData;
 import javafx.beans.binding.Bindings;
@@ -8,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 public class TrovaPaccoController {
+    private Pacco pacco;
     @FXML
     private TextField codicePaccoTextField;
 
@@ -15,12 +17,19 @@ public class TrovaPaccoController {
     public Pacco processaTracciamentoPacco(){
         int codiceInserito = Integer.parseInt(this.codicePaccoTextField.getText().trim());
 
-        Pacco pacco = MyDeliveryData.getInstance().tracciaPacco(codiceInserito);
-        if(pacco != null){
-            return pacco;
+        Pacco paccoDaCercare = MyDeliveryData.getInstance().tracciaPacco(codiceInserito);
+        System.out.println("ciao");
+        if(paccoDaCercare != null){
+            System.out.println("ciao");
+            this.pacco = paccoDaCercare;
+            return this.pacco;
         }
 
         return null;
+    }
+
+    public Ordine ordineDelPacco(){
+        return MyDeliveryData.getInstance().getOrdineDelPacco(this.pacco);
     }
 
     public BooleanExpression disabilitaOkButton() {

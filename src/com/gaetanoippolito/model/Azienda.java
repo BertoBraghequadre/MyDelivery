@@ -102,7 +102,7 @@ public class Azienda implements Serializable {
         TipoVeicolo tipoVeicolo;
         double capienzaContainer;
         int codice;
-        int maxRandom = 4;
+        int maxRandom = 10;
 
         // Salvo un numero randomico che va da 1 a 5
         int randomNumber = (random.nextInt(maxRandom) + 1);

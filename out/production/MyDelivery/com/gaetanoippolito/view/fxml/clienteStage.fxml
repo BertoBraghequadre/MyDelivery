@@ -37,6 +37,8 @@
 
                 <TableColumn fx:id="statoOrdineColonna" editable="false" text="Stato Ordine" />
 
+                <TableColumn fx:id="dataDiConsegnaColonna" editable="false" text="In arrivo il.."/>
+
                 <TableColumn fx:id="corriereColonna" editable="false" text="Corriere" />
 
                 <TableColumn fx:id="nomeAziendaColonna" editable="false" text="Azienda" />

@@ -4,6 +4,7 @@ import com.gaetanoippolito.controller.dialog.RegisterController;
 import com.gaetanoippolito.controller.dialog.TrovaPaccoController;
 import com.gaetanoippolito.model.Admin;
 import com.gaetanoippolito.model.Cliente;
+import com.gaetanoippolito.model.Ordine;
 import com.gaetanoippolito.model.Pacco;
 import com.gaetanoippolito.model.database.MyDeliveryData;
 import javafx.fxml.FXML;
@@ -245,21 +246,26 @@ public class LoginController {
 
         if(result.isPresent() && result.get() == ButtonType.OK){
             Pacco paccoDaMostrare = trovaPaccoController.processaTracciamentoPacco();
+            Ordine ordineDaMostrare = trovaPaccoController.ordineDelPacco();
 
-            if(paccoDaMostrare != null){
+            if(paccoDaMostrare != null && ordineDaMostrare != null){
+                this.loginErrorLabel.setVisible(false);
                 this.informazioniPaccoTextArea.setVisible(true);
                 this.informazioniPaccoTextArea.setText(String.format(
                                 "Mittente: %s %s\n" +
                                 "Destinatario: %s %s\n" +
+                                "Data di consegna: %s\n" +
                                 "Stato pacco: %s\n" +
                                 "Codice pacco: %s",
                         paccoDaMostrare.getMittente().getNome(), paccoDaMostrare.getMittente().getCognome(),
                         paccoDaMostrare.getDestinatario().getNome(), paccoDaMostrare.getDestinatario().getCognome(),
+                        ordineDaMostrare.getDataDiConsegna(),
                         paccoDaMostrare.getStatoPacco(), paccoDaMostrare.getCodice()));
             }
             else{
-                this.informazioniPaccoTextArea.setVisible(true);
-                this.informazioniPaccoTextArea.setText("Questo pacco non esiste");
+                this.informazioniPaccoTextArea.setVisible(false);
+                this.loginErrorLabel.setVisible(true);
+                this.loginErrorLabel.setText("Questo pacco non esiste");
             }
         }
         else{

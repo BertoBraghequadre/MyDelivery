@@ -37,6 +37,7 @@ public class AdminStageController {
     // Questa TableView viene assegnata la prima volta dal metodo "visualizzaVeicoli()"
     /**@see Veicolo*/
     private TableView<Veicolo> veicoloTableView;
+    // Questa TableView viene assegnata la prima volta dal metodo "visualizzaColliDaConsegnare()"
     /**@see*/
     private TableView<Pacco> colliTableView;
 

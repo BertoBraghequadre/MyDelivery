@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.gaetanoippolito.controller.CorriereStageController">
+    <top>
+        <ToolBar>
+            <HBox>
+                <Button text="Avvia spedizione Ordine">
+                    <tooltip>
+                        <Tooltip text="Crea un nuovo Ordine da spedire" />
+                    </tooltip>
+                </Button>
+
+                <Button text="Visualizza Ordini">
+                    <HBox.margin>
+                        <Insets left="10.0" />
+                    </HBox.margin></Button>
+
+                <Button text="Cambia stato ordine">
+                    <HBox.margin>
+                        <Insets left="10.0" />
+                    </HBox.margin></Button>
+
+                <Button text="Logout">
+                    <HBox.margin>
+                        <Insets left="10.0" />
+                    </HBox.margin></Button>
+            </HBox>
+        </ToolBar>
+    </top>
+
+    <center>
+        <TableView fx:id="ordineView">
+            <columns>
+                <TableColumn editable="false" text="Codice ordine" />
+
+                <TableColumn editable="false" text="Destinazione" />
+
+                <TableColumn editable="false" text="Scadenza" />
+
+                <TableColumn editable="false" text="Veicolo" />
+
+                <TableColumn editable="false" text="Peso Container" />
+
+                <TableColumn editable="false" text="Stato Ordine" />
+
+                <TableColumn editable="false" text="Centro di smistamento" />
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>

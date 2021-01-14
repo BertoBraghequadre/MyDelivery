@@ -476,6 +476,19 @@ public class MyDeliveryData {
         return listaMittenteOrdini;
     }
 
+    public Ordine getOrdineDelPacco(Pacco pacco){
+        if(pacco != null){
+            for(Ordine ordine : this.ordini){
+                if(ordine.getPacco().getCodice() == pacco.getCodice()){
+                    System.out.println(ordine);
+                    return ordine;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public void storeOrdini() throws IOException{
         try (ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filenameOrdini)))){
 
