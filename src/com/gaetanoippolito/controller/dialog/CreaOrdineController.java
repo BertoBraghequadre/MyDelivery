@@ -64,14 +64,18 @@ public class CreaOrdineController {
 
         corriereDisponibile.setOrdineAssociato(ordine);
         corriereDisponibile.setPaccoAssociato(pacco);
+        corriereDisponibile.setIsBusy(true);
+
+        veicoloDisponibile.setIsBusy(true);
 
         MyDeliveryData.getInstance().aggiungiOrdine(ordine);
         MyDeliveryData.getInstance().aggiungiPacco(pacco);
 
         try{
             MyDeliveryData.getInstance().storeCorrieri();
+            MyDeliveryData.getInstance().storeVeicoli();
         } catch (IOException e){
-            System.out.println("Errore nel salvataggio del corriere");
+            System.out.println("Errore nel salvataggio");
         }
 
         return true;

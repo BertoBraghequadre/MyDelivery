@@ -405,14 +405,12 @@ public class LoginController {
             Parent root = loader.load(new FileInputStream(rootCorriereStageFile));
 
             corriereStage.setTitle(corriere.getNome() + " " + corriere.getCognome());
-            corriereStage.setScene(new Scene(root, 800, 400));
+            corriereStage.setScene(new Scene(root, 980, 400));
 
-            /*
+
             corriereStageController = loader.getController();
-            clienteStageController.setCliente(this.cliente);
-            clienteStageController.setOrdini(MyDeliveryData.getInstance().getMittenteOrdini(this.cliente));
-             */
-
+            corriereStageController.setCorriere(corriere);
+            corriereStageController.setOrdiniDiCorriere(MyDeliveryData.getInstance().getOrdineDelCorriere(corriere));
 
             corriereStage.show();
 

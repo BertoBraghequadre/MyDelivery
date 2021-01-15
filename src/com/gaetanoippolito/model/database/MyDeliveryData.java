@@ -375,14 +375,14 @@ public class MyDeliveryData {
     }
 
     public Veicolo getVeicoloDisponibile(Azienda azienda){
-        for(Veicolo veicolo : azienda.getVeicoli()){
+        List<Veicolo> veicoliDisponibili = azienda.getVeicoli();
+
+        for(Veicolo veicolo : veicoliDisponibili){
             if(!veicolo.getIsBusy()){
                 return veicolo;
             }
-            else{
-                return null;
-            }
         }
+
         return null;
     }
 
@@ -390,7 +390,7 @@ public class MyDeliveryData {
      * Questo metodo lo si utilizza per salvare i dati di Azienda all'interno del file "listaVeicoli.txt"
      * @throws IOException
      */
-    private void storeVeicoli() throws IOException{
+    public void storeVeicoli() throws IOException{
         try (ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filenameVeicoli)))){
 
             ArrayList<Veicolo> veicoli = new ArrayList<>(this.veicoli);
@@ -424,14 +424,16 @@ public class MyDeliveryData {
     }
 
     public Corriere loginCorriere(String id) throws Exception{
-            for(Corriere corriere : this.corrieri){
-                if(corriere.getIdCorriere().equals(id)){
+        System.out.println(this.corrieri);
 
-                    return corriere;
-                }
+        for(Corriere corriere : this.corrieri){
+            if(corriere.getIdCorriere().equals(id)){
+
+                return corriere;
             }
+        }
 
-        throw new Exception();
+    throw new Exception();
     }
 
     /*
@@ -465,12 +467,21 @@ public class MyDeliveryData {
     }
 
     public Corriere getCorriereDisponibile(Azienda azienda){
-        for(Corriere corriere : azienda.getCorrieri()){
+        List<Corriere> corriereDisponibile = azienda.getCorrieri();
+
+        for(Corriere corriere : corriereDisponibile){
             if(!corriere.getIsBusy()){
                 return corriere;
             }
-            else{
-                return null;
+        }
+
+        return null;
+    }
+
+    public Ordine getOrdineDelCorriere(Corriere corriereDiOrdine){
+        for(Ordine ordine : this.ordini){
+            if(ordine.getOrdineFromCorriere().equals(corriereDiOrdine)){
+                return ordine;
             }
         }
 

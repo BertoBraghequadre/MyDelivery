@@ -4,6 +4,7 @@ import com.gaetanoippolito.controller.dialog.AggiungiAziendaController;
 import com.gaetanoippolito.controller.dialog.RimuoviAziendaController;
 import com.gaetanoippolito.model.*;
 import com.gaetanoippolito.model.database.MyDeliveryData;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -283,6 +284,7 @@ public class AdminStageController {
             TableColumn<Veicolo, String> colonnaCapienzaVeicolo = new TableColumn<>("Capienza Veicolo");
             TableColumn<Veicolo, String> colonnaCodiceVeicolo = new TableColumn<>("Codice");
             TableColumn<Veicolo, String> colonnaAziendaAssociata = new TableColumn<>("Azienda Associata");
+            TableColumn<Veicolo, String> colonnaVeicoloDisponibile = new TableColumn<>("Non Disponibile");
 
             // Si setta il valore delle celle in base al ritorno della funzione lamba
             // "SimpleStringProperty" rende una stringa osservabile data una stringa
@@ -298,12 +300,16 @@ public class AdminStageController {
             colonnaAziendaAssociata.setCellValueFactory(nomeAzienda -> new SimpleStringProperty(nomeAzienda.getValue().getAziendaAssociata()));
             this.veicoloTableView.getColumns().add(popolaCelleVeicolo(colonnaAziendaAssociata));
 
+            colonnaVeicoloDisponibile.setCellValueFactory(veicoloDisponibile -> new SimpleStringProperty(String.valueOf(veicoloDisponibile.getValue().getIsBusy())));
+            this.veicoloTableView.getColumns().add(popolaCelleVeicolo(colonnaVeicoloDisponibile));
+
             // Impostiamo la grandezza massima della TableView per ogni colonna
             this.veicoloTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-            colonnaTipoVeicolo.setMaxWidth(Integer.MAX_VALUE * 25D);       // 25%
-            colonnaCapienzaVeicolo.setMaxWidth(Integer.MAX_VALUE * 25D);   // 25%
-            colonnaCodiceVeicolo.setMaxWidth(Integer.MAX_VALUE * 25D);     // 25%
-            colonnaAziendaAssociata.setMaxWidth(Integer.MAX_VALUE * 25D);  // 25%
+            colonnaTipoVeicolo.setMaxWidth(Integer.MAX_VALUE * 20D);         // 20%
+            colonnaCapienzaVeicolo.setMaxWidth(Integer.MAX_VALUE * 20D);     // 20%
+            colonnaCodiceVeicolo.setMaxWidth(Integer.MAX_VALUE * 20D);       // 20%
+            colonnaAziendaAssociata.setMaxWidth(Integer.MAX_VALUE * 20D);    // 20%
+            colonnaVeicoloDisponibile.setMaxWidth(Integer.MAX_VALUE * 20D);  // 20%
 
             this.veicoloTableView.setItems(this.veicoli);
 

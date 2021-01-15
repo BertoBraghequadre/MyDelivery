@@ -35,21 +35,21 @@
     </top>
 
     <center>
-        <TableView fx:id="ordineView">
+        <TableView fx:id="spedizioneCorriereView">
             <columns>
-                <TableColumn editable="false" text="Codice ordine" />
+                <TableColumn editable="false" text="Codice ordine" fx:id="codiceOrdineColonna"/>
 
-                <TableColumn editable="false" text="Destinazione" />
+                <TableColumn editable="false" text="Destinazione" fx:id="destinazioneColonna"/>
 
-                <TableColumn editable="false" text="Scadenza" />
+                <TableColumn editable="false" text="Scadenza" fx:id="scadenzaColonna"/>
 
-                <TableColumn editable="false" text="Veicolo" />
+                <TableColumn editable="false" text="Veicolo" fx:id="veicoloColonna"/>
 
-                <TableColumn editable="false" text="Peso Container" />
+                <TableColumn editable="false" text="Peso Container" fx:id="pesoContainerColonna"/>
 
-                <TableColumn editable="false" text="Stato Ordine" />
+                <TableColumn editable="false" text="Stato Ordine" fx:id="statoOrdineColonna"/>
 
-                <TableColumn editable="false" text="Centro di smistamento" />
+                <TableColumn editable="false" text="Centro di smistamento" fx:id="centroDiSmistamentoColonna"/>
             </columns>
         </TableView>
     </center>

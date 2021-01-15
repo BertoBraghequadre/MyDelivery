@@ -92,6 +92,7 @@ public class ClienteStageController {
         CreaOrdineController creaOrdineController;
         Dialog<ButtonType> creaOrdineDialog = new Dialog<>();
         FXMLLoader loader = new FXMLLoader();
+        Alert alert = new Alert(Alert.AlertType.WARNING);
 
         // Settiamo il proprietario e il titolo della finestra Dialog che si crea
         creaOrdineDialog.initOwner(this.stageClienteBorderPane.getScene().getWindow());
@@ -128,12 +129,16 @@ public class ClienteStageController {
                 popolaCelle();
             }
             else{
+                alert.setContentText("Corrieri o veicoli non disponibili per l'azienda selezionata");
+                alert.show();
+
                 System.out.println("Corrieri o veicoli non disponibili");
             }
-
-            // Visualizza l'ordine
         }
         else{
+            alert.setContentText("Operazione annullata");
+            alert.show();
+
             System.out.println("Operazione fallita");
         }
 
@@ -246,8 +251,8 @@ public class ClienteStageController {
     private void visualizzaColonnaCorriere(){
         // "SimpleStringProperty" rende una stringa osservabile data una stringa
         this.corriereColonna.setCellValueFactory(ordine -> new SimpleStringProperty(
-                     ordine.getValue().getOrdineDelCorriere().getNome() + " " +
-                        ordine.getValue().getOrdineDelCorriere().getCognome()));
+                     ordine.getValue().getOrdineFromCorriere().getNome() + " " +
+                        ordine.getValue().getOrdineFromCorriere().getCognome()));
 
         // Personalizziamo la cella e quello che vogliamo vedere
         this.corriereColonna.setCellFactory(corriereColonna -> new TableCell<>(){
