@@ -47,7 +47,7 @@ public class Ordine implements Serializable {
         return this.ordineDelVeicolo;
     }
 
-    public Corriere getOrdineFromCorriere(){
+    public Corriere getCorriereFromOrdine(){
         return this.ordineDelCorriere;
     }
 

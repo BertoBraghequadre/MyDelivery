@@ -44,7 +44,7 @@ public class Cliente extends Utente implements Serializable {
         this.builderOrdine = builderOrdine;
     }
 
-    public Ordine creaOrdine(Cliente mittente, Destinatario destinatario, Azienda ordineDiAzienda, Veicolo veicoloDiOrdine, Corriere corriere){
+    public Ordine creaOrdine(Cliente mittente, Destinatario destinatario, Azienda ordineDiAzienda){
         Random random = new Random();
         int maxDays = 25;
         long randomDays = random.nextInt(maxDays);
@@ -54,8 +54,6 @@ public class Cliente extends Utente implements Serializable {
         this.builderOrdine.buildDestinatario(destinatario);
         this.builderOrdine.buildDataDiConsegna(LocalDate.now().plusDays(randomDays));
         this.builderOrdine.buildAzienda(ordineDiAzienda);
-        this.builderOrdine.buildVeicolo(veicoloDiOrdine);
-        this.builderOrdine.buildCorriere(corriere);
 
         return this.builderOrdine.getOrdine();
     }

@@ -169,7 +169,7 @@ public class LoginController {
             System.out.println(this.corrieri);
 
             try{
-                Corriere corriere = MyDeliveryData.getInstance().loginCorriere(id);
+                Corriere corriere = MyDeliveryData.getInstance().loginCorriere(nome, id);
 
                 vaiAdInterfacciaCorriere(corriere);
 
@@ -407,10 +407,8 @@ public class LoginController {
             corriereStage.setTitle(corriere.getNome() + " " + corriere.getCognome());
             corriereStage.setScene(new Scene(root, 980, 400));
 
-
             corriereStageController = loader.getController();
             corriereStageController.setCorriere(corriere);
-            corriereStageController.setOrdiniDiCorriere(MyDeliveryData.getInstance().getOrdineDelCorriere(corriere));
 
             corriereStage.show();
 

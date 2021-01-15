@@ -2,6 +2,7 @@ package com.gaetanoippolito.model.database;
 
 import com.gaetanoippolito.model.*;
 import com.gaetanoippolito.model.observerPattern.Corriere;
+import com.gaetanoippolito.model.observerPattern.ObservableCorriere;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.io.*;
@@ -423,11 +424,11 @@ public class MyDeliveryData {
         }
     }
 
-    public Corriere loginCorriere(String id) throws Exception{
+    public Corriere loginCorriere(String nome, String id) throws Exception{
         System.out.println(this.corrieri);
 
         for(Corriere corriere : this.corrieri){
-            if(corriere.getIdCorriere().equals(id)){
+            if(corriere.getIdCorriere().equals(id) && corriere.getNome().equals(nome)){
 
                 return corriere;
             }
@@ -480,7 +481,8 @@ public class MyDeliveryData {
 
     public Ordine getOrdineDelCorriere(Corriere corriereDiOrdine){
         for(Ordine ordine : this.ordini){
-            if(ordine.getOrdineFromCorriere().equals(corriereDiOrdine)){
+            if(ordine.getCorriereFromOrdine().equals(corriereDiOrdine)){
+                System.out.println("CIAO");
                 return ordine;
             }
         }

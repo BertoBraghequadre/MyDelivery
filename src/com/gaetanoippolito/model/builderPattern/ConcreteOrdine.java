@@ -33,14 +33,4 @@ public class ConcreteOrdine extends BuilderOrdine implements Serializable {
     public void buildAzienda(Azienda azienda){
         ordine.setOrdineDaAzienda(azienda);
     }
-
-    @Override
-    public void buildVeicolo(Veicolo veicolo){
-        ordine.setOrdineDelVeicolo(veicolo);
-    }
-
-    @Override
-    public void buildCorriere(Corriere corriere){
-        ordine.setOrdineDelCorriere(corriere);
-    }
 }

@@ -114,6 +114,18 @@ public class Veicolo implements Serializable {
 
     ////////////////////////////////////// METODI //////////////////////////////////////
 
+    public double getPesoInContainer(){
+        double pesoDepositato = 0.0d;
+
+        System.out.println(this.pacchiDepositati);
+
+        for(Pacco pacco : this.pacchiDepositati){
+            pesoDepositato += pacco.getPesoPacco();
+        }
+
+        return pesoDepositato;
+    }
+
     /**
      * Il metodo equals() che viene ereditato dalla classe Object. Serve per confrontare due oggetti, dove
      * restituisce true solo se si tratta di due riferimenti allo stesso oggetto.

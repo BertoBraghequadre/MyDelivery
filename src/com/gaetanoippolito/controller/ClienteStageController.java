@@ -61,14 +61,6 @@ public class ClienteStageController {
         this.corriereColonna.setMaxWidth(Integer.MAX_VALUE * 14D);         //14%
         this.nomeAziendaColonna.setMaxWidth(Integer.MAX_VALUE * 14D);      //14%
         this.codicePaccoColonna.setMaxWidth(Integer.MAX_VALUE * 14D);      //14%
-
-        visualizzaColonnaMittente();
-        visualizzaColonnaDestinatario();
-        visualizzaColonnaStatoOrdine();
-        visualizzaColonnaDataDiConsegna();
-        visualizzaColonnaCorriere();
-        visualizzaColonnaAzienda();
-        visualizzaColonnaCodicePacco();
     }
 
     public void setCliente(Cliente cliente){
@@ -126,7 +118,12 @@ public class ClienteStageController {
         if(result.isPresent() && result.get() == ButtonType.OK) {
             if(creaOrdineController.processaCreazioneOrdine()){
                 System.out.println("Operazione Riuscita");
-                popolaCelle();
+                visualizzaColonnaMittente();
+                visualizzaColonnaDestinatario();
+                visualizzaColonnaStatoOrdine();
+                visualizzaColonnaDataDiConsegna();
+                visualizzaColonnaAzienda();
+                visualizzaColonnaCodicePacco();
             }
             else{
                 alert.setContentText("Corrieri o veicoli non disponibili per l'azienda selezionata");
@@ -251,8 +248,8 @@ public class ClienteStageController {
     private void visualizzaColonnaCorriere(){
         // "SimpleStringProperty" rende una stringa osservabile data una stringa
         this.corriereColonna.setCellValueFactory(ordine -> new SimpleStringProperty(
-                     ordine.getValue().getOrdineFromCorriere().getNome() + " " +
-                        ordine.getValue().getOrdineFromCorriere().getCognome()));
+                     ordine.getValue().getCorriereFromOrdine().getNome() + " " +
+                        ordine.getValue().getCorriereFromOrdine().getCognome()));
 
         // Personalizziamo la cella e quello che vogliamo vedere
         this.corriereColonna.setCellFactory(corriereColonna -> new TableCell<>(){
@@ -305,7 +302,28 @@ public class ClienteStageController {
         });
     }
 
+    @FXML
     public void popolaCelle(){
         this.ordineView.setItems(MyDeliveryData.getInstance().getMittenteOrdini(this.cliente));
+
+        for(Ordine ordine : this.ordini){
+            if(ordine.getCorriereFromOrdine() == null && ordine.getOrdineDelVeicolo() == null){
+                visualizzaColonnaMittente();
+                visualizzaColonnaDestinatario();
+                visualizzaColonnaStatoOrdine();
+                visualizzaColonnaDataDiConsegna();
+                visualizzaColonnaAzienda();
+                visualizzaColonnaCodicePacco();
+            }
+            else{
+                visualizzaColonnaMittente();
+                visualizzaColonnaDestinatario();
+                visualizzaColonnaStatoOrdine();
+                visualizzaColonnaDataDiConsegna();
+                visualizzaColonnaCorriere();
+                visualizzaColonnaAzienda();
+                visualizzaColonnaCodicePacco();
+            }
+        }
     }
 }

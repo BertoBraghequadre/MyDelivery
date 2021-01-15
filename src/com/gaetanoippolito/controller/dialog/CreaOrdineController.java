@@ -2,15 +2,11 @@ package com.gaetanoippolito.controller.dialog;
 
 import com.gaetanoippolito.model.*;
 import com.gaetanoippolito.model.database.MyDeliveryData;
-import com.gaetanoippolito.model.observerPattern.Corriere;
 import com.gaetanoippolito.model.observerPattern.Destinatario;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanExpression;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-
-import java.io.IOError;
-import java.io.IOException;
 
 public class CreaOrdineController {
     private Cliente mittente;
@@ -50,33 +46,15 @@ public class CreaOrdineController {
         String cfTextField = this.cfTextField.getText().trim();
         String numeroDiTelefonoTextField = this.numeroDiTelefonoTextField.getText().trim();
 
-        Veicolo veicoloDisponibile = MyDeliveryData.getInstance().getVeicoloDisponibile(azienda);
-        Corriere corriereDisponibile = MyDeliveryData.getInstance().getCorriereDisponibile(azienda);
         Destinatario destinatario = new Destinatario(nomeDestinatario, cognomeTextField, indirizzoTextField,
                                                      cfTextField, numeroDiTelefonoTextField);
 
-        if(veicoloDisponibile == null || corriereDisponibile == null){
-            return false;
-        }
-        Ordine ordine = this.mittente.creaOrdine(this.mittente, destinatario, azienda, veicoloDisponibile, corriereDisponibile);
+        Ordine ordine = this.mittente.creaOrdine(this.mittente, destinatario, azienda);
         ordine.setPacco(new Pacco(mittente, destinatario, ordine.generaPeso(), ordine.generaFragile()));
         Pacco pacco = ordine.getPacco();
 
-        corriereDisponibile.setOrdineAssociato(ordine);
-        corriereDisponibile.setPaccoAssociato(pacco);
-        corriereDisponibile.setIsBusy(true);
-
-        veicoloDisponibile.setIsBusy(true);
-
         MyDeliveryData.getInstance().aggiungiOrdine(ordine);
         MyDeliveryData.getInstance().aggiungiPacco(pacco);
-
-        try{
-            MyDeliveryData.getInstance().storeCorrieri();
-            MyDeliveryData.getInstance().storeVeicoli();
-        } catch (IOException e){
-            System.out.println("Errore nel salvataggio");
-        }
 
         return true;
     }

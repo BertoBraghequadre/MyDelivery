@@ -19,8 +19,6 @@ public abstract class BuilderOrdine implements Serializable {
     public abstract void buildDestinatario(Destinatario destinatario);
     public abstract void buildDataDiConsegna(LocalDate dataDiConsegna);
     public abstract void buildAzienda(Azienda azienda);
-    public abstract void buildVeicolo(Veicolo veicolo);
-    public abstract void buildCorriere(Corriere corriere);
 
     public void creaOrdine(){
         this.ordine = new Ordine();

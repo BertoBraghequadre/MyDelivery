@@ -16,7 +16,7 @@
                     </tooltip>
                 </Button>
 
-                <Button text="Visualizza Ordini">
+                <Button text="Visualizza Ordini" fx:id="bottoneVisualizzaOrdini" onAction="#visualizzaOrdini">
                     <HBox.margin>
                         <Insets left="10.0" />
                     </HBox.margin></Button>
@@ -28,7 +28,7 @@
 
                 <Button text="Logout">
                     <HBox.margin>
-                        <Insets left="10.0" />
+                        <Insets left="490.0" />
                     </HBox.margin></Button>
             </HBox>
         </ToolBar>
