@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Questa classe rappresenta l'astrazione del database dell'applicazione MyDelivery
@@ -231,12 +232,36 @@ public class MyDeliveryData {
      * @param azienda rappresenta l'azienda che l'utente vuole rimuovere
      */
     private void rimuoviAzienda(Azienda azienda){
+        List<Veicolo> veicoliDaRimuovere = azienda.getVeicoli();
+        List<Corriere> corrieriDaRimuovere = azienda.getCorrieri();
+        List<Ordine> ordiniDaRimuovere = new ArrayList<>();
+        List<Pacco> pacchiDaRimuovere = new ArrayList<>();
+
+        for(Ordine ordine : this.ordini){
+            if(ordine.getOrdineDaAzienda().equals(azienda)){
+                ordiniDaRimuovere.add(ordine);
+                pacchiDaRimuovere.add(ordine.getPacco());
+            }
+        }
+        System.out.println(pacchiDaRimuovere);
+
+        this.veicoli.removeIf(veicoliDaRimuovere::contains);
+        this.corrieri.removeIf(corrieriDaRimuovere::contains);
+        this.ordini.removeIf(ordiniDaRimuovere::contains);
+        this.pacchi.removeIf(pacchiDaRimuovere::contains);
+
+        System.out.println(this.pacchi);
+
         this.aziende.remove(azienda);
-        rimuoviVeicoli(azienda);
+
         try{
+            storePacchi();
+            storeOrdini();
+            storeCorrieri();
+            storeVeicoli();
             storeAziende();
         } catch (IOException e){
-            System.out.println("Rimozione fallita");
+            System.out.println("Salvataggio fallito");
         }
     }
 
