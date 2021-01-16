@@ -8,9 +8,16 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 public class CorriereStageController {
+    private final String rootLoginStageFile = "src/com/gaetanoippolito/view/fxml/login.fxml";
     private ObservableCorriere corriere;
     private ObservableList<Ordine> ordini = FXCollections.observableArrayList();
 
@@ -32,7 +39,7 @@ public class CorriereStageController {
     private TableColumn<Ordine, String> centroDiSmistamentoColonna;
 
     @FXML
-    private Button bottoneVisualizzaOrdini;
+    private Button logoutButton;
 
     @FXML
     public void initialize(){
@@ -46,7 +53,7 @@ public class CorriereStageController {
         this.statoOrdineColonna.setMaxWidth(Integer.MAX_VALUE * 14D);          //14%
         this.centroDiSmistamentoColonna.setMaxWidth(Integer.MAX_VALUE * 14D);  //14%
 
-        /*
+
         visualizzaCodiceOrdineColonna();
         visualizzaDestinazioneColonna();
         visualizzaScadenzaColonna();
@@ -54,7 +61,6 @@ public class CorriereStageController {
         visualizzaPesoContainerColonna();
         visualizzaStatoOrdineColonna();
 
-         */
         // TODO: visualizzaCentroDiSmistamentoColonna();
     }
 
@@ -62,9 +68,6 @@ public class CorriereStageController {
     public void visualizzaOrdini(){
         try{
             this.ordini.add(MyDeliveryData.getInstance().getOrdineDelCorriere((Corriere) this.corriere));
-            System.out.println(this.corriere);
-
-            this.spedizioneCorriereView.setItems(this.ordini);
 
             visualizzaCodiceOrdineColonna();
             visualizzaDestinazioneColonna();
@@ -73,10 +76,44 @@ public class CorriereStageController {
             visualizzaPesoContainerColonna();
             visualizzaStatoOrdineColonna();
 
+            this.spedizioneCorriereView.setItems(this.ordini);
+
         }catch (Exception e){
             Alert warning = new Alert(Alert.AlertType.WARNING);
             warning.setContentText("Non ci sono ordini");
             warning.show();
+        }
+    }
+
+    @FXML
+    public void ritornaInterfacciaLogin(){
+        try{
+            MyDeliveryData.getInstance().storeOrdini();
+        } catch (IOException e){
+            System.out.println("Errore nel salvataggio degli ordini");
+            e.printStackTrace();
+        }
+
+        // Chiude la finestra dell'Admin
+        Stage stage = (Stage)this.logoutButton.getScene().getWindow();
+        stage.close();
+
+        // Creazione di una nuova finestra
+        Stage loginStage = new Stage();
+
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            Parent root = loader.load(new FileInputStream(rootLoginStageFile));
+
+            loginStage.setTitle("My Delivery");
+            loginStage.setScene(new Scene(root, 550, 450));
+            loginStage.show();
+
+            loginStage.show();
+
+        } catch (IOException e){
+            e.printStackTrace();
+            System.out.println("Errore nel caricamento del file");
         }
     }
 

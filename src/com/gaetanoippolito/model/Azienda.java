@@ -38,7 +38,7 @@ public class Azienda implements Serializable {
         this.corrieri = corrieri;
 
         if(veicoli.size() == 0){
-            this.veicoli = associaVeicoli(nomeAzienda);
+            this.veicoli = associaVeicoli(this);
         }
         else{
             this.veicoli = veicoli;
@@ -94,10 +94,10 @@ public class Azienda implements Serializable {
     ////////////////////////////////////// METODI //////////////////////////////////////
     /**
      * Metodo privato per creare dei veicoli da associare all'azienda nel momento della creazione di un'azienda.
-     * @param nomeAzienda Rappresenta il nome dell'azienda da passare al costruttore del Veicolo
+     * @param azienda Rappresenta l'azienda da passare al costruttore del Veicolo
      * @return Ritorna un ArrayList di veicoli generati randomicamente.
      */
-    private ArrayList<Veicolo> associaVeicoli(String nomeAzienda){
+    private ArrayList<Veicolo> associaVeicoli(Azienda azienda){
         /**@see Random*/
         Random random = new Random();
         /**@see Veicolo*/
@@ -127,7 +127,7 @@ public class Azienda implements Serializable {
                 codice = i;
             }
 
-            veicoloAssociato = new Veicolo(tipoVeicolo, capienzaContainer, codice, nomeAzienda);
+            veicoloAssociato = new Veicolo(tipoVeicolo, capienzaContainer, codice, azienda);
             MyDeliveryData.getInstance().aggiungiVeicoli(veicoloAssociato);
             veicoliDiAzienda.add(veicoloAssociato);
         }
@@ -164,7 +164,7 @@ public class Azienda implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("%s - Partita IVA: %s",
-                              this.nomeAzienda, this.partitaIVA);
+        return String.format("%s - Partita IVA: %s - Corrieri: %s",
+                              this.nomeAzienda, this.partitaIVA, this.corrieri);
     }
 }

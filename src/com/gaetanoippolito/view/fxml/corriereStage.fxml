@@ -26,7 +26,7 @@
                         <Insets left="10.0" />
                     </HBox.margin></Button>
 
-                <Button text="Logout">
+                <Button text="Logout" onAction="#ritornaInterfacciaLogin" fx:id="logoutButton">
                     <HBox.margin>
                         <Insets left="490.0" />
                     </HBox.margin></Button>

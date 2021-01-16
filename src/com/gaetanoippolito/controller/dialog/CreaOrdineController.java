@@ -39,28 +39,30 @@ public class CreaOrdineController {
     }
 
     public boolean processaCreazioneOrdine(){
-        Azienda azienda = this.aziendeChoiceBox.getValue();
-        String nomeDestinatario = this.nomeTextField.getText().trim();
-        String cognomeTextField = this.cognomeTextField.getText().trim();
-        String indirizzoTextField = this.indirizzoTextField.getText().trim();
-        String cfTextField = this.cfTextField.getText().trim();
-        String numeroDiTelefonoTextField = this.numeroDiTelefonoTextField.getText().trim();
+        if(MyDeliveryData.getInstance().getCorrieriDisponibili(this.aziendeChoiceBox.getValue()) == null ||
+           MyDeliveryData.getInstance().getVeicoloAziendaNotBusy(this.aziendeChoiceBox.getValue()) == null){
+            return false;
+        }
+        else{
+            String nomeDestinatario = this.nomeTextField.getText().trim();
+            String cognomeTextField = this.cognomeTextField.getText().trim();
+            String indirizzoTextField = this.indirizzoTextField.getText().trim();
+            String cfTextField = this.cfTextField.getText().trim();
+            String numeroDiTelefonoTextField = this.numeroDiTelefonoTextField.getText().trim();
 
-        Destinatario destinatario = new Destinatario(nomeDestinatario, cognomeTextField, indirizzoTextField,
-                                                     cfTextField, numeroDiTelefonoTextField);
+            Destinatario destinatario = new Destinatario(nomeDestinatario, cognomeTextField, indirizzoTextField,
+                    cfTextField, numeroDiTelefonoTextField);
 
-        Ordine ordine = this.mittente.creaOrdine(this.mittente, destinatario, azienda);
-        ordine.setPacco(new Pacco(mittente, destinatario, ordine.generaPeso(), ordine.generaFragile()));
-        Pacco pacco = ordine.getPacco();
+            Ordine ordine = this.mittente.creaOrdine(this.mittente, destinatario, this.aziendeChoiceBox.getValue());
+            ordine.setPacco(new Pacco(mittente, destinatario, ordine.generaPeso(), ordine.generaFragile()));
+            Pacco pacco = ordine.getPacco();
 
-        System.out.println("_______________________________");
-        System.out.println(ordine);
-        System.out.println(pacco);
-        System.out.println("-------------------------------");
-        MyDeliveryData.getInstance().aggiungiOrdine(ordine);
-        MyDeliveryData.getInstance().aggiungiPacco(pacco);
+            MyDeliveryData.getInstance().aggiungiPacco(pacco);
+            MyDeliveryData.getInstance().aggiungiOrdine(ordine);
 
-        return true;
+            return true;
+        }
+
     }
 
     /**

@@ -95,10 +95,6 @@ public class Corriere extends Utente implements ObservableCorriere, Serializable
 
     @Override
     public String toString(){
-        return String.format("Nome: %s\n" +
-                             "Cognome: %s\n" +
-                             "IdCorriere: %s\n" +
-                             "isBusy: %s",
-                             super.getNome(), super.getCognome(), this.idCorriere, this.isBusy);
+        return String.format("%s %s - isBusy: %s", super.getNome(), super.getCognome(), this.isBusy);
     }
 }

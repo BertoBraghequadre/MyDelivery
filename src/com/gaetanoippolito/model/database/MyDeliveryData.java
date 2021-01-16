@@ -230,6 +230,9 @@ public class MyDeliveryData {
      */
     private void rimuoviAzienda(Azienda azienda){
         List<Veicolo> veicoliDaRimuovere = azienda.getVeicoli();
+        System.out.println("_______________");
+        System.out.println(veicoliDaRimuovere);
+        System.out.println("_______________");
         List<Corriere> corrieriDaRimuovere = azienda.getCorrieri();
         List<Ordine> ordiniDaRimuovere = new ArrayList<>();
         List<Pacco> pacchiDaRimuovere = new ArrayList<>();
@@ -240,16 +243,12 @@ public class MyDeliveryData {
                 pacchiDaRimuovere.add(ordine.getPacco());
             }
         }
-        System.out.println(pacchiDaRimuovere);
 
         this.veicoli.removeIf(veicoliDaRimuovere::contains);
         this.corrieri.removeIf(corrieriDaRimuovere::contains);
-        this.ordini.removeIf(ordiniDaRimuovere::contains);
         this.pacchi.removeIf(pacchiDaRimuovere::contains);
-
-        System.out.println(this.pacchi);
-
-        this.aziende.remove(azienda);
+        this.ordini.removeIf(ordiniDaRimuovere::contains);
+        this.aziende.removeIf(azienda::equals);
 
         try{
             storePacchi();
@@ -388,7 +387,6 @@ public class MyDeliveryData {
                 veicoliAzienda.add(veicolo);
             }
         }
-
         return veicoliAzienda;
     }
 
@@ -413,6 +411,7 @@ public class MyDeliveryData {
 
             ArrayList<Veicolo> veicoli = new ArrayList<>(this.veicoli);
 
+            System.out.println("Salvataggio dei Veicoli in corso");
             objectOut.writeObject(veicoli);
             System.out.println(veicoli);
             System.out.println("Il file \"listaVeicoli.txt\" è stato salvato con successo");
@@ -467,28 +466,53 @@ public class MyDeliveryData {
     */
 
     public boolean aggiungiCorrieri(Corriere corriereNuovo){
-        for(Corriere corriere : this.corrieri){
-            if(corriere.getIdCorriere().equals(corriereNuovo.getIdCorriere())){
+        if(this.corrieri.size() == 0){
+            this.corrieri.add(corriereNuovo);
+
+            try{
+                storeCorrieri();
+
+            } catch(IOException e){
+                System.out.println("Errore nel salvataggio dei corrieri");
+            }
+            return true;
+        }
+        else{
+            if(cercaCorriere(corriereNuovo.getIdCorriere())){
                 return false;
             }
-        }
+            else{
+                this.corrieri.add(corriereNuovo);
 
-        this.corrieri.add(corriereNuovo);
+                try{
+                    storeCorrieri();
 
-        try{
-            storeCorrieri();
-            storeAziende();
-        } catch(IOException e){
-            System.out.println("Errore nel salvataggio dei corrieri");
+                } catch(IOException e){
+                    System.out.println("Errore nel salvataggio dei corrieri");
+                }
+            }
         }
 
         return true;
     }
 
+    public boolean cercaCorriere(String id){
+        int contatore = 0;
+
+        for(Corriere corriere : this.corrieri){
+            if(corriere.getIdCorriere().equals(id)){
+                contatore++;
+            }
+        }
+
+        return contatore != 0;
+    }
+
     public ArrayList<Corriere> getCorrieriDisponibili(Azienda aziendaDelCorriere){
         ArrayList<Corriere> corriereDisponibile = new ArrayList<>();
-        for(Corriere corriere : this.corrieri){
-            if(!corriere.getIsBusy() && aziendaDelCorriere.getCorrieri().contains(corriere)){
+
+        for(Corriere corriere : aziendaDelCorriere.getCorrieri()){
+            if(!corriere.getIsBusy()){
                 corriereDisponibile.add(corriere);
             }
         }
@@ -498,8 +522,7 @@ public class MyDeliveryData {
 
     public Ordine getOrdineDelCorriere(Corriere corriereDiOrdine) throws Exception{
         for(Ordine ordine : this.ordini){
-            if(ordine.getCorriereFromOrdine().equals(corriereDiOrdine)){
-                System.out.println("CIAO");
+            if(ordine.getCorriereFromOrdine().getIdCorriere().equals(corriereDiOrdine.getIdCorriere())){
                 return ordine;
             }
         }
@@ -545,6 +568,7 @@ public class MyDeliveryData {
 
         try{
             storeOrdini();
+            storePacchi();
         } catch (IOException e){
             System.out.println("Errore nel salvataggio degli ordini");
         }
@@ -622,12 +646,6 @@ public class MyDeliveryData {
 
     public void aggiungiPacco(Pacco pacco){
         this.pacchi.add(pacco);
-
-        try{
-            storePacchi();
-        } catch (IOException e){
-            System.out.println("Errore nel salvagaggio dei pacchi");
-        }
     }
 
     public Pacco tracciaPacco(int codicePacco){
@@ -708,13 +726,15 @@ public class MyDeliveryData {
     }
 
     private boolean cercaEsistenzaCliente(String username){
+        int contatore = 0;
+
         for(Cliente cliente : this.clienti){
             if(cliente.getUsername().equals(username)){
-                return true;
+                contatore++;
             }
         }
 
-        return false;
+        return contatore != 0;
     }
 
     public Cliente loginCliente(Cliente loginCliente) throws Exception{

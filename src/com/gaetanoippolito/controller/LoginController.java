@@ -261,17 +261,20 @@ public class LoginController {
             Optional<ButtonType> result = registerControllerDialog.showAndWait();
 
             if(result.isPresent() && result.get() == ButtonType.OK){
-                this.loginErrorLabel.setVisible(true);
-                this.loginErrorLabel.setText(registerCorriereController.aggiungiNuovoAccount());
-            }
-            else if(result.isPresent() && result.get() == ButtonType.CANCEL){
-                this.loginErrorLabel.setVisible(true);
-                this.loginErrorLabel.setText("Operazione annullata");
+                if(registerCorriereController.aggiungiNuovoAccount()){
+                    this.loginErrorLabel.setVisible(true);
+                    this.loginErrorLabel.setText("Account registrato");
+                }
+                else{
+                    this.loginErrorLabel.setVisible(true);
+                    this.loginErrorLabel.setText("Account esistente");
+                }
             }
             else{
                 this.loginErrorLabel.setVisible(true);
-                this.loginErrorLabel.setText("Account esistente");
+                this.loginErrorLabel.setText("Operazione annullata");
             }
+
         }
     }
 

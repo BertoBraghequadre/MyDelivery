@@ -21,7 +21,7 @@ public class Veicolo implements Serializable {
     private double capienzaContainer;
     private int codice;
     private boolean isBusy;
-    private String aziendaAssociata;
+    private Azienda aziendaAssociata;
     /**@see Pacco*/
     private ArrayList<Pacco> pacchiDepositati;
 
@@ -47,7 +47,7 @@ public class Veicolo implements Serializable {
      * @param aziendaAssociata Rappresenta l'azienda associata al veicolo
      * @see Azienda
      */
-    public Veicolo(TipoVeicolo tipoVeicolo, double capienzaContainer, int codice, String aziendaAssociata){
+    public Veicolo(TipoVeicolo tipoVeicolo, double capienzaContainer, int codice, Azienda aziendaAssociata){
         this(tipoVeicolo, capienzaContainer, codice);
         this.aziendaAssociata = aziendaAssociata;
         this.pacchiDepositati = new ArrayList<>();
@@ -90,7 +90,7 @@ public class Veicolo implements Serializable {
      * Metodo che restituisce il nome dell'azienda associata al veicolo
      * @return Ritorna il nome dell'azienda associata al veicolo
      */
-    public String getAziendaAssociata(){
+    public Azienda getAziendaAssociata(){
         return this.aziendaAssociata;
     }
 
@@ -141,8 +141,9 @@ public class Veicolo implements Serializable {
         if (this == o) return true;
         if (!(o instanceof Veicolo)) return false;
         Veicolo veicolo = (Veicolo) o;
-        return Objects.equals(codice, veicolo.codice);
+        return codice == veicolo.codice && Objects.equals(aziendaAssociata, veicolo.aziendaAssociata);
     }
+
 
     /**
      * Restituisce un valore hash per un oggetto.
@@ -150,7 +151,7 @@ public class Veicolo implements Serializable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(codice);
+        return Objects.hash(codice, aziendaAssociata);
     }
 
     /**

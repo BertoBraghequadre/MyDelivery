@@ -2,6 +2,7 @@ package com.gaetanoippolito.view;
 
 import com.gaetanoippolito.model.database.MyDeliveryData;
 import javafx.application.Application;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -35,6 +36,16 @@ public class Main extends Application {
         MyDeliveryData.getInstance().loadCorrieri();
         MyDeliveryData.getInstance().loadOrdini();
         MyDeliveryData.getInstance().loadPacchi();
+    }
+
+    @Override
+    public void stop() throws Exception{
+        MyDeliveryData.getInstance().storeAziende();
+        MyDeliveryData.getInstance().storeVeicoli();
+        MyDeliveryData.getInstance().storeClienti();
+        MyDeliveryData.getInstance().storeCorrieri();
+        MyDeliveryData.getInstance().storeOrdini();
+        MyDeliveryData.getInstance().storePacchi();
     }
 
     public static void main(String[] args) {

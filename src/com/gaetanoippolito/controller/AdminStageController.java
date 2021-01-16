@@ -309,7 +309,7 @@ public class AdminStageController {
             colonnaCodiceVeicolo.setCellValueFactory(codiceVeicolo -> new SimpleStringProperty(String.valueOf(codiceVeicolo.getValue().getCodice())));
             this.veicoloTableView.getColumns().add(popolaCelleVeicolo(colonnaCodiceVeicolo));
 
-            colonnaAziendaAssociata.setCellValueFactory(nomeAzienda -> new SimpleStringProperty(nomeAzienda.getValue().getAziendaAssociata()));
+            colonnaAziendaAssociata.setCellValueFactory(nomeAzienda -> new SimpleStringProperty(nomeAzienda.getValue().getAziendaAssociata().getNome()));
             this.veicoloTableView.getColumns().add(popolaCelleVeicolo(colonnaAziendaAssociata));
 
             colonnaVeicoloDisponibile.setCellValueFactory(veicoloDisponibile -> new SimpleStringProperty(String.valueOf(veicoloDisponibile.getValue().getIsBusy())));
@@ -505,25 +505,24 @@ public class AdminStageController {
         // Se il tasto "OK" è stato cliccato rimuovi l'azienda, altrimenti annulla l'operazione
         if(result.isPresent() && result.get() == ButtonType.OK){
 
-            Azienda aziendaNextFit = nextFitDialogController.aziendaSelezionata();
-            ArrayList<Veicolo> veicoliNextFit = new ArrayList<>(MyDeliveryData.getInstance().getVeicoloAziendaNotBusy(aziendaNextFit));
-            ArrayList<Corriere> corrieriNextFit = new ArrayList<>(MyDeliveryData.getInstance().getCorrieriDisponibili(aziendaNextFit));
-            ArrayList<Ordine> ordini = new ArrayList<>(MyDeliveryData.getInstance().getOrdiniDaAzienda(aziendaNextFit));
+            ArrayList<Veicolo> veicoliNextFit = new ArrayList<>(MyDeliveryData.getInstance().getVeicoloAziendaNotBusy(nextFitDialogController.aziendaSelezionata()));
+            ArrayList<Corriere> corrieriNextFit = new ArrayList<>(MyDeliveryData.getInstance().getCorrieriDisponibili(nextFitDialogController.aziendaSelezionata()));
+            ArrayList<Ordine> ordiniNextFit = new ArrayList<>(MyDeliveryData.getInstance().getOrdiniDaAzienda(nextFitDialogController.aziendaSelezionata()));
             ArrayList<Pacco> pacchiNextFit = new ArrayList<>();
 
             if(corrieriNextFit.size() == 0){
                 warning.setContentText("Non ci sono corrieri per questa azienda");
                 warning.show();
             }
-            else if(ordini.size() == 0){
+            else if(ordiniNextFit.size() == 0){
                 warning.setContentText("Non ci sono ordini presso questa azienda");
                 warning.show();
             }
-            else if(corrieriNextFit.size() < ordini.size()){
+            else if(corrieriNextFit.size() < ordiniNextFit.size()){
                 warning.setContentText("Non ci sono abbastanza corrieri per questa azienda");
                 warning.show();
             }
-            else if(veicoliNextFit.size() < ordini.size()){
+            else if(veicoliNextFit.size() < ordiniNextFit.size()){
                 warning.setContentText("Non ci sono abbastanza veicoli per questa azienda");
                 warning.show();
             }
@@ -532,48 +531,35 @@ public class AdminStageController {
                 warning.show();
             }
             else{
-                for(Ordine ordine : ordini){
+                for(Ordine ordine : ordiniNextFit){
                     pacchiNextFit.add(ordine.getPacco());
-                    System.out.println("----------------");
-                    System.out.println(pacchiNextFit);
-                    System.out.println(pacchiNextFit.size());
-                    System.out.println("----------------");
                 }
 
-
-                // TODO: Aggiungere un iterazione per permettere al nextFit di agire più volte in base a quanti ordini
-                // sono disponibili.
-                nextFit(veicoliNextFit, veicoliNextFit.size(), pacchiNextFit, pacchiNextFit.size(), ordini, corrieriNextFit);
+                nextFit(veicoliNextFit, veicoliNextFit.size(), pacchiNextFit, pacchiNextFit.size(), ordiniNextFit, corrieriNextFit);
             }
-
-
         }
         else{
             System.out.println("Operazione Annullata");
         }
     }
 
-    private void nextFit(ArrayList<Veicolo> veicoli, int sizeVeicoli, ArrayList<Pacco> pacchi, int sizePacchi,
-                         ArrayList<Ordine> ordini, ArrayList<Corriere> corrieri){
+    private void nextFit(ArrayList<Veicolo> veicoliNextFit, int sizeVeicoli, ArrayList<Pacco> pacchi, int sizePacchi,
+                         ArrayList<Ordine> ordiniNextFit, ArrayList<Corriere> corrieriNextFit){
         int j = 0;
 
         for(int i = 0; i < sizePacchi; i++){
-            while(j < sizeVeicoli){
-                System.out.println(i);
-                if(veicoli.get(j).getCapienzaContainer() >= pacchi.get(i).getPesoPacco()){
-                    veicoli.get(j).depositaPacco(pacchi.get(i));
+            while(j < sizeVeicoli && i < ordiniNextFit.size()){
+                if(veicoliNextFit.get(j).getCapienzaContainer() >= pacchi.get(i).getPesoPacco()){
+                    this.veicoli.remove(veicoliNextFit.get(j));
 
-                    // TODO: Eliminare i veicoli dal database
-                    if(this.veicoli.contains(veicoli.get(j))){
-                        this.veicoli.remove(veicoli.get(j));
+                    veicoliNextFit.get(j).depositaPacco(pacchi.get(i));
+                    veicoliNextFit.get(j).setIsBusy(true);
 
-                        veicoli.get(j).setIsBusy(true);
-
-                        this.veicoli.add(veicoli.get(j));
-                    }
-
-                    associaOrdineVeicoloCorriere(veicoli.get(j), ordini.get(i), corrieri.get(i));
+                    associaOrdineVeicoloCorriere(veicoliNextFit.get(j), ordiniNextFit.get(i), corrieriNextFit.get(i));
                     break;
+                }
+                else{
+                    System.out.println("Errore nel nextFit");
                 }
 
                 j = (j + 1) % sizeVeicoli;
@@ -582,32 +568,32 @@ public class AdminStageController {
     }
 
     private void associaOrdineVeicoloCorriere(Veicolo veicoloAggiornato, Ordine ordine, Corriere corriere){
-        if(this.ordini.contains(ordine)){
-            this.ordini.remove(ordine);
+        this.ordini.remove(ordine);
+        this.corrieri.remove(corriere);
 
-            ordine.setVeicoloDiOrdine(veicoloAggiornato);
-            ordine.setOrdineDelCorriere(corriere);
-            ordine.setPresoInCarico(true);
+        ordine.setPresoInCarico(true);
 
-            ordine.setVeicoloDiOrdine(veicoloAggiornato);
+        ordine.setVeicoloDiOrdine(veicoloAggiornato);
 
-            if(this.corrieri.contains(corriere)){
-                this.corrieri.remove(corriere);
+        corriere.setIsBusy(true);
 
-                corriere.setIsBusy(true);
-                ordine.setOrdineDelCorriere(corriere);
+        System.out.println("________________");
+        System.out.println(corriere);
+        System.out.println("________________");
 
-                this.corrieri.add(corriere);
-            }
+        ordine.setOrdineDelCorriere(corriere);
 
-            this.ordini.add(ordine);
-        }
+        this.veicoli.add(veicoloAggiornato);
+        this.corrieri.add(corriere);
+        this.ordini.add(ordine);
 
         try{
             MyDeliveryData.getInstance().storeVeicoli();
             MyDeliveryData.getInstance().storeOrdini();
-            MyDeliveryData.getInstance().storeCorrieri();
             MyDeliveryData.getInstance().storePacchi();
+            MyDeliveryData.getInstance().storeCorrieri();
+            MyDeliveryData.getInstance().storeAziende();
+            MyDeliveryData.getInstance().storeClienti();
         } catch (IOException e){
             System.out.println("Errore durante il salvataggio");
             e.printStackTrace();

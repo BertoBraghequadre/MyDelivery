@@ -4,6 +4,7 @@ import com.gaetanoippolito.controller.dialog.CreaOrdineController;
 import com.gaetanoippolito.model.Cliente;
 import com.gaetanoippolito.model.Ordine;
 import com.gaetanoippolito.model.database.MyDeliveryData;
+import com.gaetanoippolito.model.observerPattern.Corriere;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -22,7 +23,7 @@ public class ClienteStageController {
     private final String rootCreaOrdineDialog = "src/com/gaetanoippolito/view/fxml/dialog/creaOrdineDialog.fxml";
     private LoginController loginController;
     private Cliente cliente;
-    private ObservableList<Ordine> ordini;
+    private ObservableList<Ordine> ordini = MyDeliveryData.getInstance().getOrdini();
 
     @FXML
     private BorderPane stageClienteBorderPane;
@@ -114,16 +115,13 @@ public class ClienteStageController {
         // Aspettiamo l'input dell'utente
         Optional<ButtonType> result = creaOrdineDialog.showAndWait();
 
+        popolaCelle();
+
         // Se il tasto "OK" è stato cliccato rimuovi l'azienda, altrimenti annulla l'operazione
         if(result.isPresent() && result.get() == ButtonType.OK) {
             if(creaOrdineController.processaCreazioneOrdine()){
                 System.out.println("Operazione Riuscita");
-                visualizzaColonnaMittente();
-                visualizzaColonnaDestinatario();
-                visualizzaColonnaStatoOrdine();
-                visualizzaColonnaDataDiConsegna();
-                visualizzaColonnaAzienda();
-                visualizzaColonnaCodicePacco();
+                popolaCelle();
             }
             else{
                 alert.setContentText("Corrieri o veicoli non disponibili per l'azienda selezionata");
@@ -247,9 +245,7 @@ public class ClienteStageController {
 
     private void visualizzaColonnaCorriere(){
         // "SimpleStringProperty" rende una stringa osservabile data una stringa
-        this.corriereColonna.setCellValueFactory(ordine -> new SimpleStringProperty(
-                     ordine.getValue().getCorriereFromOrdine().getNome() + " " +
-                        ordine.getValue().getCorriereFromOrdine().getCognome()));
+        this.corriereColonna.setCellValueFactory(ordine -> new SimpleStringProperty(String.format("%s", ordine.getValue().getCorriereFromOrdine())));
 
         // Personalizziamo la cella e quello che vogliamo vedere
         this.corriereColonna.setCellFactory(corriereColonna -> new TableCell<>(){
@@ -304,26 +300,14 @@ public class ClienteStageController {
 
     @FXML
     public void popolaCelle(){
-        this.ordineView.setItems(MyDeliveryData.getInstance().getMittenteOrdini(this.cliente));
+        visualizzaColonnaMittente();
+        visualizzaColonnaDestinatario();
+        visualizzaColonnaStatoOrdine();
+        visualizzaColonnaDataDiConsegna();
+        visualizzaColonnaAzienda();
+        visualizzaColonnaCorriere();
+        visualizzaColonnaCodicePacco();
 
-        for(Ordine ordine : this.ordini){
-            if(ordine.getCorriereFromOrdine() == null && ordine.getOrdineDelVeicolo() == null){
-                visualizzaColonnaMittente();
-                visualizzaColonnaDestinatario();
-                visualizzaColonnaStatoOrdine();
-                visualizzaColonnaDataDiConsegna();
-                visualizzaColonnaAzienda();
-                visualizzaColonnaCodicePacco();
-            }
-            else{
-                visualizzaColonnaMittente();
-                visualizzaColonnaDestinatario();
-                visualizzaColonnaStatoOrdine();
-                visualizzaColonnaDataDiConsegna();
-                visualizzaColonnaCorriere();
-                visualizzaColonnaAzienda();
-                visualizzaColonnaCodicePacco();
-            }
-        }
+        this.ordineView.setItems(MyDeliveryData.getInstance().getMittenteOrdini(this.cliente));
     }
 }
