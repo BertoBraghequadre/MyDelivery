@@ -30,19 +30,14 @@ public class RegisterCorriereController {
     }
 
     public String aggiungiNuovoAccount(){
+        Azienda azienda = this.aziendeChoiceBox.getValue();
         String nome = this.nomeTextField.getText().trim();
         String cognome = this.cognomeTextField.getText().trim();
         String ID = this.idTextField.getText().trim();
-        Azienda azienda = this.aziendeChoiceBox.getValue();
 
         Corriere corriere = new Corriere(nome, cognome, ID);
 
         azienda.setCorrieri(corriere);
-        try{
-            MyDeliveryData.getInstance().storeAziende();
-        } catch (IOException e){
-            return "Errore nel salvataggio del corriere nell'azienda";
-        }
 
         if(MyDeliveryData.getInstance().aggiungiCorrieri(corriere)){
             return "Account Registrato!";

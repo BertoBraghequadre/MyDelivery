@@ -53,6 +53,10 @@ public class CreaOrdineController {
         ordine.setPacco(new Pacco(mittente, destinatario, ordine.generaPeso(), ordine.generaFragile()));
         Pacco pacco = ordine.getPacco();
 
+        System.out.println("_______________________________");
+        System.out.println(ordine);
+        System.out.println(pacco);
+        System.out.println("-------------------------------");
         MyDeliveryData.getInstance().aggiungiOrdine(ordine);
         MyDeliveryData.getInstance().aggiungiPacco(pacco);
 

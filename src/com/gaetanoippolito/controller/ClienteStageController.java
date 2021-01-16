@@ -268,7 +268,7 @@ public class ClienteStageController {
     private void visualizzaColonnaAzienda(){
         // "SimpleStringProperty" rende una stringa osservabile data una stringa
         this.nomeAziendaColonna.setCellValueFactory(ordine -> new SimpleStringProperty(
-                ordine.getValue().getOrdineDaAzienda().getNome()));
+                ordine.getValue().getAziendaDaOrdine().getNome()));
 
         // Personalizziamo la cella e quello che vogliamo vedere
         this.nomeAziendaColonna.setCellFactory(aziendaColonna -> new TableCell<>(){

@@ -126,6 +126,10 @@ public class Veicolo implements Serializable {
         return pesoDepositato;
     }
 
+    public void depositaPacco(Pacco pacco){
+        this.pacchiDepositati.add(pacco);
+    }
+
     /**
      * Il metodo equals() che viene ereditato dalla classe Object. Serve per confrontare due oggetti, dove
      * restituisce true solo se si tratta di due riferimenti allo stesso oggetto.

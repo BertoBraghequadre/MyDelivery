@@ -20,8 +20,11 @@ public class Ordine implements Serializable {
     private Azienda ordineDaAzienda;
     private Corriere ordineDelCorriere;
     private Veicolo ordineDelVeicolo;
+    private boolean presoInCarico;
 
-    public Ordine(){}
+    public Ordine(){
+        this.presoInCarico = false;
+    }
 
     public Pacco getPacco() {
         return this.pacco;
@@ -39,7 +42,7 @@ public class Ordine implements Serializable {
         return this.destinatario;
     }
 
-    public Azienda getOrdineDaAzienda() {
+    public Azienda getAziendaDaOrdine() {
         return this.ordineDaAzienda;
     }
 
@@ -49,6 +52,10 @@ public class Ordine implements Serializable {
 
     public Corriere getCorriereFromOrdine(){
         return this.ordineDelCorriere;
+    }
+
+    public boolean getPresoInCarico(){
+        return this.presoInCarico;
     }
 
     public void setPacco(Pacco pacco) {
@@ -71,12 +78,16 @@ public class Ordine implements Serializable {
         this.ordineDaAzienda = ordineDaAzienda;
     }
 
-    public void setOrdineDelVeicolo(Veicolo ordineDelVeicolo) {
+    public void setVeicoloDiOrdine(Veicolo ordineDelVeicolo) {
         this.ordineDelVeicolo = ordineDelVeicolo;
     }
 
     public void setOrdineDelCorriere(Corriere corriere){
         this.ordineDelCorriere = corriere;
+    }
+
+    public void setPresoInCarico(boolean presoInCarico){
+        this.presoInCarico = presoInCarico;
     }
 
     public double generaPeso(){

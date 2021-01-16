@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -148,12 +149,7 @@ public class MyDeliveryData {
      * @return Il metodo ritorna un boolean che sta a rappresentare il successo o il fallimento del login
      */
     public boolean verificaLoginAdmin(String username, String password){
-        if(admin.getUsername().equals(username) && admin.getPassword().equals(password)){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return admin.getUsername().equals(username) && admin.getPassword().equals(password);
     }
 
     ///////////////////////////////// METODI: ZONA ADMIN /////////////////////////////////
@@ -239,7 +235,7 @@ public class MyDeliveryData {
         List<Pacco> pacchiDaRimuovere = new ArrayList<>();
 
         for(Ordine ordine : this.ordini){
-            if(ordine.getOrdineDaAzienda().equals(azienda)){
+            if(ordine.getAziendaDaOrdine().equals(azienda)){
                 ordiniDaRimuovere.add(ordine);
                 pacchiDaRimuovere.add(ordine.getPacco());
             }
@@ -354,10 +350,19 @@ public class MyDeliveryData {
      * stata rimossa l'azienda a cui il Veicolo è associata.
      * @param azienda Rappresenta l'azienda a cui il Veicolo è associato
      */
-    private void rimuoviVeicoli(Azienda azienda){
+    private void rimuoviVeicolo(Azienda azienda){
         for(Veicolo veicolo : azienda.getVeicoli()){
             this.veicoli.remove(veicolo);
         }
+        try{
+            storeVeicoli();
+        }catch (IOException e){
+            System.out.println("Errore nella cancellazione dei veicoli");
+        }
+    }
+
+    public void rimuoviVeicolo(Veicolo veicolo){
+        this.veicoli.remove(veicolo);
         try{
             storeVeicoli();
         }catch (IOException e){
@@ -370,6 +375,18 @@ public class MyDeliveryData {
 
         for(Veicolo veicolo : azienda.getVeicoli()){
             veicoliAzienda.add(veicolo);
+        }
+
+        return veicoliAzienda;
+    }
+
+    public ArrayList<Veicolo> getVeicoloAziendaNotBusy(Azienda azienda){
+        ArrayList<Veicolo> veicoliAzienda = new ArrayList<>();
+
+        for(Veicolo veicolo : azienda.getVeicoli()){
+            if(!veicolo.getIsBusy()){
+                veicoliAzienda.add(veicolo);
+            }
         }
 
         return veicoliAzienda;
@@ -460,6 +477,7 @@ public class MyDeliveryData {
 
         try{
             storeCorrieri();
+            storeAziende();
         } catch(IOException e){
             System.out.println("Errore nel salvataggio dei corrieri");
         }
@@ -467,19 +485,18 @@ public class MyDeliveryData {
         return true;
     }
 
-    public Corriere getCorriereDisponibile(Azienda azienda){
-        List<Corriere> corriereDisponibile = azienda.getCorrieri();
-
-        for(Corriere corriere : corriereDisponibile){
-            if(!corriere.getIsBusy()){
-                return corriere;
+    public ArrayList<Corriere> getCorrieriDisponibili(Azienda aziendaDelCorriere){
+        ArrayList<Corriere> corriereDisponibile = new ArrayList<>();
+        for(Corriere corriere : this.corrieri){
+            if(!corriere.getIsBusy() && aziendaDelCorriere.getCorrieri().contains(corriere)){
+                corriereDisponibile.add(corriere);
             }
         }
 
-        return null;
+        return corriereDisponibile;
     }
 
-    public Ordine getOrdineDelCorriere(Corriere corriereDiOrdine){
+    public Ordine getOrdineDelCorriere(Corriere corriereDiOrdine) throws Exception{
         for(Ordine ordine : this.ordini){
             if(ordine.getCorriereFromOrdine().equals(corriereDiOrdine)){
                 System.out.println("CIAO");
@@ -487,7 +504,7 @@ public class MyDeliveryData {
             }
         }
 
-        return null;
+        throw new Exception();
     }
 
     public void storeCorrieri() throws IOException{
@@ -543,6 +560,18 @@ public class MyDeliveryData {
         }
 
         return listaMittenteOrdini;
+    }
+
+    public ArrayList<Ordine> getOrdiniDaAzienda(Azienda azienda){
+        ArrayList<Ordine> ordiniDiAzienda = new ArrayList<>();
+
+        for(Ordine ordine : this.ordini){
+            if(ordine.getAziendaDaOrdine().equals(azienda) && !ordine.getPresoInCarico()){
+                ordiniDiAzienda.add(ordine);
+            }
+        }
+
+        return ordiniDiAzienda;
     }
 
     public Ordine getOrdineDelPacco(Pacco pacco){

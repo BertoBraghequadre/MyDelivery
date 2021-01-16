@@ -1,10 +1,11 @@
 package com.gaetanoippolito.controller;
 
 import com.gaetanoippolito.controller.dialog.AggiungiAziendaController;
+import com.gaetanoippolito.controller.dialog.NextFitDialogController;
 import com.gaetanoippolito.controller.dialog.RimuoviAziendaController;
 import com.gaetanoippolito.model.*;
 import com.gaetanoippolito.model.database.MyDeliveryData;
-import javafx.beans.property.SimpleObjectProperty;
+import com.gaetanoippolito.model.observerPattern.Corriere;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 /**
@@ -27,6 +29,7 @@ public class AdminStageController {
     private final String rootLoginStageFile = "src/com/gaetanoippolito/view/fxml/login.fxml";
     private final String rootAggiungiAziendaDialog = "src/com/gaetanoippolito/view/fxml/dialog/aggiungiAziendaDialog.fxml";
     private final String rootRimuoviAziendaDialog = "src/com/gaetanoippolito/view/fxml/dialog/rimuoviAziendaDialog.fxml";
+    private final String rootNextFitDialog = "src/com/gaetanoippolito/view/fxml/dialog/nextFitDialog.fxml";
 
     @FXML
     /**@see VBox*/
@@ -45,6 +48,7 @@ public class AdminStageController {
     private ObservableList<Azienda> aziende = MyDeliveryData.getInstance().getAziende();
     private ObservableList<Veicolo> veicoli = MyDeliveryData.getInstance().getVeicoli();
     private ObservableList<Pacco> pacchi = MyDeliveryData.getInstance().getPacchi();
+    private ObservableList<Corriere> corrieri = MyDeliveryData.getInstance().getCorrieri();
 
     ////////////////////////////////////// METODI //////////////////////////////////////
     /**
@@ -65,6 +69,9 @@ public class AdminStageController {
         // Creazione del MenuItem per il Menu "Exit"
         MenuItem exitItem = new MenuItem("Exit..");
 
+        // Creazione del MenuItem per il nextFit
+        MenuItem nextFitITem = new MenuItem("NextFit");
+
         // Dichiaro i Menu
         Menu show = new Menu("Show");
 
@@ -79,7 +86,7 @@ public class AdminStageController {
         // Azienda -> Aggiungi Azienda, Rimuovi Azienda
         azienda.getItems().addAll(aggiungiAziendaItem, rimuoviAziendaItem);
         // Edit -> Azienda
-        edit.getItems().addAll(azienda);
+        edit.getItems().addAll(azienda, nextFitITem);
         // Logout -> Exit..
         logout.getItems().add(exitItem);
 
@@ -113,12 +120,16 @@ public class AdminStageController {
             visualizzaVeicoli();
         });
 
-        // TODO: visualizzare i colli
+        // Azione che si triggera se il bottone "Lista Colli da consegnare" viene cliccato
         listaColliDaConsegnareItem.setOnAction(event -> {
             visualizzaColliDaConsegnare();
         });
 
+        nextFitITem.setOnAction(event -> {
+            gestoreNextFit();
+        });
 
+        // Azione che si triggera se il bottone "Exit.." viene cliccato
         exitItem.setOnAction(event -> {
             ritornaInterfacciaLogin();
         });
@@ -457,5 +468,128 @@ public class AdminStageController {
             e.printStackTrace();
             System.out.println("Errore nel caricamento del file");
         }
+    }
+
+    private void gestoreNextFit(){
+        NextFitDialogController nextFitDialogController;
+        Dialog<ButtonType> nextFitDialog = new Dialog<>();
+        FXMLLoader loader = new FXMLLoader();
+        Alert warning = new Alert(Alert.AlertType.WARNING);
+
+        // Settiamo il proprietario e il titolo della finestra Dialog che si crea
+        nextFitDialog.initOwner(this.vboxAdminStage.getScene().getWindow());
+        nextFitDialog.setTitle("Scegliere l'azienda con cui applicare l'algoritmo");
+
+        // Carichiamo il File fxml dov'è presente il Dialog
+        try{
+            Parent root = loader.load(new FileInputStream(rootNextFitDialog));
+            nextFitDialog.getDialogPane().setContent(root);
+        } catch (IOException e){
+            System.out.println("File not found");
+            e.printStackTrace();
+        }
+
+        // Aggiungiamo i Bottoni nel dialog
+        nextFitDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        nextFitDialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+
+        // inizializziamo  il controller
+        nextFitDialogController = loader.getController();
+
+        nextFitDialog.getDialogPane().lookupButton(ButtonType.OK).disableProperty().bind(nextFitDialogController.disabilitaTastoOK());
+
+        // Aspettiamo l'input dell'utente
+        Optional<ButtonType> result = nextFitDialog.showAndWait();
+
+        // Se il tasto "OK" è stato cliccato rimuovi l'azienda, altrimenti annulla l'operazione
+        if(result.isPresent() && result.get() == ButtonType.OK){
+
+            Azienda aziendaNextFit = nextFitDialogController.aziendaSelezionata();
+            ArrayList<Veicolo> veicoliNextFit = new ArrayList<>(MyDeliveryData.getInstance().getVeicoloAziendaNotBusy(aziendaNextFit));
+            ArrayList<Corriere> corrieriNextFit = new ArrayList<>(MyDeliveryData.getInstance().getCorrieriDisponibili(aziendaNextFit));
+            ArrayList<Ordine> ordini = new ArrayList<>(MyDeliveryData.getInstance().getOrdiniDaAzienda(aziendaNextFit));
+            ArrayList<Pacco> pacchiNextFit = new ArrayList<>();
+
+            if(corrieriNextFit.size() == 0){
+                warning.setContentText("Non ci sono corrieri per questa azienda");
+                warning.show();
+            }
+            else if(ordini.size() == 0){
+                warning.setContentText("Non ci sono ordini presso questa azienda");
+                warning.show();
+            }
+            else if(corrieriNextFit.size() < ordini.size()){
+                warning.setContentText("Non ci sono abbastanza corrieri per questa azienda");
+                warning.show();
+            }
+            else if(corrieriNextFit.size() < veicoliNextFit.size()){
+                warning.setContentText("Non ci sono abbastanza corrieri per questa azienda");
+                warning.show();
+            }
+            else if(veicoliNextFit.size() < ordini.size()){
+                warning.setContentText("Non ci sono abbastanza veicoli per questa azienda");
+                warning.show();
+            }
+            else if(veicoliNextFit.size() < corrieriNextFit.size()){
+                warning.setContentText("Non ci sono abbastanza veicoli per questa azienda");
+                warning.show();
+            }
+            else{
+                for(Ordine ordine : ordini){
+                    pacchiNextFit.add(ordine.getPacco());
+                }
+
+
+                // TODO: Aggiungere un iterazione per permettere al nextFit di agire più volte in base a quanti ordini
+                // sono disponibili.
+                nextFit(veicoliNextFit, veicoliNextFit.size(), pacchiNextFit, pacchiNextFit.size(), ordini, corrieriNextFit);
+            }
+
+
+        }
+        else{
+            System.out.println("Operazione Annullata");
+        }
+    }
+
+    private void nextFit(ArrayList<Veicolo> veicoli, int sizeVeicoli, ArrayList<Pacco> pacchi, int sizePacchi,
+                         ArrayList<Ordine> ordini, ArrayList<Corriere> corrieri){
+        int j = 0;
+
+        for(int i = 0; i < sizePacchi; i++){
+            while(j < sizeVeicoli){
+                if(veicoli.get(j).getCapienzaContainer() >= pacchi.get(i).getPesoPacco()){
+                    veicoli.get(j).depositaPacco(pacchi.get(j));
+
+                    // TODO: Eliminare i veicoli dal database
+
+                    associaOrdineVeicoloCorriere(veicoli.get(j), ordini.get(j), corrieri.get(j));
+                    break;
+                }
+
+                j = (j + 1) % sizeVeicoli;
+            }
+        }
+
+        try{
+            MyDeliveryData.getInstance().storeVeicoli();
+            MyDeliveryData.getInstance().storeOrdini();
+            MyDeliveryData.getInstance().storeCorrieri();
+            MyDeliveryData.getInstance().storePacchi();
+        } catch (IOException e){
+            System.out.println("Errore durante il salvataggio");
+            e.printStackTrace();
+        }
+    }
+
+    private void associaOrdineVeicoloCorriere(Veicolo veicolo, Ordine ordine, Corriere corriere){
+        ordine.setVeicoloDiOrdine(veicolo);
+        ordine.setOrdineDelCorriere(corriere);
+
+        ordine.setPresoInCarico(true);
+        veicolo.setIsBusy(true);
+        corriere.setIsBusy(true);
+
+        // TODO: aggiungere i veicoli al database
     }
 }

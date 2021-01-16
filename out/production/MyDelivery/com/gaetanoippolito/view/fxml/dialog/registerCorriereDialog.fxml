@@ -35,8 +35,7 @@
                    GridPane.rowIndex="2"/>
             <ChoiceBox GridPane.columnIndex="1"
                        GridPane.rowIndex="3"
-                       fx:id="aziendeChoiceBox">
-            </ChoiceBox>
+                       fx:id="aziendeChoiceBox"/>
         </GridPane>
     </content>
 </DialogPane>

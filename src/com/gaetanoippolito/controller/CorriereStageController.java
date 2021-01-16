@@ -8,12 +8,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-
-import java.util.ArrayList;
+import javafx.scene.control.*;
 
 public class CorriereStageController {
     private ObservableCorriere corriere;
@@ -65,17 +60,24 @@ public class CorriereStageController {
 
     @FXML
     public void visualizzaOrdini(){
-        System.out.println(this.corriere);
+        try{
+            this.ordini.add(MyDeliveryData.getInstance().getOrdineDelCorriere((Corriere) this.corriere));
+            System.out.println(this.corriere);
 
-        this.ordini.add(MyDeliveryData.getInstance().getOrdineDelCorriere((Corriere) this.corriere));
-        this.spedizioneCorriereView.setItems(this.ordini);
+            this.spedizioneCorriereView.setItems(this.ordini);
 
-        visualizzaCodiceOrdineColonna();
-        visualizzaDestinazioneColonna();
-        visualizzaScadenzaColonna();
-        visualizzaVeicoloColonna();
-        visualizzaPesoContainerColonna();
-        visualizzaStatoOrdineColonna();
+            visualizzaCodiceOrdineColonna();
+            visualizzaDestinazioneColonna();
+            visualizzaScadenzaColonna();
+            visualizzaVeicoloColonna();
+            visualizzaPesoContainerColonna();
+            visualizzaStatoOrdineColonna();
+
+        }catch (Exception e){
+            Alert warning = new Alert(Alert.AlertType.WARNING);
+            warning.setContentText("Non ci sono ordini");
+            warning.show();
+        }
     }
 
     public void setCorriere(Corriere corriere){
