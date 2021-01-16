@@ -47,6 +47,7 @@ public class AdminStageController {
 
     private ObservableList<Azienda> aziende = MyDeliveryData.getInstance().getAziende();
     private ObservableList<Veicolo> veicoli = MyDeliveryData.getInstance().getVeicoli();
+    private ObservableList<Ordine> ordini = MyDeliveryData.getInstance().getOrdini();
     private ObservableList<Pacco> pacchi = MyDeliveryData.getInstance().getPacchi();
     private ObservableList<Corriere> corrieri = MyDeliveryData.getInstance().getCorrieri();
 
@@ -522,10 +523,6 @@ public class AdminStageController {
                 warning.setContentText("Non ci sono abbastanza corrieri per questa azienda");
                 warning.show();
             }
-            else if(corrieriNextFit.size() < veicoliNextFit.size()){
-                warning.setContentText("Non ci sono abbastanza corrieri per questa azienda");
-                warning.show();
-            }
             else if(veicoliNextFit.size() < ordini.size()){
                 warning.setContentText("Non ci sono abbastanza veicoli per questa azienda");
                 warning.show();
@@ -537,6 +534,10 @@ public class AdminStageController {
             else{
                 for(Ordine ordine : ordini){
                     pacchiNextFit.add(ordine.getPacco());
+                    System.out.println("----------------");
+                    System.out.println(pacchiNextFit);
+                    System.out.println(pacchiNextFit.size());
+                    System.out.println("----------------");
                 }
 
 
@@ -558,17 +559,48 @@ public class AdminStageController {
 
         for(int i = 0; i < sizePacchi; i++){
             while(j < sizeVeicoli){
+                System.out.println(i);
                 if(veicoli.get(j).getCapienzaContainer() >= pacchi.get(i).getPesoPacco()){
-                    veicoli.get(j).depositaPacco(pacchi.get(j));
+                    veicoli.get(j).depositaPacco(pacchi.get(i));
 
                     // TODO: Eliminare i veicoli dal database
+                    if(this.veicoli.contains(veicoli.get(j))){
+                        this.veicoli.remove(veicoli.get(j));
 
-                    associaOrdineVeicoloCorriere(veicoli.get(j), ordini.get(j), corrieri.get(j));
+                        veicoli.get(j).setIsBusy(true);
+
+                        this.veicoli.add(veicoli.get(j));
+                    }
+
+                    associaOrdineVeicoloCorriere(veicoli.get(j), ordini.get(i), corrieri.get(i));
                     break;
                 }
 
                 j = (j + 1) % sizeVeicoli;
             }
+        }
+    }
+
+    private void associaOrdineVeicoloCorriere(Veicolo veicoloAggiornato, Ordine ordine, Corriere corriere){
+        if(this.ordini.contains(ordine)){
+            this.ordini.remove(ordine);
+
+            ordine.setVeicoloDiOrdine(veicoloAggiornato);
+            ordine.setOrdineDelCorriere(corriere);
+            ordine.setPresoInCarico(true);
+
+            ordine.setVeicoloDiOrdine(veicoloAggiornato);
+
+            if(this.corrieri.contains(corriere)){
+                this.corrieri.remove(corriere);
+
+                corriere.setIsBusy(true);
+                ordine.setOrdineDelCorriere(corriere);
+
+                this.corrieri.add(corriere);
+            }
+
+            this.ordini.add(ordine);
         }
 
         try{
@@ -580,16 +612,5 @@ public class AdminStageController {
             System.out.println("Errore durante il salvataggio");
             e.printStackTrace();
         }
-    }
-
-    private void associaOrdineVeicoloCorriere(Veicolo veicolo, Ordine ordine, Corriere corriere){
-        ordine.setVeicoloDiOrdine(veicolo);
-        ordine.setOrdineDelCorriere(corriere);
-
-        ordine.setPresoInCarico(true);
-        veicolo.setIsBusy(true);
-        corriere.setIsBusy(true);
-
-        // TODO: aggiungere i veicoli al database
     }
 }
