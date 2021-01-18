@@ -5,6 +5,7 @@ import com.gaetanoippolito.model.observerPattern.ObserverDestinatario;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Corriere extends Utente implements Serializable {
     ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
@@ -60,5 +61,19 @@ public class Corriere extends Utente implements Serializable {
                 ", listaDestinatari=" + listaDestinatari +
                 ", isBusy=" + isBusy +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Corriere)) return false;
+        if (!super.equals(o)) return false;
+        Corriere corriere = (Corriere) o;
+        return Objects.equals(idCorriere, corriere.idCorriere);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), idCorriere);
     }
 }
