@@ -148,6 +148,10 @@ public class MyDeliveryData {
         this.veicoli = veicoli;
     }
 
+    public void setOrdini(ObservableList<Ordine> ordini) {
+        this.ordini = ordini;
+    }
+
     ////////////////////////////////////// METODI //////////////////////////////////////
     /**
      * Questo metodo verifica il successo o il fallimento del login di un Admin

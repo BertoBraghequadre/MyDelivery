@@ -58,7 +58,11 @@ public class AggiornaStatoOrdineDialogController {
     }
 
     public void processaCambiaStatoOrdine(Corriere corriere){
-        for(Ordine ordine : corriere.getOrdineAssociato()){
+        System.out.println("===============================");
+        System.out.println(MyDeliveryData.getInstance().getCorrieri());
+        System.out.println("===============================");
+
+        for(Ordine ordine : MyDeliveryData.getInstance().getOrdineDelCorriere(corriere)){
             ordine.setStatoPacco(new Stato(StatoPacco.IN_TRANSITO, this.aggiornaStatoComboBox.getValue().getNomeCentroDiSmistamento()));
         }
 
