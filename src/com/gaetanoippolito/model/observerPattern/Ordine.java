@@ -1,25 +1,27 @@
-package com.gaetanoippolito.model;
+package com.gaetanoippolito.model.observerPattern;
 
-import com.gaetanoippolito.model.observerPattern.Corriere;
-import com.gaetanoippolito.model.observerPattern.Destinatario;
+import com.gaetanoippolito.model.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
-public class Ordine implements Serializable {
+public class Ordine implements Serializable, ObservableOrdine {
     // id del "serialVersionUID"
     @Serial
     private static final long serialVersionUID = 10L;
 
     private Pacco pacco;
     private Cliente mittente;
-    private Destinatario destinatario;
     private LocalDate dataDiConsegna;
     private Azienda ordineDaAzienda;
     private Corriere ordineDelCorriere;
     private Veicolo ordineDelVeicolo;
     private boolean presoInCarico;
+    private List<ObserverDestinatario> destinatari = new ArrayList<>();
+    private Stato statoPacco;
 
     public Ordine(){
         this.presoInCarico = false;
@@ -35,10 +37,6 @@ public class Ordine implements Serializable {
 
     public Cliente getMittente(){
         return this.mittente;
-    }
-
-    public Destinatario getDestinatario(){
-        return this.destinatario;
     }
 
     public Azienda getAziendaDaOrdine() {
@@ -57,6 +55,18 @@ public class Ordine implements Serializable {
         return this.presoInCarico;
     }
 
+    public Stato getStatoPacco(){
+        return this.statoPacco;
+    }
+
+    public List<ObserverDestinatario> getDestinatari() {
+        return destinatari;
+    }
+
+    public void setDestinatari(List<ObserverDestinatario> destinatari) {
+        this.destinatari = destinatari;
+    }
+
     public void setPacco(Pacco pacco) {
         this.pacco = pacco;
     }
@@ -67,10 +77,6 @@ public class Ordine implements Serializable {
 
     public void setMittente(Cliente mittente){
         this.mittente = mittente;
-    }
-
-    public void setDestinatario(Destinatario destinatario){
-        this.destinatario = destinatario;
     }
 
     public void setOrdineDaAzienda(Azienda ordineDaAzienda) {
@@ -87,6 +93,11 @@ public class Ordine implements Serializable {
 
     public void setPresoInCarico(boolean presoInCarico){
         this.presoInCarico = presoInCarico;
+    }
+
+    public void setStatoPacco(Stato statoPacco){
+        this.statoPacco = statoPacco;
+        notifyObserver(statoPacco);
     }
 
     public double generaPeso(){
@@ -108,15 +119,33 @@ public class Ordine implements Serializable {
     }
 
     @Override
+    public void attach(ObserverDestinatario destinatario) {
+        this.destinatari.add(destinatario);
+    }
+
+    @Override
+    public void detach(ObserverDestinatario destinatario) {
+        this.destinatari.remove(destinatario);
+    }
+
+    @Override
+    public void notifyObserver(Stato statoAggiornato) {
+        for(ObserverDestinatario destinatario : this.destinatari){
+            destinatario.update(statoAggiornato);
+        }
+    }
+
+    @Override
     public String toString() {
         return "Ordine{" +
                 "pacco=" + pacco +
                 ", mittente=" + mittente +
-                ", destinatario=" + destinatario +
                 ", dataDiConsegna=" + dataDiConsegna +
                 ", ordineDaAzienda=" + ordineDaAzienda +
                 ", ordineDelCorriere=" + ordineDelCorriere +
                 ", ordineDelVeicolo=" + ordineDelVeicolo +
                 '}';
     }
+
+
 }

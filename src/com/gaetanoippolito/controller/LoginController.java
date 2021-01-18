@@ -5,11 +5,11 @@ import com.gaetanoippolito.controller.dialog.RegisterCorriereController;
 import com.gaetanoippolito.controller.dialog.TrovaPaccoController;
 import com.gaetanoippolito.model.Admin;
 import com.gaetanoippolito.model.Cliente;
-import com.gaetanoippolito.model.Ordine;
+import com.gaetanoippolito.model.observerPattern.Destinatario;
+import com.gaetanoippolito.model.observerPattern.Ordine;
 import com.gaetanoippolito.model.Pacco;
 import com.gaetanoippolito.model.database.MyDeliveryData;
-import com.gaetanoippolito.model.observerPattern.Corriere;
-import com.gaetanoippolito.model.observerPattern.ObservableCorriere;
+import com.gaetanoippolito.model.Corriere;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -35,7 +35,8 @@ public class LoginController {
     private final String rootRegisterCorriereDialogFile = "src/com/gaetanoippolito/view/fxml/dialog/registerCorriereDialog.fxml";
     private final String rootTrovaPaccoDialogFile = "src/com/gaetanoippolito/view/fxml/dialog/trovaPaccoDialog.fxml";
     private Cliente cliente;
-    private ArrayList<ObservableCorriere> corrieri = new ArrayList<>(MyDeliveryData.getInstance().getCorrieri());
+    private Corriere corriere;
+    private ArrayList<Corriere> corrieri = new ArrayList<>(MyDeliveryData.getInstance().getCorrieri());
 
     // Variabili di istanza che rappresentano il layout del Login
     /**@see GridPane*/
@@ -169,9 +170,9 @@ public class LoginController {
             System.out.println(this.corrieri);
 
             try{
-                Corriere corriere = MyDeliveryData.getInstance().loginCorriere(nome, id);
+                this.corriere = MyDeliveryData.getInstance().loginCorriere(nome, id);
 
-                vaiAdInterfacciaCorriere(corriere);
+                vaiAdInterfacciaCorriere();
 
             } catch (Exception e){
                 this.loginErrorLabel.setVisible(true);
@@ -309,22 +310,28 @@ public class LoginController {
         Optional<ButtonType> result = trovaPaccoDialog.showAndWait();
 
         if(result.isPresent() && result.get() == ButtonType.OK){
-            Pacco paccoDaMostrare = trovaPaccoController.processaTracciamentoPacco();
             Ordine ordineDaMostrare = trovaPaccoController.ordineDelPacco();
+            System.out.println(ordineDaMostrare);
 
-            if(paccoDaMostrare != null && ordineDaMostrare != null){
+            if(ordineDaMostrare != null){
                 this.loginErrorLabel.setVisible(false);
                 this.informazioniPaccoTextArea.setVisible(true);
+
+                Destinatario destinatario = (Destinatario) ordineDaMostrare.getDestinatari().get(0);
+
                 this.informazioniPaccoTextArea.setText(String.format(
                                 "Mittente: %s %s\n" +
                                 "Destinatario: %s %s\n" +
                                 "Data di consegna: %s\n" +
                                 "Stato pacco: %s\n" +
+                                "Ultima posizione: %s\n" +
                                 "Codice pacco: %s",
-                        paccoDaMostrare.getMittente().getNome(), paccoDaMostrare.getMittente().getCognome(),
-                        paccoDaMostrare.getDestinatario().getNome(), paccoDaMostrare.getDestinatario().getCognome(),
+                        ordineDaMostrare.getMittente().getNome(), ordineDaMostrare.getMittente().getCognome(),
+                        destinatario.getNome(), destinatario.getCognome(),
                         ordineDaMostrare.getDataDiConsegna(),
-                        paccoDaMostrare.getStatoPacco(), paccoDaMostrare.getCodice()));
+                        ordineDaMostrare.getStatoPacco().getStatoOrdine().toString(),
+                        ordineDaMostrare.getStatoPacco().getPosizione(),
+                        ordineDaMostrare.getPacco().getCodice()));
             }
             else{
                 this.informazioniPaccoTextArea.setVisible(false);
@@ -393,7 +400,7 @@ public class LoginController {
         }
     }
 
-    private void vaiAdInterfacciaCorriere(Corriere corriere){
+    private void vaiAdInterfacciaCorriere(){
         // Chiude la finestra del Login
         Stage stage = (Stage)loginButton.getScene().getWindow();
         stage.close();
@@ -407,11 +414,11 @@ public class LoginController {
 
             Parent root = loader.load(new FileInputStream(rootCorriereStageFile));
 
-            corriereStage.setTitle(corriere.getNome() + " " + corriere.getCognome());
+            corriereStage.setTitle(this.corriere.getNome() + " " + this.corriere.getCognome());
             corriereStage.setScene(new Scene(root, 980, 400));
 
             corriereStageController = loader.getController();
-            corriereStageController.setCorriere(corriere);
+            corriereStageController.setCorriere(this.corriere);
 
             corriereStage.show();
 

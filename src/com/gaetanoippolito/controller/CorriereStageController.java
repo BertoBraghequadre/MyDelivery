@@ -1,14 +1,14 @@
 package com.gaetanoippolito.controller;
 
 import com.gaetanoippolito.controller.dialog.AggiornaStatoOrdineDialogController;
-import com.gaetanoippolito.controller.dialog.NextFitDialogController;
-import com.gaetanoippolito.model.Ordine;
+import com.gaetanoippolito.model.observerPattern.Destinatario;
+import com.gaetanoippolito.model.observerPattern.Ordine;
 import com.gaetanoippolito.model.database.MyDeliveryData;
-import com.gaetanoippolito.model.observerPattern.Corriere;
-import com.gaetanoippolito.model.observerPattern.ObservableCorriere;
+import com.gaetanoippolito.model.Corriere;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,12 +19,13 @@ import javafx.stage.Stage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class CorriereStageController {
     private final String rootLoginStageFile = "src/com/gaetanoippolito/view/fxml/login.fxml";
     private final String rootAggiornaStatoDialogFile = "src/com/gaetanoippolito/view/fxml/dialog/aggiornaStatoOrdineDialog.fxml";
-    private ObservableCorriere corriere;
-    private ObservableList<Ordine> ordini = FXCollections.observableArrayList();
+    private Corriere corriere;
+    private ObservableList<Ordine> ordini;
 
     @FXML
     private BorderPane corriereBorderPane;
@@ -51,6 +52,8 @@ public class CorriereStageController {
 
     @FXML
     public void initialize(){
+
+
         // Impostiamo la grandezza massima della TableView per ogni colonna
         this.spedizioneCorriereView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         this.codiceOrdineColonna.setMaxWidth(Integer.MAX_VALUE * 16D);         //16%
@@ -72,7 +75,12 @@ public class CorriereStageController {
     @FXML
     public void visualizzaOrdini(){
         try{
-            this.ordini.add(MyDeliveryData.getInstance().getOrdineDelCorriere((Corriere) this.corriere));
+            Predicate<Ordine> ordinePredicato = ordine -> ordine.getCorriereFromOrdine().equals(this.corriere);
+            FilteredList<Ordine> listaFiltrataOrdini = new FilteredList<>(MyDeliveryData.getInstance().getOrdini());
+            listaFiltrataOrdini.setPredicate(ordinePredicato);
+            System.out.println("________________________________________________");
+            System.out.println(listaFiltrataOrdini);
+            System.out.println("________________________________________________");
 
             visualizzaCodiceOrdineColonna();
             visualizzaDestinazioneColonna();
@@ -81,6 +89,7 @@ public class CorriereStageController {
             visualizzaPesoContainerColonna();
             visualizzaStatoOrdineColonna();
 
+            this.ordini = listaFiltrataOrdini;
             this.spedizioneCorriereView.setItems(this.ordini);
 
         }catch (Exception e){
@@ -124,8 +133,6 @@ public class CorriereStageController {
 
     public void setCorriere(Corriere corriere){
         this.corriere = corriere;
-
-        System.out.println(this.corriere);
     }
 
     public void setOrdiniDiCorriere(Ordine ordine){
@@ -154,9 +161,10 @@ public class CorriereStageController {
 
     private void visualizzaDestinazioneColonna(){
         // "SimpleStringProperty" rende una stringa osservabile data una stringa
-        this.destinazioneColonna.setCellValueFactory(destinazioneColonna -> new SimpleStringProperty(
-                String.valueOf(destinazioneColonna.getValue().getDestinatario().getIndirizzo())));
-
+        this.destinazioneColonna.setCellValueFactory(destinazione -> {
+            Destinatario destinatario = (Destinatario) destinazione.getValue().getDestinatari().get(0);
+            return new SimpleStringProperty(destinatario.getIndirizzo());
+        });
         // Personalizziamo la cella e quello che vogliamo vedere
         this.destinazioneColonna.setCellFactory(destinazioneColonna -> new TableCell<>(){
             @Override
@@ -232,7 +240,7 @@ public class CorriereStageController {
     private void visualizzaStatoOrdineColonna(){
         // "SimpleStringProperty" rende una stringa osservabile data una stringa
         this.statoOrdineColonna.setCellValueFactory(statoOrdineColonna -> new SimpleStringProperty(
-                String.valueOf(statoOrdineColonna.getValue().getPacco().getStatoPacco())));
+                String.valueOf(statoOrdineColonna.getValue().getStatoPacco())));
 
         // Personalizziamo la cella e quello che vogliamo vedere
         this.statoOrdineColonna.setCellFactory(statoOrdineColonna  -> new TableCell<>(){
@@ -278,7 +286,8 @@ public class CorriereStageController {
         Optional<ButtonType> result = aggiornaStatoOrdineDialog.showAndWait();
 
         if(result.isPresent() && result.get() == ButtonType.OK){
-            aggiornaStatoOrdineDialogController.processaCambiaStatoOrdine();
+            Corriere currentCorriere = this.corriere;
+            aggiornaStatoOrdineDialogController.processaCambiaStatoOrdine(currentCorriere);
         }
     }
 }

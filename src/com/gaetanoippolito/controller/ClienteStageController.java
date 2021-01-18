@@ -2,7 +2,8 @@ package com.gaetanoippolito.controller;
 
 import com.gaetanoippolito.controller.dialog.CreaOrdineController;
 import com.gaetanoippolito.model.Cliente;
-import com.gaetanoippolito.model.Ordine;
+import com.gaetanoippolito.model.observerPattern.Destinatario;
+import com.gaetanoippolito.model.observerPattern.Ordine;
 import com.gaetanoippolito.model.database.MyDeliveryData;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
@@ -182,9 +183,10 @@ public class ClienteStageController {
 
     private void visualizzaColonnaDestinatario(){
         // "SimpleStringProperty" rende una stringa osservabile data una stringa
-        this.destinatarioColonna.setCellValueFactory(ordine -> new SimpleStringProperty(
-                     ordine.getValue().getDestinatario().getNome() + " " +
-                        ordine.getValue().getDestinatario().getCognome()));
+        this.destinatarioColonna.setCellValueFactory(ordine -> {
+            Destinatario destinatario = (Destinatario)ordine.getValue().getDestinatari().get(0);
+            return new SimpleStringProperty(destinatario.getNome() + " " + destinatario.getCognome());
+        });
 
         // Personalizziamo la cella e quello che vogliamo vedere
         this.destinatarioColonna.setCellFactory(destinatarioColonna -> new TableCell<>(){
@@ -203,7 +205,7 @@ public class ClienteStageController {
     private void visualizzaColonnaStatoOrdine(){
         // "SimpleStringProperty" rende una stringa osservabile data una stringa
         this.statoOrdineColonna.setCellValueFactory(ordine -> new SimpleStringProperty(
-                                                              String.valueOf(ordine.getValue().getPacco().getStatoPacco())));
+                                                              String.valueOf(ordine.getValue().getStatoPacco().getStatoOrdine())));
 
         // Personalizziamo la cella e quello che vogliamo vedere
         this.statoOrdineColonna.setCellFactory(statoOrdineColonna -> new TableCell<>(){

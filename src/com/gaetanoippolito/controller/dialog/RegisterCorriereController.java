@@ -1,11 +1,8 @@
 package com.gaetanoippolito.controller.dialog;
 
 import com.gaetanoippolito.model.Azienda;
-import com.gaetanoippolito.model.Cliente;
-import com.gaetanoippolito.model.builderPattern.ConcreteOrdine;
 import com.gaetanoippolito.model.database.MyDeliveryData;
-import com.gaetanoippolito.model.observerPattern.Corriere;
-import com.gaetanoippolito.model.observerPattern.ObservableCorriere;
+import com.gaetanoippolito.model.Corriere;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanExpression;
 import javafx.fxml.FXML;

@@ -1,22 +1,18 @@
-package com.gaetanoippolito.model.observerPattern;
+package com.gaetanoippolito.model;
 
-import com.gaetanoippolito.model.Ordine;
-import com.gaetanoippolito.model.Pacco;
-import com.gaetanoippolito.model.StatoPacco;
-import com.gaetanoippolito.model.Utente;
+import com.gaetanoippolito.model.observerPattern.Destinatario;
+import com.gaetanoippolito.model.observerPattern.ObserverDestinatario;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 
-public class Corriere extends Utente implements ObservableCorriere, Serializable {
+public class Corriere extends Utente implements Serializable {
     ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
     // id del "serialVersionUID"
     @Serial
     private static final long serialVersionUID = 7L;
-
     private String idCorriere;
-    private Ordine ordineAssociato;
-    private Pacco paccoAssociato;
     private ArrayList<ObserverDestinatario> listaDestinatari;
     private boolean isBusy;
 
@@ -38,10 +34,6 @@ public class Corriere extends Utente implements ObservableCorriere, Serializable
         return this.idCorriere;
     }
 
-    public Ordine getOrdineAssociato() {
-        return this.ordineAssociato;
-    }
-
     public ArrayList<ObserverDestinatario> getListaDestinatari() {
         return this.listaDestinatari;
     }
@@ -50,16 +42,8 @@ public class Corriere extends Utente implements ObservableCorriere, Serializable
         return this.isBusy;
     }
 
-    public Pacco getPaccoAssociato(){
-        return this.paccoAssociato;
-    }
-
     public void setIdCorriere(String idCorriere) {
         this.idCorriere = idCorriere;
-    }
-
-    public void setOrdineAssociato(Ordine ordineAssociato) {
-        this.ordineAssociato = ordineAssociato;
     }
 
     public void setListaDestinatari(ArrayList<ObserverDestinatario> listaDestinatari) {
@@ -70,31 +54,26 @@ public class Corriere extends Utente implements ObservableCorriere, Serializable
         this.isBusy = isBusy;
     }
 
-    public void setPaccoAssociato(Pacco pacco){
-        this.paccoAssociato = pacco;
+    @Override
+    public String toString() {
+        return "Corriere{" +
+                "idCorriere='" + idCorriere + '\'' +
+                ", listaDestinatari=" + listaDestinatari +
+                ", isBusy=" + isBusy +
+                '}';
     }
 
     @Override
-    public void aggiungiDestinatario(Destinatario destinatario){
-        this.listaDestinatari.add(destinatario);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Corriere)) return false;
+        if (!super.equals(o)) return false;
+        Corriere corriere = (Corriere) o;
+        return Objects.equals(idCorriere, corriere.idCorriere);
     }
 
     @Override
-    public void rimuoviDestinatario(Destinatario destinatario){
-        this.listaDestinatari.remove(destinatario);
-    }
-
-    @Override
-    public void notificaDestintari(StatoPacco statoPacco){
-        this.paccoAssociato.setStatoPacco(statoPacco);
-
-        for(ObserverDestinatario destinatario : this.listaDestinatari){
-            destinatario.updateStatoPacco(this.paccoAssociato.getStatoPacco());
-        }
-    }
-
-    @Override
-    public String toString(){
-        return String.format("%s %s - isBusy: %s", super.getNome(), super.getCognome(), this.isBusy);
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), idCorriere);
     }
 }

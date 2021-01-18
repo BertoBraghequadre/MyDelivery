@@ -5,9 +5,11 @@ import com.gaetanoippolito.controller.dialog.NextFitDialogController;
 import com.gaetanoippolito.controller.dialog.RimuoviAziendaController;
 import com.gaetanoippolito.model.*;
 import com.gaetanoippolito.model.database.MyDeliveryData;
-import com.gaetanoippolito.model.observerPattern.Corriere;
+import com.gaetanoippolito.model.Corriere;
+import com.gaetanoippolito.model.observerPattern.Ordine;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,7 +20,9 @@ import javafx.stage.Stage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * Questa classe rappresenta il Controller della finestra con cui l'Admin interagisce e monitora le azienda con cui
@@ -128,6 +132,43 @@ public class AdminStageController {
 
         nextFitITem.setOnAction(event -> {
             gestoreNextFit();
+
+            Predicate<Ordine> isPresoInCarico = Ordine::getPresoInCarico;
+            FilteredList<Ordine> listaFiltrataDiOrdini = new FilteredList<>(MyDeliveryData.getInstance().getOrdini());
+            listaFiltrataDiOrdini.setPredicate(isPresoInCarico);
+
+            List<Corriere> listaCorrieriDiAzienda = MyDeliveryData.getInstance().getCorrieriDisponibili(listaFiltrataDiOrdini.get(0).getAziendaDaOrdine());
+
+            int indiceCorriere = 0;
+            Veicolo veicoloPrecedente = MyDeliveryData.getInstance().getOrdini().get(0).getOrdineDelVeicolo();
+
+            for(int i = 0; i < MyDeliveryData.getInstance().getOrdini().size(); i++){
+                System.out.println("***********************************************");
+                System.out.println("ITERATO TOT VOLTE: " + i);
+                if(!veicoloPrecedente.equals(MyDeliveryData.getInstance().getOrdini().get(i).getOrdineDelVeicolo()) && MyDeliveryData.getInstance().getOrdini().get(i).getPresoInCarico()){
+                    indiceCorriere++;
+                    veicoloPrecedente = MyDeliveryData.getInstance().getOrdini().get(i).getOrdineDelVeicolo();
+                    MyDeliveryData.getInstance().getOrdini().get(i).setOrdineDelCorriere(listaCorrieriDiAzienda.get(indiceCorriere));
+                    listaCorrieriDiAzienda.get(indiceCorriere).setIsBusy(true);
+                }
+                else if(MyDeliveryData.getInstance().getOrdini().get(i).getPresoInCarico()){
+                    MyDeliveryData.getInstance().getOrdini().get(i).setOrdineDelCorriere(listaCorrieriDiAzienda.get(indiceCorriere));
+                    listaCorrieriDiAzienda.get(indiceCorriere).setIsBusy(true);
+                    System.out.println("peppe: " + indiceCorriere);
+                }
+            }
+
+            try{
+                MyDeliveryData.getInstance().storeVeicoli();
+                MyDeliveryData.getInstance().storeOrdini();
+                MyDeliveryData.getInstance().storePacchi();
+                MyDeliveryData.getInstance().storeCorrieri();
+                MyDeliveryData.getInstance().storeAziende();
+                MyDeliveryData.getInstance().storeClienti();
+            } catch (IOException e){
+                System.out.println("Errore durante il salvataggio");
+                e.printStackTrace();
+            }
         });
 
         // Azione che si triggera se il bottone "Exit.." viene cliccato
@@ -351,7 +392,6 @@ public class AdminStageController {
             // Creazione delle colonne e del nome dell'intestazione
             TableColumn<Pacco, String> colonnaCodicePacco = new TableColumn<>("Codice Pacco");
             TableColumn<Pacco, String> colonnaPesoPacco = new TableColumn<>("Peso Pacco");
-            TableColumn<Pacco, String> colonnaStatoPacco = new TableColumn<>("Stato Pacco");
 
             // Si setta il valore delle celle in base al ritorno della funzione lamba
             // "SimpleStringProperty" rende una stringa osservabile data una stringa
@@ -361,15 +401,10 @@ public class AdminStageController {
             colonnaPesoPacco.setCellValueFactory(pesoPacco -> new SimpleStringProperty(String.valueOf(pesoPacco.getValue().getPesoPacco())));
             this.colliTableView.getColumns().add(popolaCellePacchi(colonnaPesoPacco));
 
-            colonnaStatoPacco.setCellValueFactory(statoPacco -> new SimpleStringProperty(String.valueOf(statoPacco.getValue().getStatoPacco())));
-            this.colliTableView.getColumns().add(popolaCellePacchi(colonnaStatoPacco));
-
-
             // Impostiamo la grandezza massima della TableView per ogni colonna
             this.colliTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-            colonnaCodicePacco.setMaxWidth(Integer.MAX_VALUE * 33D); // 33%
-            colonnaPesoPacco.setMaxWidth(Integer.MAX_VALUE * 33D);   // 33%
-            colonnaStatoPacco.setMaxWidth(Integer.MAX_VALUE * 33D);  // 33%
+            colonnaCodicePacco.setMaxWidth(Integer.MAX_VALUE * 50D); // 50%
+            colonnaPesoPacco.setMaxWidth(Integer.MAX_VALUE * 50D);   // 50%
 
             this.colliTableView.setItems(this.pacchi);
 
@@ -506,27 +541,14 @@ public class AdminStageController {
         if(result.isPresent() && result.get() == ButtonType.OK){
 
             ArrayList<Veicolo> veicoliNextFit = new ArrayList<>(MyDeliveryData.getInstance().getVeicoloAziendaNotBusy(nextFitDialogController.aziendaSelezionata()));
-            ArrayList<Corriere> corrieriNextFit = new ArrayList<>(MyDeliveryData.getInstance().getCorrieriDisponibili(nextFitDialogController.aziendaSelezionata()));
             ArrayList<Ordine> ordiniNextFit = new ArrayList<>(MyDeliveryData.getInstance().getOrdiniDaAzienda(nextFitDialogController.aziendaSelezionata()));
             ArrayList<Pacco> pacchiNextFit = new ArrayList<>();
 
-            if(corrieriNextFit.size() == 0){
-                warning.setContentText("Non ci sono corrieri per questa azienda");
-                warning.show();
-            }
-            else if(ordiniNextFit.size() == 0){
+            if(ordiniNextFit.size() == 0){
                 warning.setContentText("Non ci sono ordini presso questa azienda");
                 warning.show();
             }
-            else if(corrieriNextFit.size() < ordiniNextFit.size()){
-                warning.setContentText("Non ci sono abbastanza corrieri per questa azienda");
-                warning.show();
-            }
             else if(veicoliNextFit.size() < ordiniNextFit.size()){
-                warning.setContentText("Non ci sono abbastanza veicoli per questa azienda");
-                warning.show();
-            }
-            else if(veicoliNextFit.size() < corrieriNextFit.size()){
                 warning.setContentText("Non ci sono abbastanza veicoli per questa azienda");
                 warning.show();
             }
@@ -535,7 +557,7 @@ public class AdminStageController {
                     pacchiNextFit.add(ordine.getPacco());
                 }
 
-                nextFit(veicoliNextFit, veicoliNextFit.size(), pacchiNextFit, pacchiNextFit.size(), ordiniNextFit, corrieriNextFit);
+                nextFit(veicoliNextFit, veicoliNextFit.size(), ordiniNextFit, ordiniNextFit.size());
             }
         }
         else{
@@ -543,20 +565,21 @@ public class AdminStageController {
         }
     }
 
-    private void nextFit(ArrayList<Veicolo> veicoliNextFit, int sizeVeicoli, ArrayList<Pacco> pacchi, int sizePacchi,
-                         ArrayList<Ordine> ordiniNextFit, ArrayList<Corriere> corrieriNextFit){
+    private void nextFit(ArrayList<Veicolo> veicoliNextFit, int sizeVeicoli, ArrayList<Ordine> ordiniNextFit, int sizeOrdini){
         int j = 0;
 
-        for(int i = 0; i < sizePacchi; i++){
-            while(j < sizeVeicoli && i < ordiniNextFit.size()){
-                if(veicoliNextFit.get(j).getCapienzaContainer() >= pacchi.get(i).getPesoPacco()){
+        for(int i = 0; i < sizeOrdini; i++){
+            while(j < sizeVeicoli){
+                double tempWeight = veicoliNextFit.get(j).getCapienzaContainer();
+
+                if((veicoliNextFit.get(j).getCapienzaContainer() - veicoliNextFit.get(j).getPesoInContainer()) >= ordiniNextFit.get(i).getPacco().getPesoPacco()){
                     this.veicoli.remove(veicoliNextFit.get(j));
 
-                    veicoliNextFit.get(j).depositaPacco(pacchi.get(i));
+                    veicoliNextFit.get(j).depositaPacco(ordiniNextFit.get(i).getPacco());
+
                     veicoliNextFit.get(j).setIsBusy(true);
 
-                    associaOrdineVeicoloCorriere(veicoliNextFit.get(j), ordiniNextFit.get(i), corrieriNextFit.get(i));
-                    j = (j + 1) % sizeVeicoli;
+                    associaOrdineVeicoloCorriere(veicoliNextFit.get(j), ordiniNextFit.get(i));
 
                     break;
                 }
@@ -569,36 +592,14 @@ public class AdminStageController {
         }
     }
 
-    private void associaOrdineVeicoloCorriere(Veicolo veicoloAggiornato, Ordine ordine, Corriere corriere){
+    private void associaOrdineVeicoloCorriere(Veicolo veicoloAggiornato, Ordine ordine){
         this.ordini.remove(ordine);
-        this.corrieri.remove(corriere);
 
         ordine.setPresoInCarico(true);
 
         ordine.setVeicoloDiOrdine(veicoloAggiornato);
 
-        corriere.setIsBusy(true);
-
-        System.out.println("________________");
-        System.out.println(corriere);
-        System.out.println("________________");
-
-        ordine.setOrdineDelCorriere(corriere);
-
         this.veicoli.add(veicoloAggiornato);
-        this.corrieri.add(corriere);
         this.ordini.add(ordine);
-
-        try{
-            MyDeliveryData.getInstance().storeVeicoli();
-            MyDeliveryData.getInstance().storeOrdini();
-            MyDeliveryData.getInstance().storePacchi();
-            MyDeliveryData.getInstance().storeCorrieri();
-            MyDeliveryData.getInstance().storeAziende();
-            MyDeliveryData.getInstance().storeClienti();
-        } catch (IOException e){
-            System.out.println("Errore durante il salvataggio");
-            e.printStackTrace();
-        }
     }
 }

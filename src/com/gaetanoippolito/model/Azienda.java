@@ -1,7 +1,7 @@
 package com.gaetanoippolito.model;
 
 import com.gaetanoippolito.model.database.MyDeliveryData;
-import com.gaetanoippolito.model.observerPattern.Corriere;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;

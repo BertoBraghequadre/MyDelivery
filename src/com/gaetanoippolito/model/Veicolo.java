@@ -112,6 +112,10 @@ public class Veicolo implements Serializable {
         this.isBusy = isBusy;
     }
 
+    public void setCapienzaContainer(double capienzaContainer) {
+        this.capienzaContainer = capienzaContainer;
+    }
+
     ////////////////////////////////////// METODI //////////////////////////////////////
 
     public double getPesoInContainer(){
@@ -128,6 +132,16 @@ public class Veicolo implements Serializable {
 
     public void depositaPacco(Pacco pacco){
         this.pacchiDepositati.add(pacco);
+    }
+
+    public double pesoDepositato(){
+        double peso = 0.0;
+
+        for(Pacco pacco : this.pacchiDepositati){
+            peso += pacco.getPesoPacco();
+        }
+
+        return peso;
     }
 
     /**

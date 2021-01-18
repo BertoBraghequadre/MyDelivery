@@ -1,7 +1,8 @@
 package com.gaetanoippolito.model.database;
 
 import com.gaetanoippolito.model.*;
-import com.gaetanoippolito.model.observerPattern.Corriere;
+import com.gaetanoippolito.model.Corriere;
+import com.gaetanoippolito.model.observerPattern.Ordine;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.io.*;
@@ -38,7 +39,7 @@ public class MyDeliveryData {
     private ObservableList<Cliente> clienti;
     /**@see Corriere*/
     private ObservableList<Corriere> corrieri;
-    /**@see Ordine*/
+    /**@see Ordine */
     private ObservableList<Ordine> ordini;
     /**@see Pacco*/
     private ObservableList<Pacco> pacchi;
@@ -145,6 +146,10 @@ public class MyDeliveryData {
      */
     public void setVeicoli(ObservableList<Veicolo> veicoli) {
         this.veicoli = veicoli;
+    }
+
+    public void setOrdini(ObservableList<Ordine> ordini) {
+        this.ordini = ordini;
     }
 
     ////////////////////////////////////// METODI //////////////////////////////////////
@@ -447,8 +452,6 @@ public class MyDeliveryData {
     }
 
     public Corriere loginCorriere(String nome, String id) throws Exception{
-        System.out.println(this.corrieri);
-
         for(Corriere corriere : this.corrieri){
             if(corriere.getIdCorriere().equals(id) && corriere.getNome().equals(nome)){
 
@@ -526,14 +529,16 @@ public class MyDeliveryData {
         return corriereDisponibile;
     }
 
-    public Ordine getOrdineDelCorriere(Corriere corriereDiOrdine) throws Exception{
+    public List<Ordine> getOrdineDelCorriere(Corriere corriereDiOrdine){
+        List<Ordine> ordini = new ArrayList<>();
+
         for(Ordine ordine : this.ordini){
             if(ordine.getCorriereFromOrdine().getIdCorriere().equals(corriereDiOrdine.getIdCorriere())){
-                return ordine;
+                ordini.add(ordine);
             }
         }
 
-        throw new Exception();
+        return ordini;
     }
 
     public void storeCorrieri() throws IOException{
@@ -608,7 +613,7 @@ public class MyDeliveryData {
         if(pacco != null){
             for(Ordine ordine : this.ordini){
                 if(ordine.getPacco().getCodice() == pacco.getCodice()){
-                    System.out.println(ordine);
+
                     return ordine;
                 }
             }
