@@ -1,8 +1,8 @@
 package com.gaetanoippolito.model.builderPattern;
 
 import com.gaetanoippolito.model.*;
-import com.gaetanoippolito.model.observerPattern.Corriere;
 import com.gaetanoippolito.model.observerPattern.Destinatario;
+import com.gaetanoippolito.model.observerPattern.Stato;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -21,12 +21,16 @@ public class ConcreteOrdine extends BuilderOrdine implements Serializable {
 
     @Override
     public void buildDestinatario(Destinatario persona){
-        ordine.setDestinatario(persona);
+        ordine.attach(persona);
     }
 
     @Override
     public void buildDataDiConsegna(LocalDate dataDiConsegna){
         ordine.setDataDiConsegna(dataDiConsegna);
+    }
+
+    public void buildStatoOrdine(Stato stato){
+        ordine.setStatoPacco(stato);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.gaetanoippolito.controller.dialog;
 
-import com.gaetanoippolito.model.Ordine;
+import com.gaetanoippolito.model.observerPattern.Ordine;
 import com.gaetanoippolito.model.Pacco;
 import com.gaetanoippolito.model.database.MyDeliveryData;
 import javafx.beans.binding.Bindings;

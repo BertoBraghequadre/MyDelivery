@@ -1,22 +1,20 @@
-package com.gaetanoippolito.model.observerPattern;
+package com.gaetanoippolito.model;
 
-import com.gaetanoippolito.model.Ordine;
-import com.gaetanoippolito.model.Pacco;
-import com.gaetanoippolito.model.StatoPacco;
-import com.gaetanoippolito.model.Utente;
+import com.gaetanoippolito.model.observerPattern.Ordine;
+import com.gaetanoippolito.model.observerPattern.Destinatario;
+import com.gaetanoippolito.model.observerPattern.ObserverDestinatario;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
-public class Corriere extends Utente implements ObservableCorriere, Serializable {
+public class Corriere extends Utente implements Serializable {
     ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
     // id del "serialVersionUID"
     @Serial
     private static final long serialVersionUID = 7L;
-
     private String idCorriere;
-    private Ordine ordineAssociato;
-    private Pacco paccoAssociato;
+    private ArrayList<Ordine> ordiniAssociato;
     private ArrayList<ObserverDestinatario> listaDestinatari;
     private boolean isBusy;
 
@@ -25,6 +23,7 @@ public class Corriere extends Utente implements ObservableCorriere, Serializable
         super(username, password, nome, cognome, email);
         this.idCorriere = idCorriere;
         this.isBusy = false;
+        this.ordiniAssociato = new ArrayList<>();
 
         this.listaDestinatari = new ArrayList<>();
         this.listaDestinatari.add(destinatario);
@@ -38,8 +37,8 @@ public class Corriere extends Utente implements ObservableCorriere, Serializable
         return this.idCorriere;
     }
 
-    public Ordine getOrdineAssociato() {
-        return this.ordineAssociato;
+    public ArrayList<Ordine> getOrdineAssociato() {
+        return this.ordiniAssociato;
     }
 
     public ArrayList<ObserverDestinatario> getListaDestinatari() {
@@ -50,16 +49,12 @@ public class Corriere extends Utente implements ObservableCorriere, Serializable
         return this.isBusy;
     }
 
-    public Pacco getPaccoAssociato(){
-        return this.paccoAssociato;
-    }
-
     public void setIdCorriere(String idCorriere) {
         this.idCorriere = idCorriere;
     }
 
-    public void setOrdineAssociato(Ordine ordineAssociato) {
-        this.ordineAssociato = ordineAssociato;
+    public void setOrdineAssociato(ArrayList<Ordine> ordineAssociato) {
+        this.ordiniAssociato = ordineAssociato;
     }
 
     public void setListaDestinatari(ArrayList<ObserverDestinatario> listaDestinatari) {
@@ -68,29 +63,6 @@ public class Corriere extends Utente implements ObservableCorriere, Serializable
 
     public void setIsBusy(boolean isBusy){
         this.isBusy = isBusy;
-    }
-
-    public void setPaccoAssociato(Pacco pacco){
-        this.paccoAssociato = pacco;
-    }
-
-    @Override
-    public void aggiungiDestinatario(Destinatario destinatario){
-        this.listaDestinatari.add(destinatario);
-    }
-
-    @Override
-    public void rimuoviDestinatario(Destinatario destinatario){
-        this.listaDestinatari.remove(destinatario);
-    }
-
-    @Override
-    public void notificaDestintari(StatoPacco statoPacco){
-        this.paccoAssociato.setStatoPacco(statoPacco);
-
-        for(ObserverDestinatario destinatario : this.listaDestinatari){
-            destinatario.updateStatoPacco(this.paccoAssociato.getStatoPacco());
-        }
     }
 
     @Override

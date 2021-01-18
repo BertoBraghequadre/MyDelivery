@@ -5,7 +5,8 @@ import com.gaetanoippolito.controller.dialog.NextFitDialogController;
 import com.gaetanoippolito.controller.dialog.RimuoviAziendaController;
 import com.gaetanoippolito.model.*;
 import com.gaetanoippolito.model.database.MyDeliveryData;
-import com.gaetanoippolito.model.observerPattern.Corriere;
+import com.gaetanoippolito.model.Corriere;
+import com.gaetanoippolito.model.observerPattern.Ordine;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -351,7 +352,6 @@ public class AdminStageController {
             // Creazione delle colonne e del nome dell'intestazione
             TableColumn<Pacco, String> colonnaCodicePacco = new TableColumn<>("Codice Pacco");
             TableColumn<Pacco, String> colonnaPesoPacco = new TableColumn<>("Peso Pacco");
-            TableColumn<Pacco, String> colonnaStatoPacco = new TableColumn<>("Stato Pacco");
 
             // Si setta il valore delle celle in base al ritorno della funzione lamba
             // "SimpleStringProperty" rende una stringa osservabile data una stringa
@@ -361,15 +361,10 @@ public class AdminStageController {
             colonnaPesoPacco.setCellValueFactory(pesoPacco -> new SimpleStringProperty(String.valueOf(pesoPacco.getValue().getPesoPacco())));
             this.colliTableView.getColumns().add(popolaCellePacchi(colonnaPesoPacco));
 
-            colonnaStatoPacco.setCellValueFactory(statoPacco -> new SimpleStringProperty(String.valueOf(statoPacco.getValue().getStatoPacco())));
-            this.colliTableView.getColumns().add(popolaCellePacchi(colonnaStatoPacco));
-
-
             // Impostiamo la grandezza massima della TableView per ogni colonna
             this.colliTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-            colonnaCodicePacco.setMaxWidth(Integer.MAX_VALUE * 33D); // 33%
-            colonnaPesoPacco.setMaxWidth(Integer.MAX_VALUE * 33D);   // 33%
-            colonnaStatoPacco.setMaxWidth(Integer.MAX_VALUE * 33D);  // 33%
+            colonnaCodicePacco.setMaxWidth(Integer.MAX_VALUE * 50D); // 50%
+            colonnaPesoPacco.setMaxWidth(Integer.MAX_VALUE * 50D);   // 50%
 
             this.colliTableView.setItems(this.pacchi);
 
@@ -518,10 +513,6 @@ public class AdminStageController {
                 warning.setContentText("Non ci sono ordini presso questa azienda");
                 warning.show();
             }
-            else if(corrieriNextFit.size() < ordiniNextFit.size()){
-                warning.setContentText("Non ci sono abbastanza corrieri per questa azienda");
-                warning.show();
-            }
             else if(veicoliNextFit.size() < ordiniNextFit.size()){
                 warning.setContentText("Non ci sono abbastanza veicoli per questa azienda");
                 warning.show();
@@ -548,15 +539,14 @@ public class AdminStageController {
         int j = 0;
 
         for(int i = 0; i < sizePacchi; i++){
-            while(j < sizeVeicoli && i < ordiniNextFit.size()){
+            while(j < sizeVeicoli && i < ordiniNextFit.size() && i < corrieriNextFit.size()){
                 if(veicoliNextFit.get(j).getCapienzaContainer() >= pacchi.get(i).getPesoPacco()){
                     this.veicoli.remove(veicoliNextFit.get(j));
 
                     veicoliNextFit.get(j).depositaPacco(pacchi.get(i));
                     veicoliNextFit.get(j).setIsBusy(true);
 
-                    associaOrdineVeicoloCorriere(veicoliNextFit.get(j), ordiniNextFit.get(i), corrieriNextFit.get(i));
-                    j = (j + 1) % sizeVeicoli;
+                    associaOrdineVeicoloCorriere(veicoliNextFit.get(j), ordiniNextFit.get(i), corrieriNextFit.get(j));
 
                     break;
                 }
@@ -579,11 +569,8 @@ public class AdminStageController {
 
         corriere.setIsBusy(true);
 
-        System.out.println("________________");
-        System.out.println(corriere);
-        System.out.println("________________");
-
         ordine.setOrdineDelCorriere(corriere);
+        corriere.getOrdineAssociato().add(ordine);
 
         this.veicoli.add(veicoloAggiornato);
         this.corrieri.add(corriere);

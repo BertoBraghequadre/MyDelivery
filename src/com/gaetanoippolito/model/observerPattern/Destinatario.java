@@ -4,48 +4,37 @@ import com.gaetanoippolito.model.Persona;
 import com.gaetanoippolito.model.StatoPacco;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
 
-public class Destinatario extends Persona implements ObserverDestinatario, Serializable {
+public class Destinatario extends Persona implements Serializable, ObserverDestinatario {
     ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
     // id del "serialVersionUID"
     @Serial
     private static final long serialVersionUID = 9L;
-    private StatoPacco statoPacco;
-    private ArrayList<ObservableCorriere> listaCorrieriDiOrdine;
+    private Stato statoPacco;
+    private Ordine ordine;
 
     public Destinatario(String nome, String cognome, String indirizzo, String numeroDiTelefono, String cf,
-                        StatoPacco statoPacco, ObservableCorriere corriereDelPacco){
+                        Stato statoPacco){
         super(nome, cognome, indirizzo, numeroDiTelefono, cf);
 
         this.statoPacco = statoPacco;
-        this.listaCorrieriDiOrdine = new ArrayList<>();
-        this.listaCorrieriDiOrdine.add(corriereDelPacco);
     }
 
     public Destinatario(String nome, String cognome, String indirizzo, String numeroDiTelefono, String cf){
-        this(nome, cognome, indirizzo, numeroDiTelefono, cf, StatoPacco.IN_PREPARAZIONE, null);
+        this(nome, cognome, indirizzo, numeroDiTelefono, cf, new Stato(StatoPacco.IN_PREPARAZIONE, "Deposito"));
     }
 
-    public StatoPacco getStatoPacco() {
+    public Stato getStatoPacco() {
         return statoPacco;
     }
 
-    public void setStatoPacco(StatoPacco statoPacco) {
+    public void setStatoPacco(Stato statoPacco) {
         this.statoPacco = statoPacco;
     }
 
-    public ArrayList<ObservableCorriere> getListaCorrieriDiOrdine() {
-        return listaCorrieriDiOrdine;
-    }
-
-    public void setListaCorrieriDiOrdine(ArrayList<ObservableCorriere> listaCorrieriDiOrdine) {
-        this.listaCorrieriDiOrdine = listaCorrieriDiOrdine;
-    }
-
     @Override
-    public void updateStatoPacco(StatoPacco statoPacco){
-        setStatoPacco(statoPacco);
+    public void update(Stato statoAggiornato){
+        this.statoPacco = statoAggiornato;
     }
 
     @Override
