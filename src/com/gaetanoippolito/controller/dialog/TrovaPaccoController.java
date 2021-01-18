@@ -13,9 +13,8 @@ public class TrovaPaccoController {
     @FXML
     private TextField codicePaccoTextField;
 
-    @FXML
-    public Pacco processaTracciamentoPacco(){
-        int codiceInserito = Integer.parseInt(this.codicePaccoTextField.getText().trim());
+    public Pacco processaTracciamentoPacco(String codice){
+        int codiceInserito = Integer.parseInt(codice);
 
         Pacco paccoDaCercare = MyDeliveryData.getInstance().tracciaPacco(codiceInserito);
 
@@ -28,7 +27,7 @@ public class TrovaPaccoController {
     }
 
     public Ordine ordineDelPacco(){
-        return MyDeliveryData.getInstance().getOrdineDelPacco(this.pacco);
+        return MyDeliveryData.getInstance().getOrdineDelPacco(processaTracciamentoPacco(this.codicePaccoTextField.getText().trim()));
     }
 
     public BooleanExpression disabilitaOkButton() {

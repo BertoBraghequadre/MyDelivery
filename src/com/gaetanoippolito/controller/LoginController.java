@@ -311,6 +311,7 @@ public class LoginController {
 
         if(result.isPresent() && result.get() == ButtonType.OK){
             Ordine ordineDaMostrare = trovaPaccoController.ordineDelPacco();
+            System.out.println(ordineDaMostrare);
 
             if(ordineDaMostrare != null){
                 this.loginErrorLabel.setVisible(false);
