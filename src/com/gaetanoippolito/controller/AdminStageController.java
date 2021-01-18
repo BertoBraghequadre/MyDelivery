@@ -556,6 +556,8 @@ public class AdminStageController {
                     veicoliNextFit.get(j).setIsBusy(true);
 
                     associaOrdineVeicoloCorriere(veicoliNextFit.get(j), ordiniNextFit.get(i), corrieriNextFit.get(i));
+                    j = (j + 1) % sizeVeicoli;
+
                     break;
                 }
                 else{

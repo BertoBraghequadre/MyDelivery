@@ -1,9 +1,7 @@
 package com.gaetanoippolito.model.builderPattern;
 
 import com.gaetanoippolito.model.*;
-import com.gaetanoippolito.model.observerPattern.Corriere;
 import com.gaetanoippolito.model.observerPattern.Destinatario;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;

@@ -2,7 +2,6 @@ package com.gaetanoippolito.model.database;
 
 import com.gaetanoippolito.model.*;
 import com.gaetanoippolito.model.observerPattern.Corriere;
-import com.gaetanoippolito.model.observerPattern.ObservableCorriere;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.io.*;
@@ -10,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -29,6 +27,7 @@ public class MyDeliveryData {
     private static final String filenameCorrieri = "listaCorrieri.txt";
     private static final String filenameOrdini = "listaOrdini.txt";
     private static final String filenamePacchi = "listaPacchi.txt";
+    private static final String filenameCentroDiSmistamento = "listaCentriDiSmistamento.txt";
     /**@see Admin*/
     private Admin admin;
     /**@see Azienda*/
@@ -43,6 +42,8 @@ public class MyDeliveryData {
     private ObservableList<Ordine> ordini;
     /**@see Pacco*/
     private ObservableList<Pacco> pacchi;
+    /**@see CentroDiSmistamento*/
+    private ObservableList<CentroDiSmistamento> centriDiSmistamento;
 
     //////////////////////////////////// COSTRUTTORE ////////////////////////////////////
     /**
@@ -57,6 +58,7 @@ public class MyDeliveryData {
         this.corrieri = FXCollections.observableArrayList();
         this.ordini = FXCollections.observableArrayList();
         this.pacchi = FXCollections.observableArrayList();
+        this.centriDiSmistamento = FXCollections.observableArrayList();
     }
 
     ///////////////////////////////////// GETTER /////////////////////////////////////
@@ -111,6 +113,10 @@ public class MyDeliveryData {
      */
     public ObservableList<Pacco> getPacchi() {
         return this.pacchi;
+    }
+
+    public ObservableList<CentroDiSmistamento> getCentriDiSmistamento() {
+        return centriDiSmistamento;
     }
 
     ///////////////////////////////////// SETTER /////////////////////////////////////
@@ -761,6 +767,68 @@ public class MyDeliveryData {
 
         } catch (IOException e) {
             System.out.println("Errore nel salvataggio del File \"listaClienti.txt\"");
+            e.printStackTrace();
+        }
+    }
+
+    ///////////////////////////// METODI: ZONA CENTRI DI SMISTAMENTO /////////////////////////////////
+    public void loadCentroDiSmistamento() throws IOException{
+        /**@see Path*/
+        Path path = Paths.get(filenameCentroDiSmistamento);
+        String input;
+
+        // Questo fa tutto il lavoro del "buffer", in cui si bufferizza il file dato un path
+        try(BufferedReader br = Files.newBufferedReader(path)){
+            while((input = br.readLine()) != null){
+                String[] itemPieces = input.split(" - ");
+
+                String nomeCentroDiSmistamento = itemPieces[0];
+                String indirizzo = itemPieces[1];
+                String numeroCivico = itemPieces[2];
+
+
+                /**@see CentroDiSmistamento*/
+                CentroDiSmistamento centroDiSmistamento = new CentroDiSmistamento(nomeCentroDiSmistamento, indirizzo, numeroCivico);
+                this.centriDiSmistamento.add(centroDiSmistamento);
+            }
+        } catch (IOException e){
+            System.out.println("Caricamento file \"listaClienti.txt\" fallito");
+        }
+    }
+
+    public void aggiungiCentroDiSmistamento(CentroDiSmistamento centroDiSmistamentoNuovo){
+        this.centriDiSmistamento.add(centroDiSmistamentoNuovo);
+
+        try{
+            storeCentriDiSmistamento();
+        } catch (IOException e){
+            System.out.println("Errore nel salvataggio dei centri di smistamento");
+            e.printStackTrace();
+        }
+    }
+
+    public void rimuoviCentroDiSmistamento(CentroDiSmistamento centroDiSmistamento){
+        this.centriDiSmistamento.remove(centroDiSmistamento);
+
+        try{
+            storeCentriDiSmistamento();
+        } catch (IOException e){
+            System.out.println("Errore nella rimozione del centro di smistamento");
+            e.printStackTrace();
+        }
+    }
+
+    public void storeCentriDiSmistamento() throws IOException{
+        try (ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filenameCentroDiSmistamento)))){
+
+            ArrayList<CentroDiSmistamento> centroDiSmistamento = new ArrayList<>(this.centriDiSmistamento);
+
+            objectOut.writeObject(centroDiSmistamento);
+            System.out.println(centroDiSmistamento);
+            System.out.println("Il file \"listaCentriDiSmistamento.txt\" è stato salvato con successo");
+
+        } catch (IOException e) {
+            System.out.println("Errore nel salvataggio del File \"listaCentriDiSmistamento.txt\"");
             e.printStackTrace();
         }
     }

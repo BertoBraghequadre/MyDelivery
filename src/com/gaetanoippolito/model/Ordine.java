@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.util.Random;
 
 public class Ordine implements Serializable {
-    ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
     // id del "serialVersionUID"
     @Serial
     private static final long serialVersionUID = 10L;

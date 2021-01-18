@@ -1,5 +1,7 @@
 package com.gaetanoippolito.controller;
 
+import com.gaetanoippolito.controller.dialog.AggiornaStatoOrdineDialogController;
+import com.gaetanoippolito.controller.dialog.NextFitDialogController;
 import com.gaetanoippolito.model.Ordine;
 import com.gaetanoippolito.model.database.MyDeliveryData;
 import com.gaetanoippolito.model.observerPattern.Corriere;
@@ -12,14 +14,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Optional;
 
 public class CorriereStageController {
     private final String rootLoginStageFile = "src/com/gaetanoippolito/view/fxml/login.fxml";
+    private final String rootAggiornaStatoDialogFile = "src/com/gaetanoippolito/view/fxml/dialog/aggiornaStatoOrdineDialog.fxml";
     private ObservableCorriere corriere;
     private ObservableList<Ordine> ordini = FXCollections.observableArrayList();
+
+    @FXML
+    private BorderPane corriereBorderPane;
 
     @FXML
     private TableView<Ordine> spedizioneCorriereView;
@@ -45,13 +53,12 @@ public class CorriereStageController {
     public void initialize(){
         // Impostiamo la grandezza massima della TableView per ogni colonna
         this.spedizioneCorriereView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        this.codiceOrdineColonna.setMaxWidth(Integer.MAX_VALUE * 14D);         //14%
-        this.destinazioneColonna.setMaxWidth(Integer.MAX_VALUE * 14D);         //14%
-        this.scadenzaColonna.setMaxWidth(Integer.MAX_VALUE * 14D);             //14%
-        this.veicoloColonna.setMaxWidth(Integer.MAX_VALUE * 14D);              //14%
-        this.pesoContainerColonna.setMaxWidth(Integer.MAX_VALUE * 14D);        //14%
-        this.statoOrdineColonna.setMaxWidth(Integer.MAX_VALUE * 14D);          //14%
-        this.centroDiSmistamentoColonna.setMaxWidth(Integer.MAX_VALUE * 14D);  //14%
+        this.codiceOrdineColonna.setMaxWidth(Integer.MAX_VALUE * 16D);         //16%
+        this.destinazioneColonna.setMaxWidth(Integer.MAX_VALUE * 16D);         //16%
+        this.scadenzaColonna.setMaxWidth(Integer.MAX_VALUE * 16D);             //16%
+        this.veicoloColonna.setMaxWidth(Integer.MAX_VALUE * 16D);              //16%
+        this.pesoContainerColonna.setMaxWidth(Integer.MAX_VALUE * 16D);        //16%
+        this.statoOrdineColonna.setMaxWidth(Integer.MAX_VALUE * 16D);          //16%
 
 
         visualizzaCodiceOrdineColonna();
@@ -60,8 +67,6 @@ public class CorriereStageController {
         visualizzaVeicoloColonna();
         visualizzaPesoContainerColonna();
         visualizzaStatoOrdineColonna();
-
-        // TODO: visualizzaCentroDiSmistamentoColonna();
     }
 
     @FXML
@@ -243,25 +248,37 @@ public class CorriereStageController {
         });
     }
 
-    /*
-    private void visualizzaCentroDiSmistamentoColonna(){
-        // "SimpleStringProperty" rende una stringa osservabile data una stringa
-        this.centroDiSmistamentoColonna.setCellValueFactory(pesoContainerColonna -> new SimpleStringProperty(
-                String.valueOf(pesoContainerColonna.getValue().getOrdineDelVeicolo().getCapienzaContainer())));
+    @FXML
+    private void gestioneCambiaStatoOrdine(){
+        AggiornaStatoOrdineDialogController aggiornaStatoOrdineDialogController;
+        Dialog<ButtonType> aggiornaStatoOrdineDialog = new Dialog<>();
+        FXMLLoader loader = new FXMLLoader();
 
-        // Personalizziamo la cella e quello che vogliamo vedere
-        this.centroDiSmistamentoColonna.setCellFactory(pesoContainerColonna  -> new TableCell<>(){
-            @Override
-            protected void updateItem(String pesoContainer, boolean empty){
-                super.updateItem(pesoContainer, empty);
-                if(empty || pesoContainer == null){
-                    setText(null);
-                } else {
-                    setText(pesoContainer);
-                }
-            }
-        });
+        // Settiamo il proprietario e il titolo della finestra Dialog che si crea
+        aggiornaStatoOrdineDialog.initOwner(this.corriereBorderPane.getScene().getWindow());
+        aggiornaStatoOrdineDialog.setTitle("Cambia stato dell'ordine");
+
+        // Carichiamo il File fxml dov'è presente il Dialog
+        try{
+            Parent root = loader.load(new FileInputStream(rootAggiornaStatoDialogFile));
+            aggiornaStatoOrdineDialog.getDialogPane().setContent(root);
+        } catch (IOException e){
+            System.out.println("File not found");
+            e.printStackTrace();
+        }
+
+        // Aggiungiamo i Bottoni nel dialog
+        aggiornaStatoOrdineDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        aggiornaStatoOrdineDialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+
+        // inizializziamo  il controller
+        aggiornaStatoOrdineDialogController = loader.getController();
+
+        // Aspettiamo l'input dell'utente
+        Optional<ButtonType> result = aggiornaStatoOrdineDialog.showAndWait();
+
+        if(result.isPresent() && result.get() == ButtonType.OK){
+            aggiornaStatoOrdineDialogController.processaCambiaStatoOrdine();
+        }
     }
-    */
-
 }

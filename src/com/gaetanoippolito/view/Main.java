@@ -36,6 +36,7 @@ public class Main extends Application {
         MyDeliveryData.getInstance().loadCorrieri();
         MyDeliveryData.getInstance().loadOrdini();
         MyDeliveryData.getInstance().loadPacchi();
+        MyDeliveryData.getInstance().loadCentroDiSmistamento();
     }
 
     @Override

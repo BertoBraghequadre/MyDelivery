@@ -4,7 +4,6 @@ import com.gaetanoippolito.controller.dialog.CreaOrdineController;
 import com.gaetanoippolito.model.Cliente;
 import com.gaetanoippolito.model.Ordine;
 import com.gaetanoippolito.model.database.MyDeliveryData;
-import com.gaetanoippolito.model.observerPattern.Corriere;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -44,9 +43,6 @@ public class ClienteStageController {
     private TableColumn<Ordine, String> nomeAziendaColonna;
     @FXML
     private TableColumn<Ordine, String> codicePaccoColonna;
-
-    @FXML
-    private Button visualizzaOrdiniButton;
 
     @FXML
     private Button logoutButton;

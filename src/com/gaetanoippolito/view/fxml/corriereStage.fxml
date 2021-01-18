@@ -6,30 +6,28 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.gaetanoippolito.controller.CorriereStageController">
+            fx:controller="com.gaetanoippolito.controller.CorriereStageController"
+            fx:id="corriereBorderPane">
     <top>
         <ToolBar>
             <HBox>
-                <Button text="Avvia spedizione Ordine">
-                    <tooltip>
-                        <Tooltip text="Crea un nuovo Ordine da spedire" />
-                    </tooltip>
-                </Button>
-
                 <Button text="Visualizza Ordini" fx:id="bottoneVisualizzaOrdini" onAction="#visualizzaOrdini">
                     <HBox.margin>
-                        <Insets left="10.0" />
-                    </HBox.margin></Button>
+                        <Insets left="5.0" />
+                    </HBox.margin>
+                </Button>
 
-                <Button text="Cambia stato ordine">
+                <Button text="Cambia stato ordine" onAction="#gestioneCambiaStatoOrdine">
                     <HBox.margin>
                         <Insets left="10.0" />
-                    </HBox.margin></Button>
+                    </HBox.margin>
+                </Button>
 
                 <Button text="Logout" onAction="#ritornaInterfacciaLogin" fx:id="logoutButton">
                     <HBox.margin>
                         <Insets left="490.0" />
-                    </HBox.margin></Button>
+                    </HBox.margin>
+                </Button>
             </HBox>
         </ToolBar>
     </top>
@@ -48,8 +46,6 @@
                 <TableColumn editable="false" text="Peso Container" fx:id="pesoContainerColonna"/>
 
                 <TableColumn editable="false" text="Stato Ordine" fx:id="statoOrdineColonna"/>
-
-                <TableColumn editable="false" text="Centro di smistamento" fx:id="centroDiSmistamentoColonna"/>
             </columns>
         </TableView>
     </center>
