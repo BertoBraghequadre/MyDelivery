@@ -7,7 +7,6 @@ import com.gaetanoippolito.model.Admin;
 import com.gaetanoippolito.model.Cliente;
 import com.gaetanoippolito.model.observerPattern.Destinatario;
 import com.gaetanoippolito.model.observerPattern.Ordine;
-import com.gaetanoippolito.model.Pacco;
 import com.gaetanoippolito.model.database.MyDeliveryData;
 import com.gaetanoippolito.model.Corriere;
 import javafx.fxml.FXML;
@@ -279,6 +278,11 @@ public class LoginController {
         }
     }
 
+    /**
+     * Questo metodo gestisce e visualizza il Dialog "Trova Pacco". Se il codice inserito dall'utente appartiene
+     * ad un Pacco generato da un Cliente, allora verranno mostrati in una TextArea tutte le informazioni riguardo
+     * quel pacco.
+     */
     @FXML
     public void gestisciTracciamentoPacco(){
         TrovaPaccoController trovaPaccoController;
@@ -371,6 +375,9 @@ public class LoginController {
         }
     }
 
+    /**
+     * Questo metodo viene utilizzato per aprire una nuova Finestra in cui vi è l'interfaccia grafica per il cliente
+     */
     private void vaiAdInterfacciaCliente(){
         // Chiude la finestra del Login
         Stage stage = (Stage)loginButton.getScene().getWindow();
@@ -400,6 +407,10 @@ public class LoginController {
         }
     }
 
+    /**
+     * Questo metodo viene utilizzato per aprire una nuova Finestra in cui vi è l'interfaccia grafica per
+     * il corriere
+     */
     private void vaiAdInterfacciaCorriere(){
         // Chiude la finestra del Login
         Stage stage = (Stage)loginButton.getScene().getWindow();

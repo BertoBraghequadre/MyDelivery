@@ -5,7 +5,6 @@ import com.gaetanoippolito.model.builderPattern.ConcreteOrdine;
 import com.gaetanoippolito.model.observerPattern.Destinatario;
 import com.gaetanoippolito.model.observerPattern.Ordine;
 import com.gaetanoippolito.model.observerPattern.Stato;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
