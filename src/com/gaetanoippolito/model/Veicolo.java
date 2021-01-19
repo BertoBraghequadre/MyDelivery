@@ -121,8 +121,6 @@ public class Veicolo implements Serializable {
     public double getPesoInContainer(){
         double pesoDepositato = 0.0d;
 
-        System.out.println(this.pacchiDepositati);
-
         for(Pacco pacco : this.pacchiDepositati){
             pesoDepositato += pacco.getPesoPacco();
         }

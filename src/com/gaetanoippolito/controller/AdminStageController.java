@@ -35,8 +35,8 @@ public class AdminStageController {
     private final String rootRimuoviAziendaDialog = "src/com/gaetanoippolito/view/fxml/dialog/rimuoviAziendaDialog.fxml";
     private final String rootNextFitDialog = "src/com/gaetanoippolito/view/fxml/dialog/nextFitDialog.fxml";
 
-    @FXML
     /**@see VBox*/
+    @FXML
     private VBox vboxAdminStage;
 
     /**@see Azienda*/
@@ -46,7 +46,7 @@ public class AdminStageController {
     /**@see Veicolo*/
     private TableView<Veicolo> veicoloTableView;
     // Questa TableView viene assegnata la prima volta dal metodo "visualizzaColliDaConsegnare()"
-    /**@see*/
+    /**@see TableView*/
     private TableView<Pacco> colliTableView;
 
     private ObservableList<Azienda> aziende = MyDeliveryData.getInstance().getAziende();
@@ -130,21 +130,28 @@ public class AdminStageController {
             visualizzaColliDaConsegnare();
         });
 
+        // Azione che viene triggerata se il bottone "nextFit" viene cliccato
         nextFitITem.setOnAction(event -> {
+            // la prima azione dell'evento è quella di far partire l'algoritmo
             gestoreNextFit();
 
+            // Creiamo un Predicate che serve da filtro per la filteredList. In questo caso gli diciamo di prendere
+            // in considerazione solo gli ordini che NON sono stati presi in carico, ovvero che devono ancora essere
+            // assegnati ad un corriere.
             Predicate<Ordine> isPresoInCarico = Ordine::getPresoInCarico;
             FilteredList<Ordine> listaFiltrataDiOrdini = new FilteredList<>(MyDeliveryData.getInstance().getOrdini());
             listaFiltrataDiOrdini.setPredicate(isPresoInCarico);
 
+            // Salviamo i corrieri DISPONIBILI
             List<Corriere> listaCorrieriDiAzienda = MyDeliveryData.getInstance().getCorrieriDisponibili(listaFiltrataDiOrdini.get(0).getAziendaDaOrdine());
 
             int indiceCorriere = 0;
             Veicolo veicoloPrecedente = MyDeliveryData.getInstance().getOrdini().get(0).getOrdineDelVeicolo();
 
+            // Questo ciclo permette di far prendere in carico un ordine ai corrieri se e solo se cambia il veicolo
+            // dell'ordine cambia. Altrimenti assegna l'ordine allo stesso corriere siccome vuol dire che il veicolo
+            // è capace di storare più pacchi.
             for(int i = 0; i < MyDeliveryData.getInstance().getOrdini().size(); i++){
-                System.out.println("***********************************************");
-                System.out.println("ITERATO TOT VOLTE: " + i);
                 if(!veicoloPrecedente.equals(MyDeliveryData.getInstance().getOrdini().get(i).getOrdineDelVeicolo()) && MyDeliveryData.getInstance().getOrdini().get(i).getPresoInCarico()){
                     indiceCorriere++;
                     veicoloPrecedente = MyDeliveryData.getInstance().getOrdini().get(i).getOrdineDelVeicolo();
@@ -154,7 +161,6 @@ public class AdminStageController {
                 else if(MyDeliveryData.getInstance().getOrdini().get(i).getPresoInCarico()){
                     MyDeliveryData.getInstance().getOrdini().get(i).setOrdineDelCorriere(listaCorrieriDiAzienda.get(indiceCorriere));
                     listaCorrieriDiAzienda.get(indiceCorriere).setIsBusy(true);
-                    System.out.println("peppe: " + indiceCorriere);
                 }
             }
 
@@ -482,6 +488,10 @@ public class AdminStageController {
         return tableColumn;
     }
 
+    /**
+     * Metodo che viene triggerato quando l'Admin clicca sul bottone "logout". Questo metodo ha lo scopo di farci
+     * ritornare alla schermata precedente del login.
+     */
     private void ritornaInterfacciaLogin(){
         // Chiude la finestra dell'Admin
         Stage stage = (Stage)vboxAdminStage.getScene().getWindow();
@@ -506,6 +516,15 @@ public class AdminStageController {
         }
     }
 
+    /**
+     * Questo metodo è utilizzato per gestire l'algoritmo del NextFit. La sua prima azione è quella di aprire
+     * un Dialog in cui bisogna selezionare l'azienda per cui svolgere l'algoritmo. Una volta selezionata l'azienda
+     * l'algortimo inzia se e solo se:
+     *      1. Esistono degli ordini presso l'azienda selezionata.
+     *      2. I veicoli sono sufficienti a soddisfare la presa in carico degli ordini.
+     * Nel caso in cui questi due passaggi sono soddisfatti, vengono prelevati i pacchi dagli ordini creati
+     * dai clienti e passati in input all'algoritmo NextFit
+     */
     private void gestoreNextFit(){
         NextFitDialogController nextFitDialogController;
         Dialog<ButtonType> nextFitDialog = new Dialog<>();
@@ -539,10 +558,9 @@ public class AdminStageController {
 
         // Se il tasto "OK" è stato cliccato rimuovi l'azienda, altrimenti annulla l'operazione
         if(result.isPresent() && result.get() == ButtonType.OK){
-
+            // Salvo in degli ArrayList solo i Veicoli disponibili e gli ordini che fanno parte dell'azienda
             ArrayList<Veicolo> veicoliNextFit = new ArrayList<>(MyDeliveryData.getInstance().getVeicoloAziendaNotBusy(nextFitDialogController.aziendaSelezionata()));
             ArrayList<Ordine> ordiniNextFit = new ArrayList<>(MyDeliveryData.getInstance().getOrdiniDaAzienda(nextFitDialogController.aziendaSelezionata()));
-            ArrayList<Pacco> pacchiNextFit = new ArrayList<>();
 
             if(ordiniNextFit.size() == 0){
                 warning.setContentText("Non ci sono ordini presso questa azienda");
@@ -553,10 +571,7 @@ public class AdminStageController {
                 warning.show();
             }
             else{
-                for(Ordine ordine : ordiniNextFit){
-                    pacchiNextFit.add(ordine.getPacco());
-                }
-
+                // Richiamo l'algoritmo
                 nextFit(veicoliNextFit, veicoliNextFit.size(), ordiniNextFit, ordiniNextFit.size());
             }
         }
@@ -565,13 +580,40 @@ public class AdminStageController {
         }
     }
 
+    /**
+     * Algoritmo NextFit
+     * Questo algortimo accetta in input un ArrayList di veicoli (BlockSize), la size dell'ArrayList di veicoli,
+     * un ArrayList di Ordini (ProcessSize) e la size dell'ArrayList di Ordini.
+     * L'algoritmo prende in considerazione solamente quanto può depositare il veicolo al passo J-esimo e quanto
+     * pesa il pacco al passo i-esimo. In particolare "i" è minore della size dell'arrayList dei pacchi, mentre "j"
+     * è minore della size dell'arrayList dei veicoli.
+     * Dopo aver effettuato un controllo in cui: presa la capienza del veicolo al passo j-esimo sotratta dal peso di ciò
+     *                                           che è stato depositato all'interno del container del veicolo al passo
+     *                                           j-esimo, si controlla se sia maggiora del peso del pacco al passo i-esimo.
+     * Nel caso in cui if statement risulti essere true, allora il veicolo al passo j-esimo viene rimosso da MyDeliveryData
+     * per effettuare un Update; subito dopo viene depositato il pacco all'interno del veicolo in questione, per poi settare
+     * il veicolo come "Busy" (ovvero impegnato, che simboleggia un veicolo riempito e che non potrà più essere richiamato
+     * da un prossimo nextFit).
+     * Di seguito viene richiamato il metodo "associaOrdineVeicolo" in cui all'ordine al passo i-esimo viene associato il
+     * veicolo che sta venendo riempito di pacchi.
+     * Dopo aver eseguito l'associazione, viene richiamato un "break" siccome il veicolo può continuare a depositare pacchi,
+     * per cui l'indice "i" viene incrementato mentre l'indice j non viene incrementato, indicando che se riferisce ad un pacco
+     * di un ordine diverso che però viene depositato (nel caso in cui le condizioni fossero rispettate) sempre all'interno
+     * dello stesso veicolo.
+     * Nel caso in cui un veicolo NON può contenere il pacco oppure, avendo depositato vari pacchi, quello al passo i-esimo
+     * fa risultare la capienza del veicolo oltre la sua capacità, allora si entra nel blocco Else, in cui viene visualizzato
+     * nella console il peso del pacco j-esimo e si incremente l'indice j. Questo non incrementerà l'indice i, in modo tale
+     * che il controllo venga effettuato al prossimo veicolo e non al prossimo ordine.
+     * @param veicoliNextFit Rappresenta un arrayList in cui sono contenuti solo veicoli che posso depositare pacchi
+     * @param sizeVeicoli Rappresenta la size dell'arrayList dei veicoli
+     * @param ordiniNextFit Rappresenta un arrayList di Ordini in cui sono contenuti i pacchi da depositare
+     * @param sizeOrdini Rappresenta la size dell'arrayList degli ordini
+     */
     private void nextFit(ArrayList<Veicolo> veicoliNextFit, int sizeVeicoli, ArrayList<Ordine> ordiniNextFit, int sizeOrdini){
         int j = 0;
 
         for(int i = 0; i < sizeOrdini; i++){
             while(j < sizeVeicoli){
-                double tempWeight = veicoliNextFit.get(j).getCapienzaContainer();
-
                 if((veicoliNextFit.get(j).getCapienzaContainer() - veicoliNextFit.get(j).getPesoInContainer()) >= ordiniNextFit.get(i).getPacco().getPesoPacco()){
                     this.veicoli.remove(veicoliNextFit.get(j));
 
@@ -579,12 +621,12 @@ public class AdminStageController {
 
                     veicoliNextFit.get(j).setIsBusy(true);
 
-                    associaOrdineVeicoloCorriere(veicoliNextFit.get(j), ordiniNextFit.get(i));
+                    associaOrdineVeicolo(veicoliNextFit.get(j), ordiniNextFit.get(i));
 
                     break;
                 }
                 else{
-                    System.out.println("Errore nel nextFit");
+                    System.out.println("Veicolo: " + veicoliNextFit.get(j).getPesoInContainer() + " pieno");
                 }
 
                 j = (j + 1) % sizeVeicoli;
@@ -592,7 +634,13 @@ public class AdminStageController {
         }
     }
 
-    private void associaOrdineVeicoloCorriere(Veicolo veicoloAggiornato, Ordine ordine){
+    /**
+     * Questo metodo viene richiamato all'interno dell'algoritmo nextFit e serve per associare ad un ordine un
+     * Veicolo che contiene i pacchi dell'ordine.
+     * @param veicoloAggiornato Rappresenta il veicolo che è stato riempito di pacchi.
+     * @param ordine Rappresenta l'ordine a cui associare il veicolo che contiene i suoi pacchi.
+     */
+    private void associaOrdineVeicolo(Veicolo veicoloAggiornato, Ordine ordine){
         this.ordini.remove(ordine);
 
         ordine.setPresoInCarico(true);
