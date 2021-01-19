@@ -329,13 +329,14 @@ public class LoginController {
                                 "Data di consegna: %s\n" +
                                 "Stato pacco: %s\n" +
                                 "Ultima posizione: %s\n" +
-                                "Codice pacco: %s",
+                                "Codice pacco: %s\n" +
+                                "Fragile: %s",
                         ordineDaMostrare.getMittente().getNome(), ordineDaMostrare.getMittente().getCognome(),
                         destinatario.getNome(), destinatario.getCognome(),
                         ordineDaMostrare.getDataDiConsegna(),
                         ordineDaMostrare.getStatoPacco().getStatoOrdine().toString(),
                         ordineDaMostrare.getStatoPacco().getPosizione(),
-                        ordineDaMostrare.getPacco().getCodice()));
+                        ordineDaMostrare.getPacco().getCodice(), ordineDaMostrare.getPacco().getIsFragile()));
             }
             else{
                 this.informazioniPaccoTextArea.setVisible(false);

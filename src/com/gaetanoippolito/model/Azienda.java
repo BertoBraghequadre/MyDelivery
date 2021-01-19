@@ -45,7 +45,6 @@ public class Azienda implements Serializable {
         }
 
         this.corrieri = corrieri;
-        System.out.println(corrieri);
     }
 
     /**
@@ -108,8 +107,8 @@ public class Azienda implements Serializable {
         int codice;
         int maxRandom = 10;
 
-        // Salvo un numero randomico che va da 1 a 5
-        int randomNumber = (random.nextInt(maxRandom) + 1);
+        // Salvo un numero randomico che va da 5 a 10
+        int randomNumber = (random.nextInt(maxRandom) + 5);
 
         // Eseguo un ciclo for le cui interazioni dipendono dal numero randomico
         for(int i = 0; i < randomNumber; i++){
