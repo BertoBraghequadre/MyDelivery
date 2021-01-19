@@ -79,7 +79,7 @@ public class Ordine implements Serializable, ObservableOrdine {
         this.mittente = mittente;
     }
 
-    public void setOrdineDaAzienda(Azienda ordineDaAzienda) {
+    public void setAzienda(Azienda ordineDaAzienda) {
         this.ordineDaAzienda = ordineDaAzienda;
     }
 
