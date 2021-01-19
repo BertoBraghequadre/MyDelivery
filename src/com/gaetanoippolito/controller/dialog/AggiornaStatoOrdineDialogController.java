@@ -10,13 +10,24 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.util.StringConverter;
-
 import java.io.IOException;
 
+/**
+ * Questa classe rappresenta il Controller del Dialog per aggiornare lo stato degli ordini associati ad un
+ * Cliente.
+ */
+
 public class AggiornaStatoOrdineDialogController {
+    ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
+    /**@see ComboBox*/
     @FXML
     private ComboBox<CentroDiSmistamento> aggiornaStatoComboBox;
 
+    ////////////////////////////////////// METODI //////////////////////////////////////
+    /**
+     * Metodo overridato che viene triggerato nel momento in cui viene inizializzata la view. Quì dentro si popolano
+     * gli items della Combobox con i dati dei Centri di Smistamento.
+     */
     @FXML
     public void initialize(){
         this.aggiornaStatoComboBox.setItems(MyDeliveryData.getInstance().getCentriDiSmistamento());
@@ -52,16 +63,23 @@ public class AggiornaStatoOrdineDialogController {
         this.aggiornaStatoComboBox.getSelectionModel().selectFirst();
     }
 
+    /**
+     * Metodo che genera una stringa formattata.
+     * @param centroDiSmistamento Rappresenta il centro di smistamento di cui vogliamo mostrare le informazioni in un
+     *                            particolare formato.
+     * @return Ritorna la stringa formattata.
+     */
     private String generaStringa(CentroDiSmistamento centroDiSmistamento){
         return String.format("%d - %s",  MyDeliveryData.getInstance().getCentriDiSmistamento().indexOf(centroDiSmistamento) + 1,
                 centroDiSmistamento.getNomeCentroDiSmistamento());
     }
 
+    /**
+     * Questo metodo si triggera solo quando il tasto OK è stato Cliccato dal Corriere. Il suo scopo è quello di
+     * cambiare lo stato di ogni ordine che fanno parte del Corriere.
+     * @param corriere Rappresenta il corriere che cambia lo stato dei suoi ordini
+     */
     public void processaCambiaStatoOrdine(Corriere corriere){
-        System.out.println("===============================");
-        System.out.println(MyDeliveryData.getInstance().getCorrieri());
-        System.out.println("===============================");
-
         for(Ordine ordine : MyDeliveryData.getInstance().getOrdineDelCorriere(corriere)){
             ordine.setStatoPacco(new Stato(StatoPacco.IN_TRANSITO, this.aggiornaStatoComboBox.getValue().getNomeCentroDiSmistamento()));
         }
