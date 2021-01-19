@@ -306,6 +306,6 @@ public class ClienteStageController {
         visualizzaColonnaCorriere();
         visualizzaColonnaCodicePacco();
 
-        this.ordineView.setItems(MyDeliveryData.getInstance().getMittenteOrdini(this.cliente));
+        this.ordineView.setItems(MyDeliveryData.getInstance().getOrdiniDaMittente(this.cliente));
     }
 }

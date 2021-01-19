@@ -170,7 +170,7 @@ public class LoginController {
             System.out.println(this.corrieri);
 
             try{
-                this.corriere = MyDeliveryData.getInstance().loginCorriere(nome, id);
+                this.corriere = MyDeliveryData.getInstance().loginCorriere(nome, cognome, id);
 
                 vaiAdInterfacciaCorriere();
 
@@ -390,7 +390,7 @@ public class LoginController {
 
             clienteStageController = loader.getController();
             clienteStageController.setCliente(this.cliente);
-            clienteStageController.setOrdini(MyDeliveryData.getInstance().getMittenteOrdini(this.cliente));
+            clienteStageController.setOrdini(MyDeliveryData.getInstance().getOrdiniDaMittente(this.cliente));
 
             clienteStage.show();
 

@@ -37,9 +37,6 @@ public class RegisterCorriereController {
             this.aziendeChoiceBox.getValue().setCorrieri(corriere);
             try{
                 MyDeliveryData.getInstance().storeAziende();
-                System.out.println(":::::::::::::::::::::::::::::::::::");
-                System.out.println(MyDeliveryData.getInstance().getAziende());
-                System.out.println(":::::::::::::::::::::::::::::::::::");
             } catch (IOException e){
                 System.out.println("Errore nel salvataggio dell'azienda");
                 e.printStackTrace();

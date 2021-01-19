@@ -2,5 +2,7 @@ module:MyDelivery
 com.gaetanoippolito.controller
 com.gaetanoippolito.controller.dialog
 com.gaetanoippolito.model
+com.gaetanoippolito.model.builderPattern
 com.gaetanoippolito.model.database
+com.gaetanoippolito.model.observerPattern
 com.gaetanoippolito.view

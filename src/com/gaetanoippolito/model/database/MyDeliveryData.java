@@ -116,8 +116,31 @@ public class MyDeliveryData {
         return this.pacchi;
     }
 
+    /**
+     * Metodo che ritorna l'ObserableList in cui sono contenuti i centri di smistamento
+     * @return Ritorna una ObservableList di CentroDiSmistamento
+     * @see CentroDiSmistamento
+     */
     public ObservableList<CentroDiSmistamento> getCentriDiSmistamento() {
-        return centriDiSmistamento;
+        return this.centriDiSmistamento;
+    }
+
+    /**
+     * Metodo che ritorna l'istanza di Admin
+     * @return Ritorna l'istanza di Admin
+     * @see Admin
+     */
+    public Admin getAdmin() {
+        return this.admin;
+    }
+
+    /**
+     * Metodo che ritorna l'ObserableList in cui sono contenuti i clienti
+     * @return Ritorna una ObservableList dei Clienti
+     * @see Cliente
+     */
+    public ObservableList<Cliente> getClienti() {
+        return this.clienti;
     }
 
     ///////////////////////////////////// SETTER /////////////////////////////////////
@@ -148,8 +171,49 @@ public class MyDeliveryData {
         this.veicoli = veicoli;
     }
 
+    /**
+     * Questo metodo setta l'ObservableList di Ordine
+     * @param ordini Rappresenta l'ObservableList di Ordine da settare all'interno della classe
+     * @see Ordine
+     */
     public void setOrdini(ObservableList<Ordine> ordini) {
         this.ordini = ordini;
+    }
+
+    /**
+     * Questo metodo setta l'ObservableList di Cliente
+     * @param clienti Rappresenta l'ObservableList di Cliente da settare all'interno della classe
+     * @see Cliente
+     */
+    public void setClienti(ObservableList<Cliente> clienti) {
+        this.clienti = clienti;
+    }
+
+    /**
+     * Questo metodo setta l'ObservableList di Corriere
+     * @param corrieri Rappresenta l'ObservableList di Corriere da settare all'interno della classe
+     * @see Corriere
+     */
+    public void setCorrieri(ObservableList<Corriere> corrieri) {
+        this.corrieri = corrieri;
+    }
+
+    /**
+     * Questo metodo setta l'ObservableList di Pacco
+     * @param pacchi Rappresenta l'ObservableList di Pacco da settare all'interno della classe
+     * @see Pacco
+     */
+    public void setPacchi(ObservableList<Pacco> pacchi) {
+        this.pacchi = pacchi;
+    }
+
+    /**
+     * Questo metodo setta l'ObservableList di CentroDiSmistamento
+     * @param centriDiSmistamento Rappresenta l'ObservableList di CentroDiSmistamento da settare all'interno della classe
+     * @see CentroDiSmistamento
+     */
+    public void setCentriDiSmistamento(ObservableList<CentroDiSmistamento> centriDiSmistamento) {
+        this.centriDiSmistamento = centriDiSmistamento;
     }
 
     ////////////////////////////////////// METODI //////////////////////////////////////
@@ -189,8 +253,10 @@ public class MyDeliveryData {
                 Admin admin = Admin.getInstance(username, password, nome, cognome, email);
                 this.setAdmin(admin);
             }
+        } catch (FileNotFoundException e) {
+            System.out.println("File \"listaAdmin.txt\" vuoto");
         } catch (IOException e){
-            System.out.println("Caricamento file \"listaClienti.txt\" fallito");
+            System.out.println("Errore nel caricamento del File \"listaAdmin.txt\"");
         }
     }
 
@@ -209,12 +275,12 @@ public class MyDeliveryData {
                 e.printStackTrace();
             }
 
-            System.out.println(this.aziende);
             System.out.println("File \"listaAziende.txt\" caricato con successo");
 
-        } catch (Exception e) {
-            System.out.println("Errore nel caricamento del File \"listaAziende\"");
-            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            System.out.println("File \"listaAziende.txt\" vuoto");
+        } catch (IOException e){
+            System.out.println("Errore nel caricamento del File \"listaAziende.txt\"");
         }
     }
 
@@ -236,14 +302,12 @@ public class MyDeliveryData {
 
     /**
      * Questo metodo serve a rimuovere un'azienda all'interno di MyDeliveryData e salvare il contenuto all'interno di
-     * "listaAziende.txt"
+     * "listaAziende.txt". Il cancellamento dell'azienda implica il cancellamento in MyDeliveryData dei Veicoli,
+     * degli ordini, dei corrieri e dei pacchi che fanno parte dell'azienda che si intende di rimuovere.
      * @param azienda rappresenta l'azienda che l'utente vuole rimuovere
      */
     private void rimuoviAzienda(Azienda azienda){
         List<Veicolo> veicoliDaRimuovere = azienda.getVeicoli();
-        System.out.println("_______________");
-        System.out.println(veicoliDaRimuovere);
-        System.out.println("_______________");
         List<Corriere> corrieriDaRimuovere = azienda.getCorrieri();
         List<Ordine> ordiniDaRimuovere = new ArrayList<>();
         List<Pacco> pacchiDaRimuovere = new ArrayList<>();
@@ -336,9 +400,10 @@ public class MyDeliveryData {
 
             System.out.println("File \"listaVeicoli.txt\" caricato con successo");
 
-        } catch (Exception e) {
-            System.out.println("Errore nel caricamento del File \"listaVeicoli\"");
-            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            System.out.println("File \"listaVeicoli.txt\" vuoto");
+        } catch (IOException e){
+            System.out.println("Errore nel caricamento del File \"listaVeicoli.txt\"");
         }
     }
 
@@ -356,40 +421,9 @@ public class MyDeliveryData {
     }
 
     /**
-     * Questo metodo rimuove un Veicolo all'interno della ObservableList di MyDeliveryData una volta che è
-     * stata rimossa l'azienda a cui il Veicolo è associata.
-     * @param azienda Rappresenta l'azienda a cui il Veicolo è associato
+     * Questo metodo restituisce un ArrayList di Veicolo data un'azienda. I veicoli restituiti sono tutti
+     * NotBusy, ovvero veicoli liberi e che possono essere utilizzati per trasportare pacchi.
      */
-    private void rimuoviVeicolo(Azienda azienda){
-        for(Veicolo veicolo : azienda.getVeicoli()){
-            this.veicoli.remove(veicolo);
-        }
-        try{
-            storeVeicoli();
-        }catch (IOException e){
-            System.out.println("Errore nella cancellazione dei veicoli");
-        }
-    }
-
-    public void rimuoviVeicolo(Veicolo veicolo){
-        this.veicoli.remove(veicolo);
-        try{
-            storeVeicoli();
-        }catch (IOException e){
-            System.out.println("Errore nella cancellazione dei veicoli");
-        }
-    }
-
-    public ArrayList<Veicolo> getVeicoloAzienda(Azienda azienda){
-        ArrayList<Veicolo> veicoliAzienda = new ArrayList<>();
-
-        for(Veicolo veicolo : azienda.getVeicoli()){
-            veicoliAzienda.add(veicolo);
-        }
-
-        return veicoliAzienda;
-    }
-
     public ArrayList<Veicolo> getVeicoloAziendaNotBusy(Azienda azienda){
         ArrayList<Veicolo> veicoliAzienda = new ArrayList<>();
 
@@ -401,20 +435,8 @@ public class MyDeliveryData {
         return veicoliAzienda;
     }
 
-    public Veicolo getVeicoloDisponibile(Azienda azienda){
-        List<Veicolo> veicoliDisponibili = azienda.getVeicoli();
-
-        for(Veicolo veicolo : veicoliDisponibili){
-            if(!veicolo.getIsBusy()){
-                return veicolo;
-            }
-        }
-
-        return null;
-    }
-
     /**
-     * Questo metodo lo si utilizza per salvare i dati di Azienda all'interno del file "listaVeicoli.txt"
+     * Questo metodo lo si utilizza per salvare i dati di Veicolo all'interno del file "listaVeicoli.txt"
      * @throws IOException
      */
     public void storeVeicoli() throws IOException{
@@ -434,6 +456,10 @@ public class MyDeliveryData {
     }
 
     ///////////////////////////// METODI: ZONA CORRIERI ////////////////////////////////
+    /**
+     * Questo metodo lo si utilizza per caricare i dati del file "listaCorrieri.txt" dove sono contenuti i
+     * dati dei Corrieri.
+     */
     public void loadCorrieri() throws IOException{
         try(ObjectInputStream objectIn = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filenameCorrieri)))) {
             try{
@@ -442,18 +468,28 @@ public class MyDeliveryData {
                 e.printStackTrace();
             }
 
-            System.out.println(this.corrieri);
-            System.out.println("File \"listaCorriere.txt\" caricato con successo");
+            System.out.println("File \"listaCorrieri.txt\" caricato con successo");
 
-        } catch (Exception e) {
-            System.out.println("Errore nel caricamento del File \"listaCorriere\"");
-            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            System.out.println("File \"listaCorrieri.txt\" vuoto");
+        } catch (IOException e){
+            System.out.println("Errore nel caricamento del File \"listaCorrieri.txt\"");
         }
     }
 
-    public Corriere loginCorriere(String nome, String id) throws Exception{
+    /**
+     * Questo metodo è utilizzato durante il login del corriere. Controlla se i dati immessi dall'utente sia uguali
+     * ad un'istanza di Corriere presente in MyDeliveryData. Se trova un'occorenza in cui "nome, cognome e id" siano
+     * uguali ad un corriere presente in MyDeliveryData, ritorna quel corriere, altrimenti lancia un Exception
+     * @param nome Rappresenta il nome del corriere inserito nel login.
+     * @param cognome Rappresenta il cognome del corriere inserito nel login.
+     * @param id Rappresenta l'id del corriere inserito nel login.
+     * @return Ritorna l'istanza del corriere che rispetta la condizione imposta dal blocco If
+     * @throws Exception
+     */
+    public Corriere loginCorriere(String nome, String cognome, String id) throws Exception{
         for(Corriere corriere : this.corrieri){
-            if(corriere.getIdCorriere().equals(id) && corriere.getNome().equals(nome)){
+            if(corriere.getIdCorriere().equals(id) && corriere.getNome().equals(nome) && corriere.getCognome().equals(cognome)){
 
                 return corriere;
             }
@@ -462,18 +498,16 @@ public class MyDeliveryData {
     throw new Exception();
     }
 
-    /*
-    private boolean cercaEsistenzaCorriere(String nomeCorriere){
-        for(Corriere corriere : this.corrieri){
-            if(corriere.getUsername().equals(nomeCorriere)){
-                return true;
-            }
-        }
-
-        return false;
-    }
-    */
-
+    /**
+     * Questo metodo è utilizzato durante la registrazione di un Corriere. Se il corriere che si vuole aggiungere
+     * è il primo della lista, allora non vi saranno controlli e verrà aggiunto in MyDeliveryData, altrimenti
+     * verrà utilizzato il metodo "cercaCorriere(String id)" in cui se trova almeno un'occorrenza del corriere
+     * all'interno di MyDeliveryData, ritorna true altrimenti ritorna false. In caso ritornasse true, non verrà
+     * salvato nessun corriere, essendo già esistente, altrimenti verrà inserito all'interno della ObservableList
+     * di corrieri e salvato all'interno del file.
+     * @param corriereNuovo Rappresenta il Corriere che si vuole aggiungere
+     * @return Ritorna true se il corriere è stato aggiunto, altrimenti ritorna false.
+     */
     public boolean aggiungiCorrieri(Corriere corriereNuovo){
         if(this.corrieri.size() == 0){
             this.corrieri.add(corriereNuovo);
@@ -505,6 +539,12 @@ public class MyDeliveryData {
         return true;
     }
 
+    /**
+     * Metodo utilizzato per controllare se il corriere inserito esiste. Questo controllo è svolto tramite il suo
+     * ID. Nel caso cui trovi un'occerrenza, ritornerà true altrimenti false.
+     * @param id Rappresenta l'id del corriere
+     * @return Ritorna true se è stata trovata almeno una o più occorrenze, altrimenti ritorna false.
+     */
     public boolean cercaCorriere(String id){
         int contatore = 0;
 
@@ -517,6 +557,13 @@ public class MyDeliveryData {
         return contatore != 0;
     }
 
+    /**
+     * Metodo utilizzato per restituire un ArrayList di Corrieri, data un'azienda, disponibili e che quindi non
+     * stanno già lavornado per una spedizione. L'ArrayList restituita sarà di Corrieri che fanno tutti parte
+     * della stessa azienda.
+     * @param aziendaDelCorriere Rappresenta l'azienda del corriere.
+     * @return Ritorna un ArrayList di corrieri disponibili facenti parte tutti della stessa azienda.
+     */
     public ArrayList<Corriere> getCorrieriDisponibili(Azienda aziendaDelCorriere){
         ArrayList<Corriere> corriereDisponibile = new ArrayList<>();
 
@@ -529,6 +576,11 @@ public class MyDeliveryData {
         return corriereDisponibile;
     }
 
+    /**
+     * Metodo che restituisce la List di Ordini del Corriere dato come parametro in input.
+     * @param corriereDiOrdine Rappresenta il Corriere di cui vogliamo sapere quanti ordini deve spedire.
+     * @return Ritorna una Lista di ordini dato un corriere.
+     */
     public List<Ordine> getOrdineDelCorriere(Corriere corriereDiOrdine){
         List<Ordine> ordini = new ArrayList<>();
 
@@ -541,6 +593,10 @@ public class MyDeliveryData {
         return ordini;
     }
 
+    /**
+     * Questo metodo lo si utilizza per salvare i dati di Corriere all'interno del file "listaCorrieri.txt"
+     * @throws IOException
+     */
     public void storeCorrieri() throws IOException{
         try (ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filenameCorrieri)))){
 
@@ -557,6 +613,10 @@ public class MyDeliveryData {
     }
 
     ////////////////////////////// METODI: ZONA ORDINI ///////////////////////////////////
+    /**
+     * Questo metodo lo si utilizza per caricare i dati del file "listaOrdini.txt" dove sono contenuti i
+     * dati degli Ordini.
+     */
     public void loadOrdini() throws IOException{
         try(ObjectInputStream objectIn = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filenameOrdini)))) {
             try{
@@ -566,14 +626,19 @@ public class MyDeliveryData {
             }
 
             System.out.println(this.ordini);
-            System.out.println("File \"listaOrdine.txt\" caricato con successo");
+            System.out.println("File \"listaOrdini.txt\" caricato con successo");
 
-        } catch (Exception e) {
-            System.out.println("Errore nel caricamento del File \"listaOrdine\"");
-            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            System.out.println("File \"listaOrdini.txt\" vuoto");
+        } catch (IOException e){
+            System.out.println("Errore nel caricamento del File \"listaOrdini.txt\"");
         }
     }
 
+    /**
+     * Questo metodo lo si utilizza per aggiungere un Ordine all'interno di MyDeliveryData
+     * @param ordine Rappresenta l'ordine creato da voler aggiungere.
+     */
     public void aggiungiOrdine(Ordine ordine){
         this.ordini.add(ordine);
 
@@ -585,7 +650,13 @@ public class MyDeliveryData {
         }
     }
 
-    public ObservableList<Ordine> getMittenteOrdini(Cliente mittente){
+    /**
+     * Questo metodo lo si utilizza per restituire una ObservableList di Ordine dato un mittente, così da mostrare
+     * quanti ordini ha effettuato un mittente (ovvero un Cliente iscritto alla piattaforma).
+     * @param mittente Rappresenta il Cliente che invia che genera ordini (per cui è il mittente di quegli ordini).
+     * @return Ritorna una ObservableList di Ordini effettuati dal mittente dato come paramentro al metodo.
+     */
+    public ObservableList<Ordine> getOrdiniDaMittente(Cliente mittente){
         ObservableList<Ordine> listaMittenteOrdini = FXCollections.observableArrayList();
 
         for(Ordine ordine : this.ordini){
@@ -597,6 +668,12 @@ public class MyDeliveryData {
         return listaMittenteOrdini;
     }
 
+    /**
+     * Questo metodo lo si utilizza per restituire una ArrayList di Ordini data un azienda, così da ottenere solo
+     * gli ordini che fanno parte di quell'azienda.
+     * @param azienda Rappresenta l'azienda presso cui sono stati effettuati degli ordini.
+     * @return Ritorna una ArrayList di Ordine effettuati presso un'azienda.
+     */
     public ArrayList<Ordine> getOrdiniDaAzienda(Azienda azienda){
         ArrayList<Ordine> ordiniDiAzienda = new ArrayList<>();
 
@@ -609,6 +686,12 @@ public class MyDeliveryData {
         return ordiniDiAzienda;
     }
 
+    /**
+     * Questo metodo è utilizzato per ottenere l'Ordine generato da un cliente in cui è presente il pacco passato
+     * come parametro di input al metodo.
+     * @param pacco Rappresenta il Pacco dell'ordine che stiamo cercando.
+     * @return Ritorna l'Ordine in cui è presente il Pacco passato in input.
+     */
     public Ordine getOrdineDelPacco(Pacco pacco){
         if(pacco != null){
             for(Ordine ordine : this.ordini){
@@ -622,6 +705,10 @@ public class MyDeliveryData {
         return null;
     }
 
+    /**
+     * Questo metodo lo si utilizza per salvare i dati di Ordine all'interno del file "listaOrdini.txt"
+     * @throws IOException
+     */
     public void storeOrdini() throws IOException{
         try (ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filenameOrdini)))){
 
@@ -638,6 +725,10 @@ public class MyDeliveryData {
     }
 
     ///////////////////////////// METODI: ZONA PACCHI /////////////////////////////////
+    /**
+     * Questo metodo lo si utilizza per caricare i dati del file "listaPacchi.txt" dove sono contenuti i
+     * dati dei Pacchi.
+     */
     public void loadPacchi() throws IOException{
         try(ObjectInputStream objectIn = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filenamePacchi)))) {
             try{
@@ -646,19 +737,28 @@ public class MyDeliveryData {
                 e.printStackTrace();
             }
 
-            System.out.println(this.pacchi);
             System.out.println("File \"listaPacchi.txt\" caricato con successo");
 
-        } catch (Exception e) {
-            System.out.println("Errore nel caricamento del File \"listaPacchi\"");
-            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            System.out.println("File \"listaOrdini.txt\" vuoto");
+        } catch (IOException e){
+            System.out.println("Errore nel caricamento del File \"listaOrdini.txt\"");
         }
     }
 
+    /**
+     * Questo metodo aggiunge un Pacco all'interno di MyDeliveryData.
+     * @param pacco Rappresenta il Pacco da voler aggiungere.
+     */
     public void aggiungiPacco(Pacco pacco){
         this.pacchi.add(pacco);
     }
 
+    /**
+     * Questo metodo restituisce il pacco dato il suo codice, se esiste.
+     * @param codicePacco Rappresenta il codice del pacco che si vuole cercare.
+     * @return Ritorna il pacco se esiste all'interno di MyDeliveryData.
+     */
     public Pacco tracciaPacco(int codicePacco){
         for(Pacco pacco : this.pacchi){
             if(pacco.getCodice() == codicePacco){
@@ -669,6 +769,10 @@ public class MyDeliveryData {
         return null;
     }
 
+    /**
+     * Questo metodo lo si utilizza per salvare i dati di Pacchi all'interno del file "listaPacchi.txt"
+     * @throws IOException
+     */
     public void storePacchi() throws IOException{
         try (ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filenamePacchi)))){
 
@@ -685,6 +789,10 @@ public class MyDeliveryData {
     }
 
     ///////////////////////////// METODI: ZONA CLIENTI /////////////////////////////////
+    /**
+     * Questo metodo lo si utilizza per caricare i dati del file "listaClienti.txt" dove sono contenuti i
+     * dati i Clienti.
+     */
     public void loadClienti() throws IOException{
         try(ObjectInputStream objectIn = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filenameClienti)))) {
             try{
@@ -693,16 +801,24 @@ public class MyDeliveryData {
                 e.printStackTrace();
             }
 
-            System.out.println(this.clienti);
             System.out.println("File \"listaClienti.txt\" caricato con successo");
 
-        } catch (Exception e) {
-            System.out.println("Errore nel caricamento del File \"listaClienti\"");
-            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            System.out.println("File \"listaClienti.txt\" vuoto");
+        } catch (IOException e){
+            System.out.println("Errore nel caricamento del File \"listaClienti.txt\"");
         }
     }
 
-
+    /**
+     * Questo metodo aggiunge un cliente all'interno di MyDeliveryData. Se la ObservableList in cui sono contenuti
+     * tutti i Clienti è vuota, allora il cliente viene aggiunto senza controlli, altrimenti viene utilizzato il
+     * metodo "cercaEsistenzaCliente(String username)" che controlla se il cliente da noi inserito già esiste.
+     * Se il metodo restituisce true, allora il cliente esiste e non verrà salvato, altrimenti se restituisce false
+     * il cliente verrà aggiunto all'interno di MyDeliveryData e salvato nel file "listaClienti.txt"
+     * @param clienteNuovo Rappresenta il cliente che si sta registrando alla piattaforma.
+     * @return Ritorna true se il cliente è stato aggiunto, altrimenti ritorna false.
+     */
     public boolean aggiungiCliente(Cliente clienteNuovo){
         clienteNuovo.setIdCliente(String.valueOf(this.clienti.size() + 1));
 
@@ -736,6 +852,12 @@ public class MyDeliveryData {
         return true;
     }
 
+    /**
+     * Questo metodo cerca, tramite l'username del cliente, se il cliente esiste. Nel caso in cui trova almeno
+     * un'occorrenza del username dato in input al metodo, allora ritornerà true, altrimenti ritornerà false.
+     * @param username Rappresenta l'username del cliente da cercare.
+     * @return Ritorna true se il cliente esiste, altrimenti ritorna false.
+     */
     private boolean cercaEsistenzaCliente(String username){
         int contatore = 0;
 
@@ -748,6 +870,14 @@ public class MyDeliveryData {
         return contatore != 0;
     }
 
+    /**
+     * Questo metodo permette ad un cliente di accedere all'interno della piattaforma MyDelivery. Se, dato un cliente,
+     * il suo username e la sua password corrispondono ad un cliente già esistente all'interno di MyDeliveryData, il
+     * metodo restuisce il cliente che vuole accedere. Altrimenti il metodo lancia un Exception.
+     * @param loginCliente Rappresenta il cliente che vuole provare ad accedere alla piattaforma
+     * @return Ritorna il Cliente che rispetta i requisiti di accesso e che quindi può effettuare il login
+     * @throws Exception
+     */
     public Cliente loginCliente(Cliente loginCliente) throws Exception{
         if(cercaEsistenzaCliente(loginCliente.getUsername())){
             for(Cliente cliente : this.clienti){
@@ -761,13 +891,16 @@ public class MyDeliveryData {
         throw new Exception();
     }
 
+    /**
+     * Questo metodo lo si utilizza per salvare i dati di Clienti all'interno del file "listaClienti.txt"
+     * @throws IOException
+     */
     public void storeClienti() throws IOException{
         try (ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filenameClienti)))){
 
             ArrayList<Cliente> cliente = new ArrayList<>(this.clienti);
 
             objectOut.writeObject(cliente);
-            System.out.println(cliente);
             System.out.println("Il file \"listaClienti.txt\" è stato salvato con successo");
 
         } catch (IOException e) {
@@ -777,6 +910,10 @@ public class MyDeliveryData {
     }
 
     ///////////////////////////// METODI: ZONA CENTRI DI SMISTAMENTO /////////////////////////////////
+    /**
+     * Questo metodo lo si utilizza per caricare i dati del file "listaCentriDiSmistamento.txt" dove sono
+     * contenuti i dati dei Centri di Smistamento.
+     */
     public void loadCentroDiSmistamento() throws IOException{
         /**@see Path*/
         Path path = Paths.get(filenameCentroDiSmistamento);
@@ -796,11 +933,17 @@ public class MyDeliveryData {
                 CentroDiSmistamento centroDiSmistamento = new CentroDiSmistamento(nomeCentroDiSmistamento, indirizzo, numeroCivico);
                 this.centriDiSmistamento.add(centroDiSmistamento);
             }
+        } catch (FileNotFoundException e) {
+            System.out.println("File \"listaCentriDiSmistamento.txt\" vuoto");
         } catch (IOException e){
-            System.out.println("Caricamento file \"listaClienti.txt\" fallito");
+            System.out.println("Errore nel caricamento del File \"listaCentriDiSmistamento.txt\"");
         }
     }
 
+    /**
+     * Metodo che aggiunge un centro di smistamento all'interno di MyDeliveryData.
+     * @param centroDiSmistamentoNuovo Rappresenta il centro di smistamento da voler aggiungere
+     */
     public void aggiungiCentroDiSmistamento(CentroDiSmistamento centroDiSmistamentoNuovo){
         this.centriDiSmistamento.add(centroDiSmistamentoNuovo);
 
@@ -812,6 +955,10 @@ public class MyDeliveryData {
         }
     }
 
+    /**
+     * Metodo che rimuove un centro di smistamento all'interno di MyDeliveryData.
+     * @param centroDiSmistamento Rappresenta il centro di smistamento da voler rimuovere
+     */
     public void rimuoviCentroDiSmistamento(CentroDiSmistamento centroDiSmistamento){
         this.centriDiSmistamento.remove(centroDiSmistamento);
 
@@ -823,13 +970,17 @@ public class MyDeliveryData {
         }
     }
 
+    /**
+     * Questo metodo lo si utilizza per salvare i dati di CentroDiSmistamento all'interno del file
+     * "listaCentriDiSmistamento.txt"
+     * @throws IOException
+     */
     public void storeCentriDiSmistamento() throws IOException{
         try (ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filenameCentroDiSmistamento)))){
 
             ArrayList<CentroDiSmistamento> centroDiSmistamento = new ArrayList<>(this.centriDiSmistamento);
 
             objectOut.writeObject(centroDiSmistamento);
-            System.out.println(centroDiSmistamento);
             System.out.println("Il file \"listaCentriDiSmistamento.txt\" è stato salvato con successo");
 
         } catch (IOException e) {
