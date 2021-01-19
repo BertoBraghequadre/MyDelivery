@@ -53,7 +53,7 @@ public class Cliente extends Utente implements Serializable {
         this.builderOrdine.creaOrdine();
         this.builderOrdine.buildMittente(mittente);
         this.builderOrdine.buildDestinatario(destinatario);
-        this.builderOrdine.buildStatoOrdine(new Stato(StatoPacco.IN_PREPARAZIONE, "Deposito"));
+        this.builderOrdine.buildStatoOrdine(new Stato(StatoOrdine.IN_PREPARAZIONE, "Deposito"));
         this.builderOrdine.buildDataDiConsegna(LocalDate.now().plusDays(randomDays));
         this.builderOrdine.buildAzienda(ordineDiAzienda);
 

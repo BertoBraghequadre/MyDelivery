@@ -18,6 +18,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * Questa classe rappresenta il controller della view del cliente.
+ */
+
 public class ClienteStageController {
     ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
     private final String rootLoginStageFile = "src/com/gaetanoippolito/view/fxml/login.fxml";

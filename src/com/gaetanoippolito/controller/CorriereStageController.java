@@ -20,6 +20,10 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+/**
+ * Questa classe rappresenta il controller della view del Corriere.
+ */
+
 public class CorriereStageController {
     ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
     private final String rootLoginStageFile = "src/com/gaetanoippolito/view/fxml/login.fxml";

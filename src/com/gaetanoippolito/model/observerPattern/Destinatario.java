@@ -1,7 +1,7 @@
 package com.gaetanoippolito.model.observerPattern;
 
 import com.gaetanoippolito.model.Persona;
-import com.gaetanoippolito.model.StatoPacco;
+import com.gaetanoippolito.model.StatoOrdine;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
@@ -48,7 +48,7 @@ public class Destinatario extends Persona implements Serializable, ObserverDesti
      * @param cf Rappresenta il codice fiscale del destinatario
      */
     public Destinatario(String nome, String cognome, String indirizzo, String numeroDiTelefono, String cf){
-        this(nome, cognome, indirizzo, numeroDiTelefono, cf, new Stato(StatoPacco.IN_PREPARAZIONE, "Deposito"));
+        this(nome, cognome, indirizzo, numeroDiTelefono, cf, new Stato(StatoOrdine.IN_PREPARAZIONE, "Deposito"));
     }
 
     ///////////////////////////////////// GETTER /////////////////////////////////////

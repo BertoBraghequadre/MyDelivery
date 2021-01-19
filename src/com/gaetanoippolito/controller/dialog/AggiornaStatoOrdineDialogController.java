@@ -2,7 +2,7 @@ package com.gaetanoippolito.controller.dialog;
 
 import com.gaetanoippolito.model.CentroDiSmistamento;
 import com.gaetanoippolito.model.Corriere;
-import com.gaetanoippolito.model.StatoPacco;
+import com.gaetanoippolito.model.StatoOrdine;
 import com.gaetanoippolito.model.database.MyDeliveryData;
 import com.gaetanoippolito.model.observerPattern.Ordine;
 import com.gaetanoippolito.model.observerPattern.Stato;
@@ -81,7 +81,7 @@ public class AggiornaStatoOrdineDialogController {
      */
     public void processaCambiaStatoOrdine(Corriere corriere){
         for(Ordine ordine : MyDeliveryData.getInstance().getOrdineDelCorriere(corriere)){
-            ordine.setStatoPacco(new Stato(StatoPacco.IN_TRANSITO, this.aggiornaStatoComboBox.getValue().getNomeCentroDiSmistamento()));
+            ordine.setStatoPacco(new Stato(StatoOrdine.IN_TRANSITO, this.aggiornaStatoComboBox.getValue().getNomeCentroDiSmistamento()));
         }
 
         try{
