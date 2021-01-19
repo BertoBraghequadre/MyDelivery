@@ -493,6 +493,15 @@ public class AdminStageController {
      * ritornare alla schermata precedente del login.
      */
     private void ritornaInterfacciaLogin(){
+        try{
+            MyDeliveryData.getInstance().storeAziende();
+            MyDeliveryData.getInstance().storeVeicoli();
+
+        } catch (IOException e){
+            System.out.println("Errore nel salvataggio");
+            e.printStackTrace();
+        }
+
         // Chiude la finestra dell'Admin
         Stage stage = (Stage)vboxAdminStage.getScene().getWindow();
         stage.close();

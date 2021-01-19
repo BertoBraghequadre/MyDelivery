@@ -179,6 +179,13 @@ public class ClienteStageController {
      */
     @FXML
     public void ritornaInterfacciaLogin(){
+        try{
+            MyDeliveryData.getInstance().storeOrdini();
+        } catch (IOException e){
+            System.out.println("Errore nel salvataggio degli ordini");
+            e.printStackTrace();
+        }
+
         // Chiude la finestra dell'Admin
         Stage stage = (Stage)this.logoutButton.getScene().getWindow();
         stage.close();
