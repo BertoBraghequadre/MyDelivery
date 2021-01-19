@@ -112,7 +112,7 @@ public class Destinatario extends Persona implements Serializable, ObserverDesti
 
     /**
      * Questo metodo overridato della classe Object ritorna l'hashcode della classe
-     * @return Rappresenta il codice della claasse
+     * @return Rappresenta il codice della classe
      */
     @Override
     public int hashCode() {
