@@ -9,36 +9,76 @@ import javafx.beans.binding.BooleanExpression;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+/**
+ * Questa classe rappresenta il Controller per la creazione degli Ordini da parte di un Cliente
+ */
+
 public class CreaOrdineController {
+    ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
+    /**@see Cliente*/
     private Cliente mittente;
 
+    /**@see ChoiceBox*/
     @FXML
     private ChoiceBox<Azienda> aziendeChoiceBox;
 
+    /**@see TextField*/
     @FXML
     private TextField nomeTextField;
+
+    /**@see TextField*/
     @FXML
     private TextField cognomeTextField;
+
+    /**@see TextField*/
     @FXML
     private TextField indirizzoTextField;
+
+    /**@see TextField*/
     @FXML
     private TextField cfTextField;
+
+    /**@see TextField*/
     @FXML
     private TextField numeroDiTelefonoTextField;
 
+    ////////////////////////////////////// METODI //////////////////////////////////////
+    /**
+     * Metodo overridato che viene triggerato nel momento in cui viene inizializzata la view. Il suo scopo è
+     * quello di riempire la ChoiceBox di aziende prese da MyDeliveryData
+     */
     @FXML
     public void initialize(){
         this.aziendeChoiceBox.setItems(MyDeliveryData.getInstance().getAziende());
     }
 
+    /**
+     * Metodo che setta il Mittente (Cliente) di un ordine.
+     * @param mittente Rappresenta il Cliente che genera un ordine.
+     * @see Cliente
+     */
     public void setMittente(Cliente mittente){
         this.mittente = mittente;
     }
 
+    /**
+     * Metodo che ritorna il Mittente (Cliente) di un ordine.
+     * @return Ritorna il mittente di un ordine.
+     * @see Cliente
+     */
     public Cliente getMittente(){
         return this.mittente;
     }
 
+    /**
+     * Questo metodo fa in modo che l'ordine venga creato. Nel caso in cui l'azienda presso cui si vuole creare
+     * un ordine non ha corrieri e/o veicoli disponibili, ritorna false. Altrimenti, tramite il valore di ritorno
+     * dei vari TextFlied all'interno del Dialog, si crea un nuovo ordine con le informazioni inseriti dall'utente.
+     * Queste informazioni andranno a creare l'istanza del destinatario, l'ordine e il pacco. In particolare,
+     * l'ordine viene creato sfruttando il metodo "creaOrdine" del pattern "Builder".
+     * @return Ritorna true se l'ordine è stato creato, altrimenti ritorna false se i veicoli e/o i corrieri non
+     *         sono disponibili.
+     */
     public boolean processaCreazioneOrdine(){
         if(MyDeliveryData.getInstance().getCorrieriDisponibili(this.aziendeChoiceBox.getValue()) == null ||
            MyDeliveryData.getInstance().getVeicoloAziendaNotBusy(this.aziendeChoiceBox.getValue()) == null){
