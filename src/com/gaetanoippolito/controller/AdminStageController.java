@@ -155,11 +155,11 @@ public class AdminStageController {
                 if(!veicoloPrecedente.equals(MyDeliveryData.getInstance().getOrdini().get(i).getOrdineDelVeicolo()) && MyDeliveryData.getInstance().getOrdini().get(i).getPresoInCarico()){
                     indiceCorriere++;
                     veicoloPrecedente = MyDeliveryData.getInstance().getOrdini().get(i).getOrdineDelVeicolo();
-                    MyDeliveryData.getInstance().getOrdini().get(i).setOrdineDelCorriere(listaCorrieriDiAzienda.get(indiceCorriere));
+                    MyDeliveryData.getInstance().getOrdini().get(i).setCorriereDiOrdine(listaCorrieriDiAzienda.get(indiceCorriere));
                     listaCorrieriDiAzienda.get(indiceCorriere).setIsBusy(true);
                 }
                 else if(MyDeliveryData.getInstance().getOrdini().get(i).getPresoInCarico()){
-                    MyDeliveryData.getInstance().getOrdini().get(i).setOrdineDelCorriere(listaCorrieriDiAzienda.get(indiceCorriere));
+                    MyDeliveryData.getInstance().getOrdini().get(i).setCorriereDiOrdine(listaCorrieriDiAzienda.get(indiceCorriere));
                     listaCorrieriDiAzienda.get(indiceCorriere).setIsBusy(true);
                 }
             }

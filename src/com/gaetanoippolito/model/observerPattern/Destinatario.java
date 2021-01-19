@@ -8,7 +8,8 @@ import java.util.Objects;
 
 /**
  * Questa classe rappresenta il ConcreteObserver del Pattern "Observer". Il Destinatario è una Persona che riceve
- * il pacco ed è anche colui che deve reperire le informazioni riguardo l'ordine.
+ * il pacco ed è anche colui che deve reperire le informazioni riguardo l'ordine. Implementa l’interfaccia
+ * dell’Observer definendo il comportamento in caso di cambio di stato del soggetto osservato.
  */
 
 public class Destinatario extends Persona implements Serializable, ObserverDestinatario {
