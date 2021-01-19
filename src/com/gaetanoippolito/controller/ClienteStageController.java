@@ -19,35 +19,60 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class ClienteStageController {
+    ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
     private final String rootLoginStageFile = "src/com/gaetanoippolito/view/fxml/login.fxml";
     private final String rootCreaOrdineDialog = "src/com/gaetanoippolito/view/fxml/dialog/creaOrdineDialog.fxml";
+    /**@see LoginController*/
     private LoginController loginController;
+    /**@see Cliente*/
     private Cliente cliente;
     private ObservableList<Ordine> ordini = MyDeliveryData.getInstance().getOrdini();
 
+    /**@see BorderPane*/
     @FXML
     private BorderPane stageClienteBorderPane;
 
+    /**@see TableView*/
     @FXML
     private TableView<Ordine> ordineView;
+
+    /**@see TableColumn*/
     @FXML
     private TableColumn<Ordine, String> mittenteColonna;
+
+    /**@see TableColumn*/
     @FXML
     private TableColumn<Ordine, String> destinatarioColonna;
+
+    /**@see TableColumn*/
     @FXML
     private TableColumn<Ordine, String> statoOrdineColonna;
+
+    /**@see TableColumn*/
     @FXML
     private TableColumn<Ordine, String> dataDiConsegnaColonna;
+
+    /**@see TableColumn*/
     @FXML
     private TableColumn<Ordine, String> corriereColonna;
+
+    /**@see TableColumn*/
     @FXML
     private TableColumn<Ordine, String> nomeAziendaColonna;
+
+    /**@see TableColumn*/
     @FXML
     private TableColumn<Ordine, String> codicePaccoColonna;
 
+    /**@see Button*/
     @FXML
     private Button logoutButton;
 
+    ////////////////////////////////////// METODI //////////////////////////////////////
+    /**
+     * Metodo overridato che viene triggerato nel momento in cui viene inizializzata la view. All'interno di questo
+     * metodo viene impostata la grandezza massima delle colonne della tableView
+     */
     @FXML
     public void initialize(){
         // Impostiamo la grandezza massima della TableView per ogni colonna
@@ -61,22 +86,34 @@ public class ClienteStageController {
         this.codicePaccoColonna.setMaxWidth(Integer.MAX_VALUE * 14D);      //14%
     }
 
+    /**
+     * Questo metodo setta il cliente che sta utilizzando l'interfaccia del cliente
+     * @param cliente Rappresenta il cliente
+     */
     public void setCliente(Cliente cliente){
         this.cliente = cliente;
     }
 
+    /**
+     * Questo metodo setta gli ordini effettuati dal cliente
+     * @param ordini Rappresenta gli ordini effettuati dal cliente.
+     */
     public void setOrdini(ObservableList<Ordine> ordini){
         this.ordini = ordini;
     }
 
+    /**
+     * Questo metodo ritorna il cliente che sta utilizzando l'interfaccia cliente
+     * @return Ritorna un cliente.
+     */
     public Cliente getCliente(){
         return this.cliente;
     }
 
-    public ObservableList<Ordine> getOrdini(){
-        return this.ordini;
-    }
-
+    /**
+     * Questo metodo genera e gestisce il Dialog "CreaOrdineDialog". Viene richiamato nel momento in cui il
+     * cliente preme sul bottone "Crea nuovo ordine"
+     */
     @FXML
     public void gestioneOrdineDialog(){
         CreaOrdineController creaOrdineController;
@@ -136,6 +173,10 @@ public class ClienteStageController {
 
     }
 
+    /**
+     * Questo metodo è utilizzato per tornare nell'interfaccia login. Viene richiamato nel momento in cui il cliente
+     * preme sul bottone "Logout"
+     */
     @FXML
     public void ritornaInterfacciaLogin(){
         // Chiude la finestra dell'Admin
@@ -161,6 +202,9 @@ public class ClienteStageController {
         }
     }
 
+    /**
+     * Questo metodo è utilizzato visualizzare il contenuto della colonna "Mittente" della tableView degli ordini
+     */
     private void visualizzaColonnaMittente(){
         // "SimpleStringProperty" rende una stringa osservabile data una stringa
         this.mittenteColonna.setCellValueFactory(ordine -> new SimpleStringProperty(
@@ -181,6 +225,10 @@ public class ClienteStageController {
         });
     }
 
+    /**
+     * Questo metodo è utilizzato visualizzare il contenuto della colonna "Destinatario" della tableView degli
+     * ordini
+     */
     private void visualizzaColonnaDestinatario(){
         // "SimpleStringProperty" rende una stringa osservabile data una stringa
         this.destinatarioColonna.setCellValueFactory(ordine -> {
@@ -202,6 +250,10 @@ public class ClienteStageController {
         });
     }
 
+    /**
+     * Questo metodo è utilizzato visualizzare il contenuto della colonna "Stato Ordine" della tableView degli
+     * ordini
+     */
     private void visualizzaColonnaStatoOrdine(){
         // "SimpleStringProperty" rende una stringa osservabile data una stringa
         this.statoOrdineColonna.setCellValueFactory(ordine -> new SimpleStringProperty(
@@ -221,6 +273,10 @@ public class ClienteStageController {
         });
     }
 
+    /**
+     * Questo metodo è utilizzato visualizzare il contenuto della colonna "Data Di Consegna" della tableView
+     * degli ordini
+     */
     private void visualizzaColonnaDataDiConsegna(){
         // "SimpleStringProperty" rende una stringa osservabile data una stringa
         this.dataDiConsegnaColonna.setCellValueFactory(ordine -> new SimpleStringProperty(
@@ -241,6 +297,9 @@ public class ClienteStageController {
         });
     }
 
+    /**
+     * Questo metodo è utilizzato visualizzare il contenuto della colonna "Correre" della tableView degli ordini
+     */
     private void visualizzaColonnaCorriere(){
         // "SimpleStringProperty" rende una stringa osservabile data una stringa
         this.corriereColonna.setCellValueFactory(ordine -> new SimpleStringProperty(String.format("%s", ordine.getValue().getCorriereFromOrdine())));
@@ -259,6 +318,9 @@ public class ClienteStageController {
         });
     }
 
+    /**
+     * Questo metodo è utilizzato visualizzare il contenuto della colonna "Azienda" della tableView degli ordini
+     */
     private void visualizzaColonnaAzienda(){
         // "SimpleStringProperty" rende una stringa osservabile data una stringa
         this.nomeAziendaColonna.setCellValueFactory(ordine -> new SimpleStringProperty(
@@ -278,6 +340,9 @@ public class ClienteStageController {
         });
     }
 
+    /**
+     * Questo metodo è utilizzato visualizzare il contenuto della colonna "Codice Pacco" della tableView degli ordini
+     */
     private void visualizzaColonnaCodicePacco(){
         // "SimpleStringProperty" rende una stringa osservabile data una stringa
         this.codicePaccoColonna.setCellValueFactory(ordine -> new SimpleStringProperty(String.valueOf(ordine.getValue().getPacco().getCodice())));
@@ -296,6 +361,10 @@ public class ClienteStageController {
         });
     }
 
+    /**
+     * Questo metodo è utilizzato per visualizzare tutto il contenuto della tableView all'interno dell'interfaccia
+     * del cliente. Viene richiamato nel momento in cui il cliente clicca sul bottone "Visualizza Ordini".
+     */
     @FXML
     public void popolaCelle(){
         visualizzaColonnaMittente();
