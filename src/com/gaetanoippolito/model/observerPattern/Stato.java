@@ -93,9 +93,6 @@ public class Stato implements Serializable {
      */
     @Override
     public String toString() {
-        return "Stato{" +
-                "statoOrdine=" + statoOrdine +
-                ", posizione='" + posizione + '\'' +
-                '}';
+        return String.format("%s: %s", this.statoOrdine, this.posizione);
     }
 }

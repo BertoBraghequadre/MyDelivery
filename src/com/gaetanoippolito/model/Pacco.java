@@ -8,6 +8,9 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.Random;
 
+/**
+ * Questa classe rappresenta l'astrazione di un pacco
+ */
 public class Pacco implements Serializable {
     ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
     // id del "serialVersionUID"

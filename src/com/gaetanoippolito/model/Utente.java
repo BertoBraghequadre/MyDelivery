@@ -10,6 +10,7 @@ import java.util.Objects;
  */
 public abstract class Utente extends Persona implements Serializable {
     ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
+    /**@see Serializable*/
     @Serial
     private static final long serialVersionUID = 4L;
 
