@@ -177,7 +177,7 @@ public class Veicolo implements Serializable {
                              "Codice veicolo: %s - " +
                              "Azienda associata: %s - " +
                              "isBusy: %s - " +
-                             "Pacchi depositati: %s\n\t\t\t\t\t\t\t\t\t\t\t\t\t",
+                             "Pacchi depositati: %s\n",
                              this.tipoVeicolo, this.capienzaContainer,
                              this.codice, this.aziendaAssociata, this.isBusy, this.pacchiDepositati);
     }
