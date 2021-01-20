@@ -268,7 +268,7 @@ public class ClienteStageController {
     private void visualizzaColonnaStatoOrdine(){
         // "SimpleStringProperty" rende una stringa osservabile data una stringa
         this.statoOrdineColonna.setCellValueFactory(ordine -> new SimpleStringProperty(
-                                                              String.valueOf(ordine.getValue().getStatoPacco().getStatoOrdine())));
+                                                              String.valueOf(ordine.getValue().getStatoOrdine().getStato())));
 
         // Personalizziamo la cella e quello che vogliamo vedere
         this.statoOrdineColonna.setCellFactory(statoOrdineColonna -> new TableCell<>(){

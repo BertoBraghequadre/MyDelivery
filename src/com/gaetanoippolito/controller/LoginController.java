@@ -334,8 +334,8 @@ public class LoginController {
                         ordineDaMostrare.getMittente().getNome(), ordineDaMostrare.getMittente().getCognome(),
                         destinatario.getNome(), destinatario.getCognome(),
                         ordineDaMostrare.getDataDiConsegna(),
-                        ordineDaMostrare.getStatoPacco().getStatoOrdine().toString(),
-                        ordineDaMostrare.getStatoPacco().getPosizione(),
+                        ordineDaMostrare.getStatoOrdine().getStato().toString(),
+                        ordineDaMostrare.getStatoOrdine().getPosizione(),
                         ordineDaMostrare.getPacco().getCodice(), ordineDaMostrare.getPacco().getIsFragile()));
             }
             else{

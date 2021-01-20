@@ -163,7 +163,7 @@ public class Azienda implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("%s - Partita IVA: %s - Corrieri: %s",
-                              this.nomeAzienda, this.partitaIVA, this.corrieri);
+        return String.format("%s - Partita IVA: %s",
+                              this.nomeAzienda, this.partitaIVA);
     }
 }

@@ -6,7 +6,7 @@
 <DialogPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.gaetanoippolito.controller.dialog.AggiornaStatoOrdineDialogController"
-            headerText="Aggiorna stato">
+            headerText="Centro di smistamento">
     <content>
         <ComboBox fx:id="aggiornaStatoComboBox"/>
     </content>

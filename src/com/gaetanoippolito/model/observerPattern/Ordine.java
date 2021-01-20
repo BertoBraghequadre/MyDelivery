@@ -36,7 +36,7 @@ public class Ordine implements Serializable, ObservableOrdine {
     /**@see ObserverDestinatario*/
     private List<ObserverDestinatario> destinatari = new ArrayList<>();
     /**@see Stato*/
-    private Stato statoPacco;
+    private Stato statoOrdine;
 
     //////////////////////////////////// COSTRUTTORE ////////////////////////////////////
     /**
@@ -114,8 +114,8 @@ public class Ordine implements Serializable, ObservableOrdine {
      * @return Ritorna lo Stato dell'ordine
      * @see Stato
      */
-    public Stato getStatoPacco(){
-        return this.statoPacco;
+    public Stato getStatoOrdine(){
+        return this.statoOrdine;
     }
 
     /**
@@ -196,7 +196,7 @@ public class Ordine implements Serializable, ObservableOrdine {
      * @see Stato
      */
     public void setStatoPacco(Stato statoPacco){
-        this.statoPacco = statoPacco;
+        this.statoOrdine = statoPacco;
         notifyObserver(statoPacco);
     }
 
@@ -289,7 +289,7 @@ public class Ordine implements Serializable, ObservableOrdine {
         if (this == o) return true;
         if (!(o instanceof Ordine)) return false;
         Ordine ordine = (Ordine) o;
-        return presoInCarico == ordine.presoInCarico && Objects.equals(pacco, ordine.pacco) && Objects.equals(mittente, ordine.mittente) && Objects.equals(dataDiConsegna, ordine.dataDiConsegna) && Objects.equals(ordineDaAzienda, ordine.ordineDaAzienda) && Objects.equals(ordineDelCorriere, ordine.ordineDelCorriere) && Objects.equals(ordineDelVeicolo, ordine.ordineDelVeicolo) && Objects.equals(destinatari, ordine.destinatari) && Objects.equals(statoPacco, ordine.statoPacco);
+        return presoInCarico == ordine.presoInCarico && Objects.equals(pacco, ordine.pacco) && Objects.equals(mittente, ordine.mittente) && Objects.equals(dataDiConsegna, ordine.dataDiConsegna) && Objects.equals(ordineDaAzienda, ordine.ordineDaAzienda) && Objects.equals(ordineDelCorriere, ordine.ordineDelCorriere) && Objects.equals(ordineDelVeicolo, ordine.ordineDelVeicolo) && Objects.equals(destinatari, ordine.destinatari) && Objects.equals(statoOrdine, ordine.statoOrdine);
     }
 
     /**
@@ -299,6 +299,6 @@ public class Ordine implements Serializable, ObservableOrdine {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(pacco, mittente, dataDiConsegna, ordineDaAzienda, ordineDelCorriere, ordineDelVeicolo, presoInCarico, destinatari, statoPacco);
+        return Objects.hash(pacco, mittente, dataDiConsegna, ordineDaAzienda, ordineDelCorriere, ordineDelVeicolo, presoInCarico, destinatari, statoOrdine);
     }
 }

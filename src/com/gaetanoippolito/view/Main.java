@@ -2,7 +2,6 @@ package com.gaetanoippolito.view;
 
 import com.gaetanoippolito.model.database.MyDeliveryData;
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;

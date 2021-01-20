@@ -19,7 +19,7 @@ public class Destinatario extends Persona implements Serializable, ObserverDesti
     @Serial
     private static final long serialVersionUID = 9L;
     /**@see Stato*/
-    private Stato statoPacco;
+    private Stato observerStatoOrdine;
 
     //////////////////////////////////// COSTRUTTORE ////////////////////////////////////
     /**
@@ -29,13 +29,13 @@ public class Destinatario extends Persona implements Serializable, ObserverDesti
      * @param indirizzo Rappresenta l'indirizzo del destinatario
      * @param numeroDiTelefono Rappresenta il numeroDiTelefono del destinatario
      * @param cf Rappresenta il codice fiscale del destinatario
-     * @param statoPacco Rappresenta lo stato del pacco del destinatario
+     * @param observerStatoOrdine Rappresenta lo stato dell'ordine del destinatario
      */
     public Destinatario(String nome, String cognome, String indirizzo, String numeroDiTelefono, String cf,
-                        Stato statoPacco){
+                        Stato observerStatoOrdine){
         super(nome, cognome, indirizzo, numeroDiTelefono, cf);
 
-        this.statoPacco = statoPacco;
+        this.observerStatoOrdine = observerStatoOrdine;
     }
 
     /**
@@ -54,19 +54,19 @@ public class Destinatario extends Persona implements Serializable, ObserverDesti
     ///////////////////////////////////// GETTER /////////////////////////////////////
     /**
      * Questo classe ritorna lo stato del pacco che il destinatario sta osservando
-     * @return Ritorna lo stato del pacco osservato
+     * @return Ritorna lo stato dell'ordine osservato
      */
-    public Stato getStatoPacco() {
-        return statoPacco;
+    public Stato getObserverStatoOrdine() {
+        return observerStatoOrdine;
     }
 
     ///////////////////////////////////// SETTER /////////////////////////////////////
     /**
      * Questo classe setta lo stato del pacco che il destinatario sta osservando
-     * @param statoPacco Rappresenta lo stato del pacco osservato dal destinatario
+     * @param observerStatoOrdine Rappresenta lo stato dell'ordine osservato dal destinatario
      */
-    public void setStatoPacco(Stato statoPacco) {
-        this.statoPacco = statoPacco;
+    public void setObserverStatoOrdine(Stato observerStatoOrdine) {
+        this.observerStatoOrdine = observerStatoOrdine;
     }
 
     ///////////////////////////////////// METODI /////////////////////////////////////
@@ -76,7 +76,7 @@ public class Destinatario extends Persona implements Serializable, ObserverDesti
      */
     @Override
     public void update(Stato statoAggiornato){
-        this.statoPacco = statoAggiornato;
+        this.observerStatoOrdine = statoAggiornato;
     }
 
     /**
@@ -93,7 +93,7 @@ public class Destinatario extends Persona implements Serializable, ObserverDesti
                 ", indirizzo='" + super.getIndirizzo() + '\'' +
                 ", numeroDiTelefono='" + super.getNumeroDiTelefono() + '\'' +
                 ", cf='" + super.getCf() + '\'' +
-                ", Stato Ordine='" + this.statoPacco + '\'' +
+                ", Stato Ordine='" + this.observerStatoOrdine + '\'' +
                 '}';
     }
 
@@ -107,7 +107,7 @@ public class Destinatario extends Persona implements Serializable, ObserverDesti
         if (this == o) return true;
         if (!(o instanceof Destinatario)) return false;
         Destinatario that = (Destinatario) o;
-        return Objects.equals(statoPacco, that.statoPacco);
+        return Objects.equals(observerStatoOrdine, that.observerStatoOrdine);
     }
 
     /**
@@ -116,6 +116,6 @@ public class Destinatario extends Persona implements Serializable, ObserverDesti
      */
     @Override
     public int hashCode() {
-        return Objects.hash(statoPacco);
+        return Objects.hash(observerStatoOrdine);
     }
 }

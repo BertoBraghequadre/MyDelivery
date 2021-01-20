@@ -33,7 +33,7 @@ public class Stato implements Serializable {
      * Metodo che restituisce lo stato dell'ordine
      * @return Ritorna lo stato dell'ordine
      */
-    public StatoOrdine getStatoOrdine() {
+    public StatoOrdine getStato() {
         return this.statoOrdine;
     }
 
