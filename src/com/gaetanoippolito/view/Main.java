@@ -11,7 +11,6 @@ import javafx.stage.Stage;
  * Questa classe rappresenta l'Entry point dell'applicazione. Quì vengono gestite le scene e gli stage della finistra
  * dell'applicazione.
  * @author Gaetano Ippolito (0124001867)
- * @version 0.19.6
  * */
 
 public class Main extends Application {
