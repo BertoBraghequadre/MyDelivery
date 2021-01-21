@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.DialogPane?>
+
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.PasswordField?>
+<DialogPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.gaetanoippolito.controller.dialog.RegisterController"
+            headerText="Registra un account"
+            fx:id="">
+    <content>
+        <GridPane>
+            <Label text="Nome"
+                   GridPane.columnIndex="0"
+                   GridPane.rowIndex="0"/>
+            <TextField GridPane.columnIndex="0"
+                       GridPane.rowIndex="1"
+                       fx:id="nomeTextField"/>
+
+            <Label text="Cognome"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="0"/>
+            <TextField GridPane.columnIndex="1"
+                       GridPane.rowIndex="1"
+                       fx:id="cognomeTextField"/>
+
+            <Label text="Username"
+                   GridPane.columnIndex="0"
+                   GridPane.rowIndex="2"/>
+            <TextField GridPane.columnIndex="0"
+                       GridPane.rowIndex="3"
+                       fx:id="usernameTextField"/>
+
+            <Label text="Password"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="2"/>
+            <PasswordField GridPane.columnIndex="1"
+                           GridPane.rowIndex="3"
+                           fx:id="passwordTextField"/>
+
+            <Label text="Email"
+                   GridPane.columnIndex="0"
+                   GridPane.rowIndex="4"/>
+            <TextField GridPane.columnIndex="0"
+                       GridPane.rowIndex="5"
+                       fx:id="emailTextField"/>
+
+            <Label text="Indirizzo"
+                   GridPane.columnIndex="0"
+                   GridPane.rowIndex="6"/>
+            <TextField GridPane.columnIndex="0"
+                       GridPane.rowIndex="7"
+                       fx:id="indirizzoTextField"/>
+
+            <Label text="Codice fiscale"
+                   GridPane.columnIndex="0"
+                   GridPane.rowIndex="8"/>
+            <TextField GridPane.columnIndex="0"
+                       GridPane.rowIndex="9"
+                       fx:id="cfTextField"/>
+
+            <Label text="Numero di Telefono"
+                   GridPane.columnIndex="0"
+                   GridPane.rowIndex="10"/>
+            <TextField GridPane.columnIndex="0"
+                       GridPane.rowIndex="11"
+                       fx:id="numeroDiTelefonoTextField"/>
+        </GridPane>
+    </content>
+</DialogPane>

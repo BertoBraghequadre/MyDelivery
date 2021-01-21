@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.GridPane?>
+
+<DialogPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.gaetanoippolito.controller.dialog.RegisterCorriereController">
+
+    <content>
+        <GridPane>
+            <Label text="Nome"
+                   GridPane.columnIndex="0"
+                   GridPane.rowIndex="0"/>
+            <TextField GridPane.columnIndex="0"
+                       GridPane.rowIndex="1"
+                       fx:id="nomeTextField"/>
+
+            <Label text="Cognome"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="0"/>
+            <TextField GridPane.columnIndex="1"
+                       GridPane.rowIndex="1"
+                       fx:id="cognomeTextField"/>
+
+            <Label text="ID"
+                   GridPane.columnIndex="0"
+                   GridPane.rowIndex="2"/>
+            <TextField GridPane.columnIndex="0"
+                       GridPane.rowIndex="3"
+                       fx:id="idTextField"/>
+
+            <Label text="Seleziona l'azienda presso cui lavora"
+                   GridPane.columnIndex="1"
+                   GridPane.rowIndex="2"/>
+            <ChoiceBox GridPane.columnIndex="1"
+                       GridPane.rowIndex="3"
+                       fx:id="aziendeChoiceBox"/>
+        </GridPane>
+    </content>
+</DialogPane>

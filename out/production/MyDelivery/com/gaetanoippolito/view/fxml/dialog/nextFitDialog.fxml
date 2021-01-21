@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+
+<?import javafx.scene.layout.VBox?>
+<DialogPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.gaetanoippolito.controller.dialog.NextFitDialogController">
+
+    <content>
+        <VBox>
+            <ChoiceBox fx:id="aziendeChoiceBox"/>
+        </VBox>
+    </content>
+</DialogPane>
