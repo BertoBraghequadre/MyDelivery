@@ -1,7 +1,5 @@
 package com.gaetanoippolito.model;
 
-import java.time.LocalDate;
-
 /**
  * La seguente classe rappresenta l'astrazione di quella figura che controlla e gestisce l'applicazione. Quindi sarà
  * colui che potrà avere il controllo sulle operazioni della piattaforma.

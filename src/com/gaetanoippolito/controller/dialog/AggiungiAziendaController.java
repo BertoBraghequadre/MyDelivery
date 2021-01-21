@@ -37,7 +37,7 @@ public class AggiungiAziendaController {
 
         // Il metodo "controllaEsistenzaAzienda()" restituisce vero se, tramite un controllo all'interno dei file, non
         // esiste già un'azienda con la stessa partita IVA
-        if(controllaEsistenzaAzienda(partitaIva)){
+        if(controllaAziendaNonEsistente(partitaIva)){
             Azienda nuovaAzienda = new Azienda(nomeAzienda, partitaIva);
             // Salvo nel database la nuova azienda
             /**@see MyDeliveryData*/
@@ -69,9 +69,9 @@ public class AggiungiAziendaController {
      * @see Azienda
      * @see MyDeliveryData
      */
-    private boolean controllaEsistenzaAzienda(String nuovaPartitaIva){
+    private boolean controllaAziendaNonEsistente(String nuovaPartitaIva){
         for(Azienda azienda : MyDeliveryData.getInstance().getAziende()){
-            if(nuovaPartitaIva.equals(azienda.getPartitaIVA())){
+            if(azienda.getPartitaIVA().equals(nuovaPartitaIva)){
                 return false;
             }
         }

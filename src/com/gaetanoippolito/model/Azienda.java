@@ -1,6 +1,8 @@
 package com.gaetanoippolito.model;
 
 import com.gaetanoippolito.model.database.MyDeliveryData;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -13,13 +15,15 @@ import java.util.Random;
 public class Azienda implements Serializable {
     ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
     // id del "serialVersionUID" di default
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private String nomeAzienda;
     private String partitaIVA;
     /**@see Veicolo*/
     private ArrayList<Veicolo> veicoli;
-    // TODO: Aggiungere i Corrieri
+    /**@see Corriere*/
+    private ArrayList<Corriere> corrieri;
 
     //////////////////////////////////// COSTRUTTORE ////////////////////////////////////
     /**
@@ -28,16 +32,19 @@ public class Azienda implements Serializable {
      * @param partitaIVA Rappresenta la partita IVA dell'azienda
      * @param veicoli Rappresenta la lista di veicoli presenti nell'azienda
      */
-    public Azienda(String nomeAzienda, String partitaIVA, ArrayList<Veicolo> veicoli){
+    public Azienda(String nomeAzienda, String partitaIVA, ArrayList<Veicolo> veicoli, ArrayList<Corriere> corrieri){
         this.nomeAzienda = nomeAzienda;
         this.partitaIVA = partitaIVA;
+        this.corrieri = corrieri;
 
         if(veicoli.size() == 0){
-            this.veicoli = associaVeicoli(nomeAzienda);
+            this.veicoli = associaVeicoli(this);
         }
         else{
             this.veicoli = veicoli;
         }
+
+        this.corrieri = corrieri;
     }
 
     /**
@@ -46,7 +53,7 @@ public class Azienda implements Serializable {
      * @param partitaIVA Rappresenta la partita IVA dell'azienda
      */
     public Azienda(String nomeAzienda, String partitaIVA){
-        this(nomeAzienda, partitaIVA, new ArrayList<>());
+        this(nomeAzienda, partitaIVA, new ArrayList<>(), new ArrayList<>(MyDeliveryData.getInstance().getCorrieri()));
     }
 
     ///////////////////////////////////// GETTER /////////////////////////////////////
@@ -75,13 +82,21 @@ public class Azienda implements Serializable {
         return this.veicoli;
     }
 
+    public ArrayList<Corriere> getCorrieri(){
+        return this.corrieri;
+    }
+    ///////////////////////////////////// SETTER /////////////////////////////////////
+    public void setCorrieri(Corriere corriere){
+        this.corrieri.add(corriere);
+    }
+
     ////////////////////////////////////// METODI //////////////////////////////////////
     /**
      * Metodo privato per creare dei veicoli da associare all'azienda nel momento della creazione di un'azienda.
-     * @param nomeAzienda Rappresenta il nome dell'azienda da passare al costruttore del Veicolo
+     * @param azienda Rappresenta l'azienda da passare al costruttore del Veicolo
      * @return Ritorna un ArrayList di veicoli generati randomicamente.
      */
-    private ArrayList<Veicolo> associaVeicoli(String nomeAzienda){
+    private ArrayList<Veicolo> associaVeicoli(Azienda azienda){
         /**@see Random*/
         Random random = new Random();
         /**@see Veicolo*/
@@ -90,10 +105,10 @@ public class Azienda implements Serializable {
         TipoVeicolo tipoVeicolo;
         double capienzaContainer;
         int codice;
-        int maxRandom = 4;
+        int maxRandom = 10;
 
-        // Salvo un numero randomico che va da 1 a 5
-        int randomNumber = (random.nextInt(maxRandom) + 1);
+        // Salvo un numero randomico che va da 5 a 10
+        int randomNumber = (random.nextInt(maxRandom) + 5);
 
         // Eseguo un ciclo for le cui interazioni dipendono dal numero randomico
         for(int i = 0; i < randomNumber; i++){
@@ -111,7 +126,7 @@ public class Azienda implements Serializable {
                 codice = i;
             }
 
-            veicoloAssociato = new Veicolo(tipoVeicolo, capienzaContainer, codice, nomeAzienda);
+            veicoloAssociato = new Veicolo(tipoVeicolo, capienzaContainer, codice, azienda);
             MyDeliveryData.getInstance().aggiungiVeicoli(veicoloAssociato);
             veicoliDiAzienda.add(veicoloAssociato);
         }
@@ -148,7 +163,7 @@ public class Azienda implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("Nome azienda: %s - Partita IVA: %s - Veicoli: %s",
-                              this.nomeAzienda, this.partitaIVA, this.veicoli);
+        return String.format("%s - Partita IVA: %s",
+                              this.nomeAzienda, this.partitaIVA);
     }
 }

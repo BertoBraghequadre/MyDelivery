@@ -1,5 +1,6 @@
 package com.gaetanoippolito.model;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -10,15 +11,18 @@ import java.util.Objects;
 
 public class Veicolo implements Serializable {
     ///////////////////////////////// VARIABILI DI ISTANZA /////////////////////////////////
-
     // id del "serialVersionUID"
+    /**@see Serializable*/
+    @Serial
     private static final long serialVersionUID = 2L;
 
     /**@see TipoVeicolo*/
     private TipoVeicolo tipoVeicolo;
     private double capienzaContainer;
     private int codice;
-    private String aziendaAssociata;
+    private boolean isBusy;
+    /**@see Azienda*/
+    private Azienda aziendaAssociata;
     /**@see Pacco*/
     private ArrayList<Pacco> pacchiDepositati;
 
@@ -33,6 +37,7 @@ public class Veicolo implements Serializable {
         this.tipoVeicolo = tipoVeicolo;
         this.capienzaContainer = capienzaContainer;
         this.codice = codice;
+        this.isBusy = false;
     }
 
     /**
@@ -43,7 +48,7 @@ public class Veicolo implements Serializable {
      * @param aziendaAssociata Rappresenta l'azienda associata al veicolo
      * @see Azienda
      */
-    public Veicolo(TipoVeicolo tipoVeicolo, double capienzaContainer, int codice, String aziendaAssociata){
+    public Veicolo(TipoVeicolo tipoVeicolo, double capienzaContainer, int codice, Azienda aziendaAssociata){
         this(tipoVeicolo, capienzaContainer, codice);
         this.aziendaAssociata = aziendaAssociata;
         this.pacchiDepositati = new ArrayList<>();
@@ -86,8 +91,16 @@ public class Veicolo implements Serializable {
      * Metodo che restituisce il nome dell'azienda associata al veicolo
      * @return Ritorna il nome dell'azienda associata al veicolo
      */
-    public String getAziendaAssociata(){
+    public Azienda getAziendaAssociata(){
         return this.aziendaAssociata;
+    }
+
+    /**
+     * Metodo che restituisce true se il veicolo è impegnato in un ordine, altrimenti restituisce false
+     * @return Ritorna true se il veicolo è impegnato in un ordine
+     */
+    public boolean getIsBusy(){
+        return this.isBusy;
     }
 
     ///////////////////////////////////// SETTER /////////////////////////////////////
@@ -100,7 +113,44 @@ public class Veicolo implements Serializable {
         this.pacchiDepositati = pacchiDepositati;
     }
 
+    /**
+     * Metodo che setta un veicolo a impegnato
+     * @param isBusy Rappresenta se il veicolo è impegnato in un ordine
+     */
+    public void setIsBusy(boolean isBusy){
+        this.isBusy = isBusy;
+    }
+
+    /**
+     * Metodo che setta la capienza massima del container dei veicoli
+     * @param capienzaContainer Rappresenta la capienza massima dei container dei veicoli
+     */
+    public void setCapienzaContainer(double capienzaContainer) {
+        this.capienzaContainer = capienzaContainer;
+    }
+
     ////////////////////////////////////// METODI //////////////////////////////////////
+    /**
+     * Questo metodo restituisce il peso di un container in base a quanti pacchi sono stati depositati
+     * @return Ritorna il peso dei pacchi all'interno del container del veicolo
+     */
+    public double getPesoInContainer(){
+        double pesoDepositato = 0.0d;
+
+        for(Pacco pacco : this.pacchiDepositati){
+            pesoDepositato += pacco.getPesoPacco();
+        }
+
+        return pesoDepositato;
+    }
+
+    /**
+     * Questo metodo deposita un pacco all'interno del container
+     * @param pacco Rappresenta il pacco da depositare
+     */
+    public void depositaPacco(Pacco pacco){
+        this.pacchiDepositati.add(pacco);
+    }
 
     /**
      * Il metodo equals() che viene ereditato dalla classe Object. Serve per confrontare due oggetti, dove
@@ -113,8 +163,9 @@ public class Veicolo implements Serializable {
         if (this == o) return true;
         if (!(o instanceof Veicolo)) return false;
         Veicolo veicolo = (Veicolo) o;
-        return Objects.equals(codice, veicolo.codice);
+        return codice == veicolo.codice && Objects.equals(aziendaAssociata, veicolo.aziendaAssociata);
     }
+
 
     /**
      * Restituisce un valore hash per un oggetto.
@@ -122,7 +173,7 @@ public class Veicolo implements Serializable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(codice);
+        return Objects.hash(codice, aziendaAssociata);
     }
 
     /**
@@ -135,8 +186,9 @@ public class Veicolo implements Serializable {
                              "Capienza del container: %s - " +
                              "Codice veicolo: %s - " +
                              "Azienda associata: %s - " +
-                             "Pacchi depositati: %s\n\t\t\t\t\t\t\t\t\t\t\t\t\t",
+                             "isBusy: %s - " +
+                             "Pacchi depositati: %s\n",
                              this.tipoVeicolo, this.capienzaContainer,
-                             this.codice, this.aziendaAssociata, this.pacchiDepositati);
+                             this.codice, this.aziendaAssociata, this.isBusy, this.pacchiDepositati);
     }
 }
