@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.gaetanoippolito.controller.CorriereStageController"
+            fx:id="corriereBorderPane">
+    <top>
+        <ToolBar>
+            <HBox>
+                <Button text="Visualizza Ordini" fx:id="bottoneVisualizzaOrdini" onAction="#visualizzaOrdini">
+                    <HBox.margin>
+                        <Insets left="5.0" />
+                    </HBox.margin>
+                </Button>
+
+                <Button text="Cambia stato ordine" onAction="#gestioneCambiaStatoOrdine">
+                    <HBox.margin>
+                        <Insets left="10.0" />
+                    </HBox.margin>
+                </Button>
+
+                <Button text="Logout" onAction="#ritornaInterfacciaLogin" fx:id="logoutButton">
+                    <HBox.margin>
+                        <Insets left="640.0" />
+                    </HBox.margin>
+                </Button>
+            </HBox>
+        </ToolBar>
+    </top>
+
+    <center>
+        <TableView fx:id="spedizioneCorriereView">
+            <columns>
+                <TableColumn editable="false" text="Codice ordine" fx:id="codiceOrdineColonna"/>
+
+                <TableColumn editable="false" text="Destinazione" fx:id="destinazioneColonna"/>
+
+                <TableColumn editable="false" text="Scadenza" fx:id="scadenzaColonna"/>
+
+                <TableColumn editable="false" text="Veicolo" fx:id="veicoloColonna"/>
+
+                <TableColumn editable="false" text="Peso Container" fx:id="pesoContainerColonna"/>
+
+                <TableColumn editable="false" text="Stato Ordine" fx:id="statoOrdineColonna"/>
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>

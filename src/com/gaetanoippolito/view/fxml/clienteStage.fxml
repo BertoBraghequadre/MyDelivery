@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="stageClienteBorderPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gaetanoippolito.controller.ClienteStageController">
+
+    <top>
+        <ToolBar>
+            <HBox>
+                <Button onAction="#gestioneOrdineDialog" text="Crea Nuovo Ordine">
+                    <tooltip>
+                        <Tooltip text="Crea un nuovo Ordine da spedire" />
+                    </tooltip>
+                </Button>
+
+                <Button onAction="#popolaCelle" text="Visualizza Ordini" fx:id="visualizzaOrdiniButton">
+                   <HBox.margin>
+                      <Insets left="10.0" />
+                   </HBox.margin>
+                </Button>
+
+                <Button onAction="#ritornaInterfacciaLogin" text="Logout" fx:id="logoutButton">
+                    <HBox.margin>
+                        <Insets left="480.0" />
+                    </HBox.margin>
+                </Button>
+            </HBox>
+        </ToolBar>
+    </top>
+
+    <center>
+        <TableView fx:id="ordineView">
+            <columns>
+                <TableColumn fx:id="mittenteColonna" editable="false" text="Mittente" />
+
+                <TableColumn fx:id="destinatarioColonna" editable="false" text="Destinatario" />
+
+                <TableColumn fx:id="statoOrdineColonna" editable="false" text="Stato Ordine" />
+
+                <TableColumn fx:id="dataDiConsegnaColonna" editable="false" text="In arrivo il.."/>
+
+                <TableColumn fx:id="corriereColonna" editable="false" text="Corriere" />
+
+                <TableColumn fx:id="nomeAziendaColonna" editable="false" text="Azienda" />
+
+                <TableColumn fx:id="codicePaccoColonna" editable="false" text="Codice Pacco" />
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>
